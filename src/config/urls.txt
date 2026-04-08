@@ -1,0 +1,41 @@
+# Frontmatter
+https://mlsysbook.ai/book/contents/frontmatter/foreword.html
+https://mlsysbook.ai/book/contents/frontmatter/about/about.html
+https://mlsysbook.ai/book/contents/frontmatter/acknowledgements/acknowledgements.html
+https://mlsysbook.ai/book/contents/frontmatter/socratiq/socratiq.html
+
+# Systems Foundations
+https://mlsysbook.ai/book/contents/core/introduction/introduction.html
+https://mlsysbook.ai/book/contents/core/ml_systems/ml_systems.html
+https://mlsysbook.ai/book/contents/core/dl_primer/dl_primer.html
+https://mlsysbook.ai/book/contents/core/dnn_architectures/dnn_architectures.html
+
+# Design Principles
+https://mlsysbook.ai/book/contents/core/workflow/workflow.html
+https://mlsysbook.ai/book/contents/core/data_engineering/data_engineering.html
+https://mlsysbook.ai/book/contents/core/frameworks/frameworks.html
+https://mlsysbook.ai/book/contents/core/training/training.html
+
+# Performance Engineering
+https://mlsysbook.ai/book/contents/core/efficient_ai/efficient_ai.html
+https://mlsysbook.ai/book/contents/core/optimizations/optimizations.html
+https://mlsysbook.ai/book/contents/core/hw_acceleration/hw_acceleration.html
+https://mlsysbook.ai/book/contents/core/benchmarking/benchmarking.html
+
+# Robust Deployment
+https://mlsysbook.ai/book/contents/core/ops/ops.html
+https://mlsysbook.ai/book/contents/core/ondevice_learning/ondevice_learning.html
+https://mlsysbook.ai/book/contents/core/privacy_security/privacy_security.html
+https://mlsysbook.ai/book/contents/core/robust_ai/robust_ai.html
+
+# Trustworthy Systems
+https://mlsysbook.ai/book/contents/core/responsible_ai/responsible_ai.html
+https://mlsysbook.ai/book/contents/core/sustainable_ai/sustainable_ai.html
+https://mlsysbook.ai/book/contents/core/ai_for_good/ai_for_good.html
+
+# Frontiers
+https://mlsysbook.ai/book/contents/core/frontiers/frontiers.html
+https://mlsysbook.ai/book/contents/core/conclusion/conclusion.html
+
+# Backmatter
+https://mlsysbook.ai/book/contents/backmatter/glossary/glossary.html
