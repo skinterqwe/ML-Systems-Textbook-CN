@@ -38,6 +38,8 @@ Thumbs.db
 
 # Project Specific
 output/
+!output/book/
+output/book/_build/
 *.zip
 
 # API Keys
