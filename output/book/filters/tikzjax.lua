@@ -164,9 +164,10 @@ return {
 
       -- Close the opening tag, add the body, close the script.
       -- The body is the raw TikZ code.  tikzjax reads it as textContent.
-      -- We must escape < and & so the HTML parser doesn't choke.
+      -- Do NOT escape < or & inside <script> — the browser treats the
+      -- content as raw text and textContent returns it verbatim.
       parts[#parts + 1] = ">\n"
-      parts[#parts + 1] = html_body_escape(code)
+      parts[#parts + 1] = code
       parts[#parts + 1] = "\n</script>"
 
       return pandoc.RawBlock("html", table.concat(parts))
