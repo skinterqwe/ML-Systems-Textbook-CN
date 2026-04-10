@@ -177,7 +177,6 @@ filters:
   - filters/sidenote.lua
   - filters/inject_parts.lua
   - filters/inject_quizzes.lua
-  - filters/tikzjax.lua
   - pandoc-ext/diagram
   - mlsysbook-ext/custom-numbered-blocks
 
