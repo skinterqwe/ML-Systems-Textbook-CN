@@ -28,7 +28,9 @@ jobs:
         run: quarto render --no-execute
 
       - name: Copy tikzjax assets
-        run: cp -r output/book/assets/scripts/tikzjax output/book/_build/html/assets/scripts/tikzjax
+        run: |
+          rm -rf output/book/_build/html/assets/scripts/tikzjax
+          cp -r output/book/assets/scripts/tikzjax output/book/_build/html/assets/scripts/tikzjax
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
