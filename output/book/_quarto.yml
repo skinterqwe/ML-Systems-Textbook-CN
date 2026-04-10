@@ -283,7 +283,59 @@ diagram:
     dot: false
     mermaid: false
     asymptote: false
-    tikz: false
+    tikz:
+      execpath: lualatex
+      output-format: svg
+      header-includes:
+        - '\usepackage{tikz}'
+        - '\usepackage{pgfplots}'
+        - '\usepackage{pgf-pie}'
+        - '\usepackage{amsmath}'
+        - '\usepackage{amssymb}'
+        - '\usepackage{xcolor}'
+        - '\usetikzlibrary{angles}'
+        - '\usetikzlibrary{arrows}'
+        - '\usetikzlibrary{arrows.meta}'
+        - '\usetikzlibrary{backgrounds}'
+        - '\usetikzlibrary{bending}'
+        - '\usetikzlibrary{calc}'
+        - '\usetikzlibrary{shadows.blur}'
+        - '\usetikzlibrary{fit}'
+        - '\usetikzlibrary{intersections}'
+        - '\usetikzlibrary{positioning}'
+        - '\usetikzlibrary{quotes}'
+        - '\usetikzlibrary{shapes}'
+        - '\usetikzlibrary{shapes.geometric}'
+        - '\usetikzlibrary{decorations.pathmorphing}'
+        - '\usetikzlibrary{decorations.markings}'
+        - '\usetikzlibrary{matrix}'
+        - '\usepgfplotslibrary{fillbetween}'
+        - '\usepgfplotslibrary{dateplot}'
+        - '\usepgfplotslibrary{polar}'
+        - '\definecolor{Brown}{RGB}{131,74,22}'
+        - '\definecolor{BrownL}{RGB}{199,163,103}'
+        - '\definecolor{BrownLine}{RGB}{131,74,22}'
+        - '\definecolor{BackColor}{RGB}{255,255,255}'
+        - '\definecolor{BackLine}{RGB}{0,0,0}'
+        - '\definecolor{BlueD}{RGB}{40,61,255}'
+        - '\definecolor{BlueL}{RGB}{150,209,255}'
+        - '\definecolor{BlueLine}{RGB}{0,63,199}'
+        - '\definecolor{Green}{RGB}{76,153,0}'
+        - '\definecolor{GreenD}{RGB}{38,77,0}'
+        - '\definecolor{GreenL}{RGB}{150,255,180}'
+        - '\definecolor{GreenLine}{RGB}{38,77,0}'
+        - '\definecolor{OliveL}{RGB}{194,255,128}'
+        - '\definecolor{OliveLine}{RGB}{64,128,0}'
+        - '\definecolor{OrangeL}{RGB}{255,186,128}'
+        - '\definecolor{OrangeLine}{RGB}{199,64,0}'
+        - '\definecolor{RedL}{RGB}{255,128,128}'
+        - '\definecolor{RedLine}{RGB}{199,0,0}'
+        - '\definecolor{Sepia}{RGB}{96,38,0}'
+        - '\definecolor{TextColor}{RGB}{0,0,0}'
+        - '\definecolor{VioletL}{RGB}{200,174,255}'
+        - '\definecolor{VioletL2}{RGB}{216,198,255}'
+        - '\definecolor{VioletLine}{RGB}{64,0,199}'
+        - '\definecolor{VioletLine2}{RGB}{96,32,199}'
 
 editor:
   render-on-save: true
