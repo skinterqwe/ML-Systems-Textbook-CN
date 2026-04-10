@@ -454,15 +454,24 @@ class QMDTranslator:
         return '\n'.join(result_lines)
 
     def _protect_code_blocks(self, content: str, store: Dict[str, str]) -> str:
-        """保护代码块（```{...} ... ```）。"""
-        pattern = r'(```\{[^}]*\}\n[\s\S]*?```)'
+        """保护代码块（含裸 ``` 无语言标记的代码块）。"""
+        # 先保护有语言标记的：```{python} / ```{.tikz} / ```{=latex} 等
+        pattern_tagged = r'(```\{[^}]*\}\n[\s\S]*?```)'
+        content = re.sub(pattern_tagged, self._make_replacer(store), content)
 
+        # 再保护裸代码块（无语言标记）：独立行的 ``` 开始到下一个 ``` 结束
+        pattern_bare = r'(^```\n[\s\S]*?^```$)'
+        content = re.sub(pattern_bare, self._make_replacer(store), content, flags=re.MULTILINE)
+
+        return content
+
+    def _make_replacer(self, store):
+        """创建占位符替换函数。"""
         def replacer(match):
             placeholder = self._next_placeholder('CODE_PH')
             store[placeholder] = match.group(1)
             return placeholder
-
-        return re.sub(pattern, replacer, content)
+        return replacer
 
     def _protect_inline_math(self, content: str, store: Dict[str, str]) -> str:
         """
@@ -655,6 +664,10 @@ class QMDTranslator:
             #    如 '文本。:::下一段' → '文本。\n\n:::\n\n下一段'
             content = re.sub(r'([^\n]):::([^\n\s])', r'\1\n\n:::\n\n\2', content)
 
+            # 7b. 行首 ::: 后紧跟非空白内容（无换行）→ 把 ::: 拆出来
+            #     如 '\n:::中文文本' → '\n:::\n\n中文文本'
+            content = re.sub(r'(^:::)([^\n\s{])', r'\1\n\n\2', content, flags=re.MULTILINE)
+
             # 8. ::: 闭合标记后面紧跟换行但不是空行 → 插入空行
             content = re.sub(r'(:::)(\n)([^\n\s])', r'\1\n\n\3', content)
 
@@ -708,6 +721,7 @@ class QMDTranslator:
 5. 不翻译：占位符、URL、引用标记（如 @sec-xxx、[@xxx]）、标签 ID
 6. 如果原文中两个占位符之间有换行（如 __QD_PH_1__\\n\\n__QD_PH_2__），译文中必须保持完全相同的换行结构
 7. 当看到 __QD_PH_N__"英文文本"__QD_PH_M__ 的模式时（即两个 __QD_PH__ 占位符之间夹着引号包裹的文本），引号内的文本需要翻译，但引号和占位符必须原样保留
+8. 代码块（用 \`\`\` 包裹的内容）中的自然语言描述文本需要翻译成中文。只有真正的代码（如 Python、JavaScript、SQL 等编程语言）和数学公式保持英文。示例性文字、伪代码中的英文描述、对话式内容都应翻译。代码块的 \`\`\` 标记保持不变。
 
 【示例】
 输入：
