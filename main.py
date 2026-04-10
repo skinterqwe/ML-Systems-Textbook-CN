@@ -532,6 +532,87 @@ def print_qmd_stats(stats: Dict):
     print("=" * 60)
 
 
+def run_deploy(trans_dir: str, book_dir: str) -> bool:
+    """
+    将翻译后的 .qmd 文件复制到 output/book/contents/ 覆盖英文原文。
+
+    Args:
+        trans_dir: 翻译输出目录（如 output/qmd_trans）
+        book_dir: Quarto 源目录（如 output/book/contents）
+
+    Returns:
+        是否有文件被复制
+    """
+    logger = logging.getLogger(__name__)
+    trans_path = Path(trans_dir)
+    book_path = Path(book_dir)
+
+    if not trans_path.exists():
+        logger.error(f"翻译目录不存在: {trans_dir}")
+        print(f"❌ 翻译目录不存在: {trans_dir}")
+        print(f"请先运行翻译: python3.9 main.py --mode qmd")
+        return False
+
+    # 收集所有已翻译的 .qmd 文件
+    trans_qmds = list(trans_path.rglob('*.qmd'))
+    if not trans_qmds:
+        logger.warning(f"翻译目录中没有 .qmd 文件: {trans_dir}")
+        print(f"⚠️  翻译目录中没有 .qmd 文件")
+        return False
+
+    copied = 0
+    skipped = 0
+
+    for trans_file in trans_qmds:
+        # 计算相对路径，找到对应的目标文件
+        rel_path = trans_file.relative_to(trans_path)
+        target_file = book_path / rel_path
+
+        if not target_file.parent.exists():
+            logger.warning(f"目标目录不存在，跳过: {rel_path.parent}")
+            skipped += 1
+            continue
+
+        # 复制 .qmd 文件
+        shutil.copy2(trans_file, target_file)
+        logger.info(f"✅ 部署: {rel_path}")
+        copied += 1
+
+        # 复制同目录下的配套文件（.bib, .json, .yml 等）
+        for item in trans_file.parent.iterdir():
+            if item.suffix in {'.bib', '.json', '.yml', '.yaml'} and item.is_file():
+                dst = target_file.parent / item.name
+                if not dst.exists() or dst.stat().st_mtime < item.stat().st_mtime:
+                    shutil.copy2(item, dst)
+                    logger.debug(f"  配套文件: {item.name}")
+
+        # 复制 images 目录
+        images_dir = trans_file.parent / 'images'
+        if images_dir.exists() and images_dir.is_dir():
+            dst_images = target_file.parent / 'images'
+            if dst_images.exists():
+                shutil.rmtree(dst_images)
+            shutil.copytree(images_dir, dst_images)
+            logger.debug(f"  图片目录: images/")
+
+    print()
+    print("=" * 60)
+    print("📊 部署统计:")
+    print(f"   ✅ 已复制: {copied} 个文件")
+    if skipped:
+        print(f"   ⏭️  跳过: {skipped} 个文件（目标目录不存在）")
+    print("=" * 60)
+
+    if copied > 0:
+        print(f"\n✨ 译文已复制到 {book_dir}/")
+        print("下一步：提交并推送以触发 GitHub Pages 部署")
+        print("  git add -f output/book/contents/")
+        print("  git commit -m 'update: 部署中文翻译'")
+        print("  git push origin master")
+
+    return copied > 0
+
+
 def parse_args():
     """解析命令行参数。"""
     parser = argparse.ArgumentParser(
@@ -542,6 +623,8 @@ def parse_args():
   %(prog)s --mode qmd                          # 翻译所有 QMD 文件
   %(prog)s --mode qmd --file path/to/file.qmd  # 只翻译指定文件
   %(prog)s --mode qmd --force                  # 强制重新翻译
+  %(prog)s --mode qmd --deploy                 # 翻译并部署到 Quarto 源目录
+  %(prog)s --deploy                            # 只部署（不翻译），需已有翻译结果
   %(prog)s --mode qmd --source /path/to/vol1/  # 指定源目录
   %(prog)s --mode qmd --output output/my_trans/ # 指定输出目录
 """
@@ -556,6 +639,8 @@ def parse_args():
                         help='强制重新翻译已存在的文件')
     parser.add_argument('--file', default=None,
                         help='只翻译指定的单个 .qmd 文件（用于测试）')
+    parser.add_argument('--deploy', action='store_true',
+                        help='翻译后将译文复制到 Quarto 源目录（覆盖英文原文）')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='显示详细日志')
     return parser.parse_args()
@@ -578,6 +663,8 @@ async def main():
         print(f"输出目录: {args.output}")
         if args.file:
             print(f"指定文件: {args.file}")
+        if args.deploy:
+            print(f"部署模式: 翻译后将覆盖 {args.source} 中的英文原文")
         print()
 
         try:
@@ -593,9 +680,18 @@ async def main():
 
             print_qmd_stats(stats)
 
-            if stats['success'] > 0:
+            if stats['success'] > 0 or (stats['skipped'] > 0 and stats['failed'] == 0):
                 print(f"\n⏱️  总耗时: {elapsed:.1f} 秒")
                 print(f"✨ 翻译结果位于: {args.output}/")
+
+                # --deploy：复制译文到 Quarto 源目录
+                if args.deploy:
+                    print()
+                    print("=" * 80)
+                    print("   开始部署译文到 Quarto 源目录")
+                    print("=" * 80)
+                    run_deploy(args.output, args.source)
+
             elif stats['skipped'] > 0 and stats['failed'] == 0:
                 print(f"\n所有文件已存在，使用 --force 强制重新翻译")
             else:
@@ -607,6 +703,13 @@ async def main():
             print(f"\n❌ 执行失败: {str(e)}")
             import traceback
             traceback.print_exc()
+
+    elif args.deploy:
+        # 单独部署模式（不翻译，只复制已有翻译结果）
+        print("=" * 80)
+        print("   部署模式：将译文复制到 Quarto 源目录")
+        print("=" * 80)
+        run_deploy(args.output, args.source)
 
     else:
         # HTML 翻译模式（原有流程）
