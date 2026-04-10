@@ -1,6 +1,7 @@
 # ML Systems Textbook 中文翻译
 
 [ML Systems Textbook](https://mlsysbook.ai/book/) 的中文翻译项目。
+[ML Systems Textbook中文版](https://skinterqwe.github.io/ML-Systems-Textbook-CN/)
 
 ## 项目简介
 
