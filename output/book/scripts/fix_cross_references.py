@@ -116,27 +116,27 @@ CHAPTER_MAPPING = {
 # Now includes "Chapter" prefix for better HTML readability
 CHAPTER_TITLES = {
     # Top-level chapters
-    "sec-introduction": "Chapter 1: Introduction",
-    "sec-ml-systems": "Chapter 2: ML Systems",
-    "sec-dl-primer": "Chapter 3: Deep Learning Primer",
-    "sec-dnn-architectures": "Chapter 4: DNN Architectures",
-    "sec-ai-workflow": "Chapter 5: AI Workflow",
-    "sec-data-engineering": "Chapter 6: Data Engineering",
-    "sec-ai-frameworks": "Chapter 7: AI Frameworks",
-    "sec-ai-training": "Chapter 8: AI Training",
-    "sec-efficient-ai": "Chapter 9: Efficient AI",
-    "sec-model-optimizations": "Chapter 10: Model Optimizations",
-    "sec-ai-acceleration": "Chapter 11: AI Acceleration",
-    "sec-benchmarking-ai": "Chapter 12: Benchmarking AI",
-    "sec-ml-operations": "Chapter 13: ML Operations",
-    "sec-ondevice-learning": "Chapter 14: On-Device Learning",
-    "sec-security-privacy": "Chapter 15: Security & Privacy",
-    "sec-robust-ai": "Chapter 16: Robust AI",
-    "sec-responsible-ai": "Chapter 17: Responsible AI",
-    "sec-sustainable-ai": "Chapter 18: Sustainable AI",
-    "sec-ai-good": "Chapter 19: AI for Good",
-    "sec-agi-systems": "Chapter 20: AGI Systems",
-    "sec-conclusion": "Chapter 21: Conclusion",
+    "sec-introduction": "Introduction",
+    "sec-ml-systems": "ML Systems",
+    "sec-dl-primer": "Deep Learning Primer",
+    "sec-dnn-architectures": "DNN Architectures",
+    "sec-ai-workflow": "AI Workflow",
+    "sec-data-engineering": "Data Engineering",
+    "sec-ai-frameworks": "AI Frameworks",
+    "sec-ai-training": "AI Training",
+    "sec-efficient-ai": "Efficient AI",
+    "sec-model-optimizations": "Model Optimizations",
+    "sec-ai-acceleration": "AI Acceleration",
+    "sec-benchmarking-ai": "Benchmarking AI",
+    "sec-ml-operations": "ML Operations",
+    "sec-ondevice-learning": "On-Device Learning",
+    "sec-security-privacy": "Security & Privacy",
+    "sec-robust-ai": "Robust AI",
+    "sec-responsible-ai": "Responsible AI",
+    "sec-sustainable-ai": "Sustainable AI",
+    "sec-ai-good": "AI for Good",
+    "sec-agi-systems": "AGI Systems",
+    "sec-conclusion": "Conclusion",
 
     # Subsections - AI Training chapter
     "sec-ai-training-distributed-systems-8fe8": "Distributed Systems",
@@ -218,6 +218,42 @@ def build_epub_section_mapping(epub_dir):
 
     return mapping
 
+
+def build_html_section_mapping(html_dir):
+    """
+    Build mapping from section IDs to HTML files by scanning all HTML files.
+
+    This dynamically discovers all section IDs (including subsections) that Quarto
+    defines in the built HTML, so we don't need to hardcode every subsection mapping.
+
+    Args:
+        html_dir: Path to HTML build directory (_build/html)
+
+    Returns:
+        Dictionary mapping section IDs to HTML relative paths (e.g., {"sec-xxx": "contents/core/.../file.html#sec-xxx"})
+    """
+    mapping = {}
+
+    for html_file in sorted(html_dir.rglob("*.html")):
+        # Skip non-content files
+        skip_patterns = ['search.html', '404.html', 'site_libs']
+        if any(skip in str(html_file) for skip in skip_patterns):
+            continue
+
+        try:
+            content = html_file.read_text(encoding='utf-8')
+            # Find all sec- IDs in this file
+            section_ids = re.findall(r'id="(sec-[^"]+)"', content)
+            rel_path = str(html_file.relative_to(html_dir)).replace('\\', '/')
+            for sec_id in section_ids:
+                # Only set if not already mapped (don't overwrite hardcoded mappings)
+                if sec_id not in mapping:
+                    mapping[sec_id] = f"{rel_path}#{sec_id}"
+        except Exception:
+            continue
+
+    return mapping
+
 def calculate_relative_path(from_file, to_path, build_dir, epub_mapping=None):
     """
     Calculate relative path from one file to another.
@@ -288,25 +324,36 @@ def calculate_relative_path(from_file, to_path, build_dir, epub_mapping=None):
 
     return result + anchor
 
-def fix_cross_reference_link(match, from_file, build_dir, epub_mapping=None):
+def fix_cross_reference_link(match, from_file, build_dir, epub_mapping=None, dynamic_mapping=None):
     """Replace a single cross-reference link with proper HTML link."""
     full_match = match.group(0)
     sec_ref = match.group(1)
 
+    # Try hardcoded mapping first, then dynamic mapping
     abs_path = CHAPTER_MAPPING.get(sec_ref)
     title = CHAPTER_TITLES.get(sec_ref)
 
-    if abs_path and title:
+    if not abs_path and dynamic_mapping:
+        abs_path = dynamic_mapping.get(sec_ref)
+
+    if not title and dynamic_mapping:
+        # Generate title from section ID as fallback
+        # e.g., "sec-agi-systems-compound-ai-systems-framework-2a31" -> "Compound AI Systems Framework"
+        # Remove parent prefix and hash suffix, then title-case it
+        title = sec_ref.replace("-", " ").title()
+
+    if abs_path:
         # Calculate relative path from current file to target
         rel_path = calculate_relative_path(from_file, abs_path, build_dir, epub_mapping)
         # Create clean HTML link
-        return f'<a href="{rel_path}">{title}</a>'
+        display_title = title if title else sec_ref
+        return f'<a href="{rel_path}">{display_title}</a>'
     else:
         # Keep original if no mapping found
         print(f"⚠️ No mapping found for: {sec_ref}")
         return full_match
 
-def fix_cross_references(html_content, from_file, build_dir, epub_mapping=None, verbose=False):
+def fix_cross_references(html_content, from_file, build_dir, epub_mapping=None, dynamic_mapping=None, verbose=False):
     """
     Fix all cross-reference links in HTML/XHTML content.
 
@@ -336,15 +383,20 @@ def fix_cross_references(html_content, from_file, build_dir, epub_mapping=None, 
     total_matches = len(matches1) + len(matches2) + len(matches3)
 
     # Fix Pattern 1 matches
-    fixed_content = re.sub(pattern1, lambda m: fix_cross_reference_link(m, from_file, build_dir, epub_mapping), html_content)
+    fixed_content = re.sub(pattern1, lambda m: fix_cross_reference_link(m, from_file, build_dir, epub_mapping, dynamic_mapping), html_content)
 
     # Fix Pattern 2 matches with proper relative path calculation
     unmapped_refs = []
     def fix_simple_reference(match):
         sec_ref = match.group(1)
+        # Try hardcoded mapping first, then dynamic mapping
         abs_path = CHAPTER_MAPPING.get(sec_ref)
         title = CHAPTER_TITLES.get(sec_ref)
-        if abs_path and title:
+        if not abs_path and dynamic_mapping:
+            abs_path = dynamic_mapping.get(sec_ref)
+        if not title:
+            title = sec_ref.replace("-", " ").title()
+        if abs_path:
             rel_path = calculate_relative_path(from_file, abs_path, build_dir, epub_mapping)
             return f'<strong><a href="{rel_path}">{title}</a></strong>'
         else:
@@ -370,7 +422,8 @@ def fix_cross_references(html_content, from_file, build_dir, epub_mapping=None, 
         else:
             # Fallback to HTML path resolution
             abs_path = CHAPTER_MAPPING.get(sec_ref)
-            title = CHAPTER_TITLES.get(sec_ref)
+            if not abs_path and dynamic_mapping:
+                abs_path = dynamic_mapping.get(sec_ref)
             if abs_path:
                 rel_path = calculate_relative_path(from_file, abs_path, build_dir, None)
                 return f'<a href="{rel_path}"{attrs}>{link_text}</a>'
@@ -389,7 +442,7 @@ def fix_cross_references(html_content, from_file, build_dir, epub_mapping=None, 
     # Return info about what was fixed
     return fixed_content, fixed_count, unmapped_refs
 
-def process_html_file(html_file, base_dir, epub_mapping=None):
+def process_html_file(html_file, base_dir, epub_mapping=None, dynamic_mapping=None):
     """Process a single HTML/XHTML file to fix cross-references."""
     # Read file content
     try:
@@ -398,7 +451,7 @@ def process_html_file(html_file, base_dir, epub_mapping=None):
         return None, 0, []
 
     # Fix cross-reference links with proper relative path calculation
-    fixed_content, fixed_count, unmapped = fix_cross_references(html_content, html_file, base_dir, epub_mapping)
+    fixed_content, fixed_count, unmapped = fix_cross_references(html_content, html_file, base_dir, epub_mapping, dynamic_mapping)
 
     # Write back fixed content if changes were made
     if fixed_count > 0:
@@ -426,10 +479,15 @@ def main():
 
         # Determine build type
         epub_mapping = None
+        dynamic_mapping = None
         if html_dir.exists() and (html_dir / "index.html").exists():
             build_dir = html_dir
             file_pattern = "*.html"
             file_type = "HTML"
+            # Build dynamic section mapping from HTML files
+            print("📚 Building dynamic section mapping from HTML files...")
+            dynamic_mapping = build_html_section_mapping(html_dir)
+            print(f"   Found {len(dynamic_mapping)} section IDs across HTML files")
         elif epub_dir.exists() and list(epub_dir.glob("*.xhtml")):
             build_dir = epub_dir
             file_pattern = "*.xhtml"
@@ -465,7 +523,7 @@ def main():
             if any(skip in str(file) for skip in skip_patterns):
                 continue
 
-            rel_path, fixed_count, unmapped = process_html_file(file, build_dir, epub_mapping)
+            rel_path, fixed_count, unmapped = process_html_file(file, build_dir, epub_mapping, dynamic_mapping)
             if fixed_count > 0:
                 files_fixed.append((rel_path, fixed_count))
                 total_refs_fixed += fixed_count
@@ -490,15 +548,25 @@ def main():
 
         # Detect if this is an EPUB file (in text/ directory)
         epub_mapping = None
+        dynamic_mapping = None
         if 'text' in html_file.parts and html_file.suffix == '.xhtml':
             # This is an EPUB chapter file, build mapping
             epub_base = html_file.parent.parent  # Go up from text/ to EPUB/
             print("📚 Building EPUB section mapping...")
             epub_mapping = build_epub_section_mapping(epub_base)
             print(f"   Found {len(epub_mapping)} section IDs across chapters")
+        elif html_file.suffix == '.html':
+            # Build dynamic mapping from sibling HTML files
+            html_dir = html_file.parent
+            while html_dir != html_dir.parent and not (html_dir / "index.html").exists():
+                html_dir = html_dir.parent
+            if (html_dir / "index.html").exists():
+                print("📚 Building dynamic section mapping from HTML files...")
+                dynamic_mapping = build_html_section_mapping(html_dir)
+                print(f"   Found {len(dynamic_mapping)} section IDs across HTML files")
 
         print(f"🔗 Fixing cross-reference links in: {html_file}")
-        rel_path, fixed_count, unmapped = process_html_file(html_file, html_file.parent, epub_mapping)
+        rel_path, fixed_count, unmapped = process_html_file(html_file, html_file.parent, epub_mapping, dynamic_mapping)
         if fixed_count > 0:
             print(f"✅ Fixed {fixed_count} cross-references")
             if unmapped:

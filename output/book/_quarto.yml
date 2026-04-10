@@ -7,6 +7,9 @@ project:
   type: website
   output-dir: _build/html
 
+  post-render:
+    - scripts/fix_cross_references.py
+
   preview:
     browser: false
     navigate: false
