@@ -23,14 +23,17 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Install TeX Live and Inkscape
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-extra texlive-latex-recommended \
+            texlive-fonts-recommended texlive-pictures texlive-pgf \
+            lmodern inkscape
+
       - name: Render website
         working-directory: output/book
-        run: quarto render --no-execute
-
-      - name: Copy tikzjax assets
-        run: |
-          rm -rf output/book/_build/html/assets/scripts/tikzjax
-          cp -r output/book/assets/scripts/tikzjax output/book/_build/html/assets/scripts/tikzjax
+        run: quarto render
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
