@@ -33,7 +33,7 @@ jobs:
 
       - name: Render website
         working-directory: output/book
-        run: quarto render
+        run: quarto render --no-execute
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
