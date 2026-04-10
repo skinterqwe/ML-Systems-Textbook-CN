@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """
 主程序入口
-整合所有翻译流程模块：爬虫 → 翻译 → 链接本地化 → 页头信息添加
+支持两种翻译模式：
+  - HTML 模式（原有）：爬取网页 → 翻译 → 链接本地化 → 页头信息
+  - QMD 模式（新增）：读取本地 .qmd → Gemini 翻译 → Quarto 渲染
 
 项目：ML Systems Textbook 中文翻译
 """
 
+import argparse
 import asyncio
 import logging
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -16,11 +20,7 @@ from typing import Dict, List, Optional
 # 添加src目录到Python路径
 sys.path.insert(0, 'src')
 
-# 导入各个模块
-from crawler import WebCrawler, crawl_from_file
-from translator import HTMLTranslator, translate_html_file
-from link_localizer import LinkLocalizer
-from header_info_adder import HeaderInfoAdder
+# 公共模块
 from config.logging_config import setup_logging
 from config.settings import Config
 
@@ -62,6 +62,11 @@ class TranslationPipeline:
         """初始化所有组件"""
         try:
             self.logger.info("正在初始化各个组件...")
+
+            from crawler import WebCrawler
+            from translator import HTMLTranslator
+            from link_localizer import LinkLocalizer
+            from header_info_adder import HeaderInfoAdder
 
             # 初始化爬虫
             self.crawler = WebCrawler()
@@ -106,6 +111,7 @@ class TranslationPipeline:
                 return False
 
             # 从文件读取URL并批量爬取
+            from crawler import crawl_from_file
             results = await crawl_from_file(urls_file)
 
             if not results:
@@ -162,6 +168,7 @@ class TranslationPipeline:
                     self.logger.info(f"处理文件: {html_file.relative_to(origin_dir)}")
 
                     # 使用translate_html_file函数，它会自动检查文件是否已存在
+                    from translator import translate_html_file
                     result = await translate_html_file(str(html_file), force_translate)
 
                     if result:
@@ -386,41 +393,253 @@ async def run_single_step(step: str, **kwargs) -> bool:
         raise ValueError(f"未知步骤: {step}")
 
 
-async def main():
-    """主函数"""
-    # 设置日志
-    setup_logging('INFO')
+def run_qmd_translation(source_dir: str, output_dir: str, force: bool = False,
+                         single_file: str = None) -> Dict:
+    """
+    运行 QMD 翻译流程。
 
-    print("=" * 80)
-    print("🌍 ML Systems Textbook 翻译流水线")
-    print("=" * 80)
-    print("流程：爬虫 → 翻译 → 链接本地化 → 页头信息添加")
-    print()
+    Args:
+        source_dir: QMD 源文件目录
+        output_dir: 翻译输出目录
+        force: 是否强制重新翻译已存在的文件
+        single_file: 只翻译指定文件（用于测试）
 
-    # 检查必要文件
-    urls_file = "src/config/urls.txt"
-    if not Path(urls_file).exists():
-        print(f"❌ 错误: URL配置文件不存在: {urls_file}")
-        print("请确保该文件存在并包含要爬取的URL列表")
+    Returns:
+        统计信息字典
+    """
+    logger = logging.getLogger(__name__)
+    from qmd_translator import QMDTranslator
+
+    source_path = Path(source_dir)
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    stats = {'total': 0, 'success': 0, 'failed': 0, 'skipped': 0}
+
+    # 收集需要翻译的文件
+    if single_file:
+        qmd_files = [Path(single_file)]
+    else:
+        qmd_files = sorted(source_path.rglob('*.qmd'))
+        # 跳过 _ 前缀的文件和目录（Quarto 内部文件）
+        qmd_files = [
+            f for f in qmd_files
+            if not any(part.startswith('_') for part in f.relative_to(source_path).parts)
+        ]
+
+    if not qmd_files:
+        logger.warning(f"未找到 .qmd 文件: {source_dir}")
+        return stats
+
+    stats['total'] = len(qmd_files)
+    logger.info(f"找到 {len(qmd_files)} 个 .qmd 文件")
+
+    # 初始化翻译器
+    translator = QMDTranslator()
+
+    # 需要复制的配套文件扩展名
+    COMPANION_EXTS = {'.bib', '.json', '.yml', '.yaml'}
+
+    for qmd_file in qmd_files:
+        rel_path = qmd_file.relative_to(source_path)
+        out_file = output_path / rel_path
+
+        # 检查是否跳过
+        if out_file.exists() and not force:
+            logger.info(f"⏭️  跳过已存在文件: {rel_path}")
+            stats['skipped'] += 1
+            # 仍然复制配套文件（以防缺失）
+            _copy_companion_files(qmd_file, out_file, COMPANION_EXTS, logger)
+            continue
+
+        logger.info(f"📄 开始翻译: {rel_path}")
+
+        # 翻译文件
+        success = translator.translate_qmd_file(qmd_file, out_file)
+
+        if success:
+            # 注入 engine: jupyter（避免 Quarto 默认用 R 引擎）
+            _inject_jupyter_engine(out_file)
+
+            # 复制配套文件（.bib, .json, .yml 等）
+            _copy_companion_files(qmd_file, out_file, COMPANION_EXTS, logger)
+
+            # 复制 images 目录
+            _copy_images_dir(qmd_file, out_file, logger)
+
+            stats['success'] += 1
+            logger.info(f"✅ 翻译完成: {rel_path}")
+        else:
+            stats['failed'] += 1
+            logger.error(f"❌ 翻译失败: {rel_path}")
+
+    return stats
+
+
+def _inject_jupyter_engine(output_file: Path):
+    """在 frontmatter 中注入 engine: jupyter。"""
+    content = output_file.read_text(encoding='utf-8')
+    if 'engine: jupyter' in content:
         return
 
-    try:
-        # 运行完整流水线
-        stats = await run_full_translation(urls_file)
+    if content.startswith('---'):
+        # 在已有的 frontmatter 中注入
+        content = content.replace('\n---\n', '\nengine: jupyter\n---\n', 1)
+    else:
+        # 没有 frontmatter，添加一个
+        content = '---\nengine: jupyter\n---\n\n' + content
 
-        if stats['translate_success'] > 0:
-            print("\n🎉 翻译流水线执行成功！")
-            print("您可以在 output/trans/ 目录中查看翻译结果")
-        else:
-            print("\n⚠️  翻译流水线执行完成，但没有成功翻译任何页面")
-            print("请检查日志以了解详细信息")
+    output_file.write_text(content, encoding='utf-8')
 
-    except KeyboardInterrupt:
-        print("\n\n⏹️  用户中断执行")
-    except Exception as e:
-        print(f"\n❌ 执行失败: {str(e)}")
-        import traceback
-        traceback.print_exc()
+
+def _copy_companion_files(source_file: Path, output_file: Path,
+                          companion_exts: set, logger):
+    """复制同目录下的配套文件（.bib, .json, .yml 等）到输出目录。"""
+    source_dir = source_file.parent
+    output_dir = output_file.parent
+
+    for item in source_dir.iterdir():
+        if item.suffix in companion_exts and item.is_file():
+            dst = output_dir / item.name
+            if not dst.exists() or dst.stat().st_mtime < item.stat().st_mtime:
+                shutil.copy2(item, dst)
+                logger.debug(f"  复制配套文件: {item.name}")
+
+
+def _copy_images_dir(source_file: Path, output_file: Path, logger):
+    """复制 images 目录到输出目录。"""
+    source_dir = source_file.parent
+    output_dir = output_file.parent
+    images_dir = source_dir / 'images'
+
+    if images_dir.exists() and images_dir.is_dir():
+        dst_images = output_dir / 'images'
+        if dst_images.exists():
+            shutil.rmtree(dst_images)
+        shutil.copytree(images_dir, dst_images)
+        logger.info(f"  复制图片目录: images/")
+
+
+def print_qmd_stats(stats: Dict):
+    """打印 QMD 翻译统计信息。"""
+    print()
+    print("=" * 60)
+    print("📊 QMD 翻译统计:")
+    print(f"   📁 总文件数: {stats['total']}")
+    print(f"   ✅ 翻译成功: {stats['success']}")
+    print(f"   ⏭️  跳过文件: {stats['skipped']}")
+    print(f"   ❌ 翻译失败: {stats['failed']}")
+    print("=" * 60)
+
+
+def parse_args():
+    """解析命令行参数。"""
+    parser = argparse.ArgumentParser(
+        description='ML Systems Textbook 翻译流水线',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""示例:
+  %(prog)s --mode html                         # 运行 HTML 翻译流水线
+  %(prog)s --mode qmd                          # 翻译所有 QMD 文件
+  %(prog)s --mode qmd --file path/to/file.qmd  # 只翻译指定文件
+  %(prog)s --mode qmd --force                  # 强制重新翻译
+  %(prog)s --mode qmd --source /path/to/vol1/  # 指定源目录
+  %(prog)s --mode qmd --output output/my_trans/ # 指定输出目录
+"""
+    )
+    parser.add_argument('--mode', choices=['html', 'qmd'], default='html',
+                        help='翻译模式：html（网页翻译）或 qmd（本地 .qmd 翻译），默认 html')
+    parser.add_argument('--source', default='output/book/contents',
+                        help='QMD 源目录，默认 output/book/contents')
+    parser.add_argument('--output', default='output/qmd_trans',
+                        help='QMD 输出目录，默认 output/qmd_trans')
+    parser.add_argument('--force', action='store_true',
+                        help='强制重新翻译已存在的文件')
+    parser.add_argument('--file', default=None,
+                        help='只翻译指定的单个 .qmd 文件（用于测试）')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='显示详细日志')
+    return parser.parse_args()
+
+
+async def main():
+    """主函数"""
+    args = parse_args()
+
+    # 设置日志
+    log_level = 'DEBUG' if args.verbose else 'INFO'
+    setup_logging(log_level)
+
+    if args.mode == 'qmd':
+        # QMD 翻译模式
+        print("=" * 80)
+        print("🌍 ML Systems Textbook QMD 翻译模式")
+        print("=" * 80)
+        print(f"源目录: {args.source}")
+        print(f"输出目录: {args.output}")
+        if args.file:
+            print(f"指定文件: {args.file}")
+        print()
+
+        try:
+            start_time = time.time()
+            stats = run_qmd_translation(
+                source_dir=args.source,
+                output_dir=args.output,
+                force=args.force,
+                single_file=args.file,
+            )
+            elapsed = time.time() - start_time
+            stats['total_time'] = elapsed
+
+            print_qmd_stats(stats)
+
+            if stats['success'] > 0:
+                print(f"\n⏱️  总耗时: {elapsed:.1f} 秒")
+                print(f"✨ 翻译结果位于: {args.output}/")
+            elif stats['skipped'] > 0 and stats['failed'] == 0:
+                print(f"\n所有文件已存在，使用 --force 强制重新翻译")
+            else:
+                print(f"\n⚠️  没有成功翻译任何文件")
+
+        except KeyboardInterrupt:
+            print("\n\n⏹️  用户中断执行")
+        except Exception as e:
+            print(f"\n❌ 执行失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
+
+    else:
+        # HTML 翻译模式（原有流程）
+        print("=" * 80)
+        print("🌍 ML Systems Textbook 翻译流水线")
+        print("=" * 80)
+        print("流程：爬虫 → 翻译 → 链接本地化 → 页头信息添加")
+        print()
+
+        # 检查必要文件
+        urls_file = "src/config/urls.txt"
+        if not Path(urls_file).exists():
+            print(f"❌ 错误: URL配置文件不存在: {urls_file}")
+            print("请确保该文件存在并包含要爬取的URL列表")
+            return
+
+        try:
+            # 运行完整流水线
+            stats = await run_full_translation(urls_file)
+
+            if stats['translate_success'] > 0:
+                print("\n🎉 翻译流水线执行成功！")
+                print("您可以在 output/trans/ 目录中查看翻译结果")
+            else:
+                print("\n⚠️  翻译流水线执行完成，但没有成功翻译任何页面")
+                print("请检查日志以了解详细信息")
+
+        except KeyboardInterrupt:
+            print("\n\n⏹️  用户中断执行")
+        except Exception as e:
+            print(f"\n❌ 执行失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
 
 if __name__ == "__main__":

@@ -44,6 +44,7 @@ quarto render output/qmd_trans/introduction/introduction.qmd --to html --no-exec
 - CI 工作流：`.github/workflows/deploy-pages.yml`
 - 构建方式：CI 中安装 Quarto + TeX Live + Inkscape，在线渲染 `output/book/` 并部署到 GitHub Pages
 - **TikZ 渲染**：CI 中通过 LuaLaTeX 编译 TikZ 为 SVG（`diagram.lua` 过滤器），需安装 `texlive-luatex` 包
+- **交叉引用修复**：`_quarto.yml` 中配置了 `post-render` hook，每次构建后自动运行 `scripts/fix_cross_references.py` 修复未解析的交叉引用
 
 ### CI 所需的系统依赖
 
@@ -59,6 +60,7 @@ lmodern inkscape
 2. `output/book/` 源文件（不含 `_build/`）需提交到仓库
 3. `.gitignore` 中 `output/` 被忽略，但 `output/book/` 通过反向规则纳入
 4. `output/book/_build/` 和 `.quarto/` 在 `output/book/.gitignore` 中排除
+5. 修改 `output/book/` 下的文件后，提交时需用 `git add -f` 强制添加（因为 `output/` 在 `.gitignore` 中）
 
 ## 架构
 
@@ -94,6 +96,15 @@ lmodern inkscape
 
 - `src/gemini_api.py` — Gemini API 封装（google-genai SDK，支持代理）
 - `src/config/settings.py` — 配置管理（路径、爬虫参数、翻译参数、QMD 配置）
+
+### Quarto 构建后处理
+
+- `output/book/scripts/fix_cross_references.py` — Post-render hook，修复 Quarto 未解析的交叉引用（`?@sec-xxx`）
+  - 通过 `_quarto.yml` 的 `post-render` 配置自动运行
+  - 动态扫描 `_build/html/` 中所有 HTML 文件的 `id="sec-xxx"` 属性，建立 section ID → 文件路径映射（1690+ 个 ID）
+  - 支持三种未解析引用模式：`quarto-xref`、`<strong>?@sec-</strong>`、EPUB 的 `@sec-` 链接
+  - 硬编码映射（`CHAPTER_MAPPING`）优先于动态映射，确保顶级章节使用正确的标题
+  - 章节标题在 `CHAPTER_TITLES` 中定义，不带 "Chapter N:" 前缀（因 `number-sections: false`）
 
 ## TikZ 渲染机制
 
