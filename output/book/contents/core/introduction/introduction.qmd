@@ -250,7 +250,7 @@ scale=0.55, every node/.append style={transform shape}]
 \pic[shift={(-0.05,-0.13)}] at  (IN){streaming={scalefac=0.25,picname=2,channelcolor=RedLine, Linewidth=0.65pt}};
 %
 \pic[shift={(0,-0.3)}] at  (DA){data={scalefac=0.3,picname=1,channelcolor=green!70!black, Linewidth=0.4pt}};
-\end{tikzpicture}
+\end{tikzpicture}}
 ```
 
 **组件相互依赖性**：机器学习系统性能依赖于模型、数据和计算基础设施的协调互动；任何一个组件的限制都会制约其他组件的能力。有效的系统设计需要平衡这些相互依赖性，以优化整体性能和可行性。
