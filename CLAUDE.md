@@ -30,6 +30,12 @@ python3.9 main.py --mode qmd --source /path/to/vol1/ --output output/qmd_trans/
 # 强制重新翻译
 python3.9 main.py --mode qmd --force
 
+# 翻译并部署（将译文复制到 output/book/contents/ 覆盖英文原文）
+python3.9 main.py --mode qmd --deploy
+
+# 只部署不翻译（已有翻译结果）
+python3.9 main.py --deploy
+
 # 运行 HTML 翻译流水线（原有）
 python3.9 main.py
 
@@ -45,6 +51,7 @@ quarto render output/qmd_trans/introduction/introduction.qmd --to html --no-exec
 - 构建方式：CI 中安装 Quarto + TeX Live + Inkscape，在线渲染 `output/book/` 并部署到 GitHub Pages
 - **TikZ 渲染**：CI 中通过 LuaLaTeX 编译 TikZ 为 SVG（`diagram.lua` 过滤器），需安装 `texlive-luatex` 包
 - **交叉引用修复**：`_quarto.yml` 中配置了 `post-render` hook，每次构建后自动运行 `scripts/fix_cross_references.py` 修复未解析的交叉引用
+- **部署流程**：翻译 output/qmd_trans/ → `--deploy` 复制到 output/book/contents/ → `git add -f` + commit + push → CI 自动构建部署
 
 ### CI 所需的系统依赖
 
@@ -64,26 +71,28 @@ lmodern inkscape
 
 ## 架构
 
-`main.py` 是唯一入口，支持 `--mode html/qmd` 切换模式。
+`main.py` 是唯一入口，支持 `--mode html/qmd` 切换模式。HTML 模式相关模块（crawler、translator 等）为延迟导入，避免 QMD 模式下缺少 crawl4ai 等依赖。
 
 ### QMD 翻译完整流程
 
 ```
-.qmd 源文件
+.qmd 源文件（output/book/contents/）
   → QMDChunker.split() 分块（分离 YAML frontmatter + 按 ## 标题分块）
   → 对每个块执行 QMDTranslator.translate_chunk():
-      1. protect_all() — 10 层占位符保护
+      1. protect_all() — 9 层占位符保护
       2. Gemini API 翻译
-      3. restore_all() — 按值长度降序恢复占位符
+      3. restore_all() — while 循环递归恢复占位符
+      4. _fix_quarto_newlines() — 修复 ::: 标记粘连（3 轮迭代）
   → QMDChunker.merge() 合并
   → 写出 .qmd 到 output/qmd_trans/
-  → quarto render --to html --no-execute 渲染为 HTML
+  → 注入 engine: jupyter 到 frontmatter
+  → --deploy 时复制到 output/book/contents/ 覆盖英文原文
 ```
 
 ### QMD 模式模块
 
-- `src/qmd_chunker.py` — 按 Markdown 标题（`##`/`###`）分块，支持 YAML frontmatter 分离，保证合并完整性
-- `src/qmd_translator.py` — QMD 翻译核心模块。230+ 条术语表，10 层占位符保护机制
+- `src/qmd_chunker.py` — 按 Markdown 标题（`##`）分块，支持 YAML frontmatter 分离，最大块 60000 字符
+- `src/qmd_translator.py` — QMD 翻译核心模块。230+ 条术语表，9 层占位符保护机制，_fix_quarto_newlines 修复 Gemini 翻译后的 ::: 粘连
 
 ### HTML 模式模块
 
@@ -94,7 +103,7 @@ lmodern inkscape
 
 ### 共用模块
 
-- `src/gemini_api.py` — Gemini API 封装（google-genai SDK，支持代理）
+- `src/gemini_api.py` — Gemini API 封装（google-genai SDK，默认 gemini-2.5-pro，支持代理）
 - `src/config/settings.py` — 配置管理（路径、爬虫参数、翻译参数、QMD 配置）
 
 ### Quarto 构建后处理
@@ -128,7 +137,7 @@ lmodern inkscape
 
 ## QMD 翻译机制要点
 
-### 占位符保护顺序（10 层）
+### 占位符保护顺序（9 层）
 
 | 顺序 | 元素 | 占位符格式 | 说明 |
 |------|------|-----------|------|
@@ -145,11 +154,23 @@ lmodern inkscape
 ### 关键设计决策
 
 - **占位符格式 `__PREFIX_N__`**：使用双下划线包裹，避免短名是长名前缀（如 `IX_PH_1` 是 `IX_PH_11` 的前缀）
-- **恢复按值长度降序**：外层占位符（值更长，可能包含内层占位符）先恢复，处理嵌套
+- **恢复用 while 循环递归**：循环匹配占位符并替换，直到无占位符残留；恢复前先清理 Gemini 在占位符两侧添加的空格（正则排除 `_`）
 - **内联数学不跨占位符**：遇到 `__PREFIX_N__` 格式的占位符时停止匹配，防止 `$` 被错误配对
 - **块级数学行级匹配**：`$$` 必须在行首才被认为是公式标记，避免 `$$\times$2` 之类的行内 `$$` 被误匹配
 - **`\index{}` 在 `:::` 之前保护**：因为 `\index` 可能出现在 `:::` 的 `fig-cap` 属性中
 - **跨引用正则不贪婪到 `__`**：`[\w\-]+?(?=__|...)` 防止跨引用吃掉相邻的占位符名
+
+### 翻译后工作流
+
+1. 执行翻译 → 2. **用 qmd-lint skill 检查** → 3. 修复发现的问题 → 4. `--deploy` 部署
+
+### Gemini 翻译常见问题及修复
+
+- **`_fix_quarto_newlines` 多轮迭代**：3 轮循环修复 Gemini 翻译后的 `:::` 粘连，规则 7 处理闭合 `:::` 后紧跟文本（无换行）的情况
+- **`:::` fence div 粘连到内容行**：`:::` 闭合标记可能粘连到图片引用或列表项末尾（如 `\noindent![](img.png):::`），导致 Quarto 无法正确解析 fence div 边界。修复方法：将 `:::` 移至新行
+- **TikZ 代码块结束符粘连**：Gemini 翻译后，TikZ 代码块的 ` ``` ` 结束标记可能与后续描述文字合并到同一行（如 `` ```**描述文字**``），导致 Pandoc 无法识别代码块结束。修复方法：将 ` ``` ` 恢复到独立行
+- **TikZ 代码块内的 LaTeX 语法完整性**：修复粘连问题时需注意代码块内 `\scalebox{}{}` 等命令的闭合括号 `}` 不能误删，否则 LuaLaTeX 编译失败导致 diagram.lua 无声地放弃渲染
+- **Callout 内裸代码块**：`::: {.callout-example}` 内的 ` ``` ` 无语言标记会导致 Quarto 把后续 `:::` 当作代码块内容。需改为缩进代码块（4 空格）或加 `{.text}` 标记
 
 ## 目标网站
 
