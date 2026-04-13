@@ -454,24 +454,15 @@ class QMDTranslator:
         return '\n'.join(result_lines)
 
     def _protect_code_blocks(self, content: str, store: Dict[str, str]) -> str:
-        """保护代码块（含裸 ``` 无语言标记的代码块）。"""
-        # 先保护有语言标记的：```{python} / ```{.tikz} / ```{=latex} 等
-        pattern_tagged = r'(```\{[^}]*\}\n[\s\S]*?```)'
-        content = re.sub(pattern_tagged, self._make_replacer(store), content)
+        """保护代码块（```{...} ... ```）。"""
+        pattern = r'(```\{[^}]*\}\n[\s\S]*?```)'
 
-        # 再保护裸代码块（无语言标记）：独立行的 ``` 开始到下一个 ``` 结束
-        pattern_bare = r'(^```\n[\s\S]*?^```$)'
-        content = re.sub(pattern_bare, self._make_replacer(store), content, flags=re.MULTILINE)
-
-        return content
-
-    def _make_replacer(self, store):
-        """创建占位符替换函数。"""
         def replacer(match):
             placeholder = self._next_placeholder('CODE_PH')
             store[placeholder] = match.group(1)
             return placeholder
-        return replacer
+
+        return re.sub(pattern, replacer, content)
 
     def _protect_inline_math(self, content: str, store: Dict[str, str]) -> str:
         """
@@ -663,10 +654,6 @@ class QMDTranslator:
             # 7. ::: 闭合标记后面紧跟非空白内容（无换行）→ 把 ::: 拆出来
             #    如 '文本。:::下一段' → '文本。\n\n:::\n\n下一段'
             content = re.sub(r'([^\n]):::([^\n\s])', r'\1\n\n:::\n\n\2', content)
-
-            # 7b. 行首 ::: 后紧跟非空白内容（无换行）→ 把 ::: 拆出来
-            #     如 '\n:::中文文本' → '\n:::\n\n中文文本'
-            content = re.sub(r'(^:::)([^\n\s{])', r'\1\n\n\2', content, flags=re.MULTILINE)
 
             # 8. ::: 闭合标记后面紧跟换行但不是空行 → 插入空行
             content = re.sub(r'(:::)(\n)([^\n\s])', r'\1\n\n\3', content)
