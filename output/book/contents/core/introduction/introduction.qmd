@@ -252,7 +252,6 @@ scale=0.55, every node/.append style={transform shape}]
 \pic[shift={(0,-0.3)}] at  (DA){data={scalefac=0.3,picname=1,channelcolor=green!70!black, Linewidth=0.4pt}};
 \end{tikzpicture}}
 ```
-
 **组件相互依赖性**：机器学习系统性能依赖于模型、数据和计算基础设施的协调互动；任何一个组件的限制都会制约其他组件的能力。有效的系统设计需要平衡这些相互依赖性，以优化整体性能和可行性。
 
 :::
@@ -524,7 +523,6 @@ in Google's database that mention artificial intelligence};
 \end{axis}
 \end{tikzpicture}
 ```
-
 **人工智能发展时间轴**：早期的人工智能研究专注于符号推理和基于规则的系统，而现代人工智能利用神经网络等数据驱动的方法来实现日益复杂的任务。这一进程揭示了从人工编码智能到习得智能的转变，其标志性事件包括感知机、深蓝以及像 GPT-3 这样的大语言模型。
 
 :::
@@ -1100,7 +1098,6 @@ node[below]{dense}(X1-|B1D.north west);
 \draw[LineA]($(B1G.north east)!0.7!(B1G.south east)$)--($(B2G.north west)!0.7!(B2G.south west)$);
 \end{tikzpicture}
 ```
-
 **卷积神经网络架构**：AlexNet 展示了深度神经网络可以自动从图像中学习有效的特征，显著优于传统的计算机视觉方法。这一突破表明，只要有足够的数据和计算能力，神经网络就能在图像识别任务中实现卓越的准确性。
 
 :::
@@ -1188,7 +1185,6 @@ fill=OrangeL,draw=OrangeLine](DB2){Model \\Monitoring};
 \draw[Line](B3)-|(DB2);
 \end{tikzpicture}
 ```
-
 **机器学习系统生命周期**：持续迭代定义了成功的机器学习系统，需要反馈循环来优化模型并解决数据收集、模型训练、评估和部署中出现的性能退化问题。这种循环过程与传统软件开发形成对比，强调了持续监控和适应的重要性，以在动态环境中保持系统可靠性和准确性。
 
 :::

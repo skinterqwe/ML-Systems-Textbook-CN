@@ -4,7 +4,9 @@ quiz: footnote_context_quizzes.json
 concepts: ml_systems_concepts.yml
 glossary: ml_systems_glossary.json
 crossrefs: ml_systems_xrefs.json
+engine: jupyter
 ---
+
 
 # ML Systems {#sec-ml-systems}
 
@@ -18,63 +20,61 @@ crossrefs: ml_systems_xrefs.json
 
 :::
 
-## Purpose {.unnumbered}
+## 目的 {.unnumbered}
 
-_How do the environments where machine learning operates shape the nature of these systems, and what drives their widespread deployment across computing platforms?_
+_机器学习运行的环境如何塑造这些系统的本质，以及是什么驱动了它们在各种计算平台上的广泛部署？_
 
-Machine learning systems must adapt to radically different computational environments, each imposing distinct constraints and opportunities. Cloud deployments leverage massive computational resources but face network latency, while mobile devices offer user proximity but operate under severe power limitations. Embedded systems minimize latency through local processing but constrain model complexity, and tiny devices enable widespread sensing while restricting memory to kilobytes. These deployment contexts fundamentally determine system architecture, algorithmic choices, and performance trade-offs. Understanding environment-specific requirements establishes the foundation for engineering decisions in machine learning systems. This knowledge enables engineers to select appropriate deployment paradigms and design architectures that balance performance, efficiency, and practicality across computing platforms.
+机器学习系统必须适应截然不同的计算环境，每种环境都带来了独特的约束和机遇。云端部署利用海量的计算资源，但面临网络延迟；而移动设备虽然贴近用户，但在严苛的功耗限制下运行。嵌入式系统通过本地处理将延迟降至最低，但限制了模型复杂度；而微型设备实现了广泛的传感，但将内存限制在千字节级别。这些部署背景从根本上决定了系统架构、算法选择和性能权衡。了解特定环境的要求，为机器学习系统中的工程决策奠定了基础。这些知识使工程师能够选择合适的部署范式，并设计出在各种计算平台上平衡性能、效率和实用性的架构。
 
-::: {.callout-tip title="Learning Objectives"}
+::: {.callout-tip title="学习目标"}
 
-- Explain the physical constraints (speed of light, power wall, memory wall) that necessitate diverse ML deployment paradigms
+- 解释导致多样化机器学习部署范式的物理约束（光速、功耗墙、内存墙）
 
-- Distinguish Cloud, Edge, Mobile, and TinyML paradigms by resource profiles and optimal use cases
+- 根据资源概况和最佳用例，区分云端、边缘、移动和 TinyML 范式
 
-- Analyze resource trade-offs (computational power, latency, privacy, energy efficiency) to determine appropriate deployment strategies for specific applications
+- 分析资源权衡（计算能力、延迟、隐私、能源效率），以确定特定应用合适的部署策略
 
-- Apply the systematic deployment decision framework to evaluate privacy, latency, computational, and cost requirements for ML applications
+- 应用系统的部署决策框架，评估机器学习应用的隐私、延迟、计算和成本要求
 
-- Design hybrid ML architectures integrating multiple deployment paradigms
+- 设计集成多种部署范式的混合机器学习架构
 
-- Evaluate real-world ML systems to identify which deployment paradigms are being used and assess their effectiveness
+- 评估现实世界的机器学习系统，识别正在使用的部署范式并评估其有效性
 
-- Critique common deployment fallacies and misconceptions to avoid poor architectural decisions in ML systems design
+- 批判常见的部署谬误和误解，以避免在机器学习系统设计中做出糟糕的架构决策
 
-- Synthesize universal design principles to create ML systems that effectively balance performance, efficiency, and practicality across deployment contexts
-
+- 综合通用设计原则，创建在不同部署背景下有效平衡性能、效率和实用性的机器学习系统
 :::
 
-## Deployment Paradigm Framework {#sec-ml-systems-deployment-paradigm-framework-d434}
+## 部署范式框架 {#sec-ml-systems-deployment-paradigm-framework-d434}
 
-The preceding introduction established machine learning systems as comprising three fundamental components: data, algorithms, and computing infrastructure. While this triadic framework provides a theoretical foundation, the transition from conceptual understanding to practical implementation introduces a critical dimension that fundamentally governs system design: the deployment environment. This chapter analyzes how computational context shapes architectural decisions in machine learning systems, establishing the theoretical basis for deployment-driven design principles.
+前面的介绍已经确定了机器学习系统由三个基本组件组成：数据、算法和计算基础设施。虽然这个三元框架提供了理论基础，但从概念理解到实际实施的转变引入了一个关键维度，它从根本上支配着系统设计：部署环境。本章分析了计算上下文如何塑造机器学习系统中的架构决策，为部署驱动的设计原则建立了理论基础。
 
-Contemporary machine learning applications demonstrate remarkable architectural diversity driven by deployment constraints. Consider the domain of computer vision[^fn-computer-vision]: a convolutional neural network trained for image classification manifests as distinctly different systems when deployed across environments. In cloud-based medical imaging, the system exploits virtually unlimited computational resources to implement ensemble methods[^fn-ensemble-methods] and sophisticated preprocessing pipelines. When deployed on mobile devices for real-time object detection, the same fundamental algorithm undergoes architectural transformation to satisfy stringent latency requirements while preserving acceptable accuracy. Factory automation applications further constrain the design space, prioritizing power efficiency and deterministic response times over model complexity. These variations represent distinctly different architectural solutions to the same computational problem, shaped by environmental constraints rather than algorithmic considerations.
+当代的机器学习应用展示了由部署约束驱动的显著架构多样性。以计算机视觉领域[^fn-computer-vision]为例：一个为图像分类而训练的卷积神经网络在跨环境部署时，会表现为截然不同的系统。在基于云的医学成像中，系统利用几乎无限的计算资源来实现集成方法[^fn-ensemble-methods]和复杂的预处理流水线。当部署在移动设备上进行实时目标检测时，相同的基本算法会经历架构转换，以在保持可接受的准确性的同时满足严格的延迟要求。工厂自动化应用进一步限制了设计空间，将功耗效率和确定性响应时间置于模型复杂度之上。这些变化代表了针对同一计算问题的截然不同的架构解决方案，是由环境约束而非算法考虑塑造的。
 
-This chapter presents a systematic taxonomy of machine learning deployment paradigms, analyzing four primary categories that span the computational spectrum from cloud data centers to microcontroller-based embedded systems. Each paradigm emerges from distinct operational requirements: computational resource availability, power consumption constraints, latency specifications, privacy requirements, and network connectivity assumptions. The theoretical framework developed here provides the analytical foundation for making informed architectural decisions in production machine learning systems.
+本章提出了机器学习部署范式的系统分类法，分析了跨越从云数据中心到基于微控制器的嵌入式系统这一计算光谱的四个主要类别。每种范式都源于不同的运营要求：计算资源可用性、功耗约束、延迟规范、隐私要求以及网络连接假设。这里开发的理论框架为在生产机器学习系统中做出明智的架构决策提供了分析基础。
 
-Modern deployment strategies transcend traditional dichotomies between centralized and distributed processing. Contemporary applications increasingly implement hybrid architectures that strategically allocate computational tasks across multiple paradigms to optimize system-wide performance. Voice recognition systems exemplify this architectural sophistication: wake-word detection operates on ultra-low-power embedded processors to enable continuous monitoring, speech-to-text conversion utilizes mobile processors to maintain privacy and minimize latency, while semantic understanding leverages cloud infrastructure for complex natural language processing. This multi-paradigm approach reflects the engineering reality that optimal machine learning systems require architectural heterogeneity.
+现代部署策略超越了集中式和分布式处理之间的传统对立。当代的应用越来越多地实施混合架构，策略性地将计算任务分配到多个范式中，以优化整个系统的性能。语音识别系统体现了这种架构的复杂性：唤醒词检测在超低功耗嵌入式处理器上运行以实现持续监控，语音转文本利用移动处理器以维护隐私并最小化延迟，而语义理解则利用云基础设施进行复杂的自然语言处理。这种多范式方法反映了工程现实，即最优的机器学习系统需要架构异构性。
 
-The deployment paradigm space exhibits clear dimensional structure. Cloud machine learning maximizes computational capabilities while accepting network-induced latency constraints. Edge computing positions inference computation proximate to data sources when latency requirements preclude cloud-based processing. Mobile machine learning extends computational capabilities to personal devices where user proximity and offline operation represent critical requirements. Tiny machine learning enables distributed intelligence on severely resource-constrained devices where energy efficiency supersedes computational sophistication.
+部署范式空间展现出清晰的维度结构。云机器学习在接受网络引起的延迟约束的同时，最大化计算能力。边缘计算当延迟要求排除基于云的处理时，将推理计算置于靠近数据源的位置。移动机器学习将计算能力扩展到个人设备，在这些设备上，用户接近度和离线运行是关键要求。微型机器学习在资源严重受限的设备上实现分布式智能，在这些设备上，能源效率优于计算复杂性。
 
-Through comprehensive analysis of these deployment paradigms, this chapter develops the systems engineering perspective necessary for designing machine learning architectures that effectively balance algorithmic capabilities with operational constraints. This systems-oriented approach provides essential methodological foundations for translating theoretical machine learning advances into production systems that demonstrate reliable performance at scale. The analysis culminates with paradigm integration strategies for hybrid architectures and identification of core design principles that govern all machine learning deployment contexts.
+通过对这些部署范式的全面分析，本章阐述了设计机器学习架构所需的系统工程视角，该架构能有效平衡算法能力与运营约束。这种面向系统的方法为将理论机器学习进展转化为在大规模生产中表现出可靠性能的生产系统提供了必要的方方法论基础。分析最后以混合架构的范式集成策略以及确定支配所有机器学习部署环境的核心设计原则告终。@fig-cloud-edge-TinyML-comparison展示了计算资源、延迟要求和部署约束如何创建这种部署光谱。虽然@sec-ai-frameworks探索了在这些范式中实现机器学习的软件工具，而@sec-ai-acceleration检查了驱动它们的专用硬件，但本章重点关注支配系统架构决策的基本部署权衡。随后的分析系统地讨论了每种范式，旨在理解它们如何集成到现代机器学习系统中。
 
-@fig-cloud-edge-TinyML-comparison illustrates how computational resources, latency requirements, and deployment constraints create this deployment spectrum. While @sec-ai-frameworks explores the software tools that enable ML across these paradigms, and @sec-ai-acceleration examines the specialized hardware that powers them, this chapter focuses on the fundamental deployment trade-offs that govern system architecture decisions. The subsequent analysis addresses each paradigm systematically, building toward an understanding of how they integrate into modern ML systems.
+## 部署频谱 {#sec-ml-systems-deployment-spectrum-38d0}
 
-## The Deployment Spectrum {#sec-ml-systems-deployment-spectrum-38d0}
+从云端到嵌入式系统的部署频谱并非出于选择，而是由支配计算系统的物理定律所强加的必然结果。这些不可逾越的限制创造了任何工程进步都无法克服的硬边界，迫使针对不同运行环境优化出的专用部署范式不断演进。
 
-The deployment spectrum from cloud to embedded systems exists not by choice, but by necessity imposed by physical laws that govern computing systems. These immutable constraints create hard boundaries that no engineering advancement can overcome, forcing the evolution of specialized deployment paradigms optimized for different operational contexts.
+**光速**确立了限制实时应用的绝对最小延迟。光在光纤中的传播速度约为每秒 200,000 公里，这使得加利福尼亚州和弗吉尼亚州之间的理论最小往返时间为 40 毫秒。互联网路由、DNS 解析和处理开销通常会再增加 60-460 毫秒，导致云服务的总延迟达到 100-500 毫秒。这种物理定律强加的延迟使得云端部署对于需要低于 10 毫秒响应时间的安全关键型应用（如自动驾驶汽车紧急制动或工业机器人精密控制）变得不可能。
 
-The **speed of light** establishes absolute minimum latencies that constrain real-time applications. Light traveling through optical fiber covers approximately 200,000 kilometers per second, creating a theoretical minimum 40ms round-trip time between California and Virginia. Internet routing, DNS resolution, and processing overhead typically add another 60-460ms, resulting in total latencies of 100-500ms for cloud services. This physics-imposed delay makes cloud deployment impossible for safety-critical applications requiring sub-10ms response times, such as autonomous vehicle emergency braking or industrial robotics precision control.
+**功耗墙**（power wall）源于 2005 年左右 Dennard 缩放定律的失效，它改变了计算经济学。晶体管的缩小不再降低功率密度，这意味着如果不按比例增加功耗和发热，芯片就无法任意提高速度。这一限制迫使人们在计算性能和能源效率之间做出权衡，直接驱动了移动和嵌入式系统中对专用低功耗架构的需求。数据中心现在将 30-40% 的功率预算用于冷却，而移动设备必须实施热限流以防止组件损坏。
 
-The **power wall**, resulting from the breakdown of Dennard scaling around 2005, transformed computing economics. Transistor shrinking no longer reduces power density, meaning chips cannot be made arbitrarily fast without proportional increases in power consumption and heat generation. This constraint forces trade-offs between computational performance and energy efficiency, directly driving the need for specialized low-power architectures in mobile and embedded systems. Data centers now dedicate 30-40% of their power budget to cooling, while mobile devices must implement thermal throttling to prevent component damage.
+**内存墙**（memory wall）代表了处理器速度与内存带宽之间日益扩大的差距。虽然计算能力通过增加处理单元呈线性增长，但由于物理布线限制，内存带宽的增长大约与芯片面积的平方根成正比。这造成了一个日益严重的瓶颈，处理器变得“数据饥饿”，等待内存传输的时间比执行计算的时间还要长。大型机器学习模型加剧了这一问题，其参数数据集所需的内存带宽超过了可用带宽数个数量级。
 
-The **memory wall** represents the growing gap between processor speed and memory bandwidth. While computational capacity scales linearly through additional processing units, memory bandwidth scales approximately as the square root of chip area due to physical routing constraints. This creates an increasingly severe bottleneck where processors become data-starved, spending more time waiting for memory transfers than performing calculations. Large machine learning models exacerbate this problem, requiring parameter datasets that exceed available memory bandwidth by orders of magnitude.
+**规模经济**产生了显著的单位成本差异，从而证明了采用不同部署方式的合理性。一台成本为 50,000 美元的云服务器通过虚拟化可以支持数千名用户，实现每用户成本低于 50 美元。然而，需要保证响应时间或私有数据处理的应用无法共享资源，从而消除了这种经济优势。与此同时，成本在 $5-50 的嵌入式处理器实现了在数十亿个端点的部署，而在这些端点进行单独的云连接在经济上是不可行的。
 
-**Economics of scale** create significant cost-per-unit differences that justify different deployment approaches. A cloud server costing $50,000 can support thousands of users through virtualization, achieving per-user costs under $50. However, applications requiring guaranteed response times or private data processing cannot share resources, eliminating this economic advantage. Meanwhile, embedded processors costing $5-50 enable deployment at billions of endpoints where individual cloud connections would be economically infeasible.
-
-These physical constraints are not temporary engineering challenges but permanent limitations that shape the computational landscape. Understanding these boundaries explains why the deployment spectrum exists and provides the theoretical foundation for making informed architectural decisions in machine learning systems.
+这些物理约束不是暂时的工程挑战，而是塑造计算格局的永久性限制。理解这些边界解释了为什么存在部署频谱，并为在机器学习系统中做出明智的架构决策提供了理论基础。
 
 ::: {#fig-cloud-edge-TinyML-comparison fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[line cap=round,line join=round,font=\usefont{T1}{phv}{m}{n}\small]
   % Parameters
@@ -244,62 +244,60 @@ pics/mobile/.style = {
 \end{tikzpicture}
 
 ```
-**Distributed Intelligence Spectrum**: Machine learning system design involves trade-offs between computational resources, latency, and connectivity, resulting in a spectrum of deployment options ranging from centralized cloud infrastructure to resource-constrained edge and TinyML devices. This figure maps these options, highlighting how each approach balances processing location with device capability and network dependence. Source: [@abiresearch2024tinyml].
+**分布式智能频谱**：机器学习系统设计涉及计算资源、延迟和连接性之间的权衡，从而产生了一系列部署选项，从集中式云基础设施到资源受限的边缘和 TinyML 设备。此图展示了这些选项，强调了每种方法如何平衡处理位置与设备能力及网络依赖性。来源：[@abiresearch2024tinyml]。
+
 :::
 
-### Deployment Paradigm Foundations {#sec-ml-systems-deployment-paradigm-foundations-0c17}
+### 部署范式基础 {#sec-ml-systems-deployment-paradigm-foundations-0c17}
 
-The deployment spectrum illustrated in @fig-cloud-edge-TinyML-comparison exists not through design preference, but from necessity driven by immutable physical and hardware constraints. Understanding these limitations reveals why ML systems cannot adopt uniform approaches and must instead span the complete deployment spectrum from cloud to embedded devices.
+@fig-cloud-edge-TinyML-comparison中展示的部署频谱并非源于设计偏好，而是由于不可逾越的物理和硬件限制所驱动的必然结果。理解这些局限性揭示了为什么机器学习系统不能采用统一的方法，而必须跨越从云端到嵌入式设备的完整部署频谱。@sec-introduction将机器学习系统的三个基本组成部分（数据、算法和基础设施）确立为一个统一框架，这些部署范式现在根据物理约束对该框架进行不同的优化。云端机器学习通过丰富的基础设施优先考虑算法复杂性，移动端机器学习强调受限基础设施下的数据局部性，而 Tiny ML 则在极端基础设施限制下最大限度地提高算法效率。
 
-@sec-introduction established the three foundational components of ML systems (data, algorithms, and infrastructure) as a unified framework that these deployment paradigms now optimize differently based on physical constraints. Cloud ML prioritizes algorithmic complexity through abundant infrastructure, while Mobile ML emphasizes data locality with constrained infrastructure, and Tiny ML maximizes algorithmic efficiency under extreme infrastructure limitations.
+现代计算中最关键的瓶颈源于内存带宽与计算能力的缩放方式不同。虽然计算能力通过增加处理单元呈线性增长，但由于物理布线限制，内存带宽的增长大约与芯片面积的平方根成正比。这造成了一个日益恶化的瓶颈，使处理器变得“数据饥饿”。在实践中，这表现为机器学习模型等待内存传输的时间超过了执行计算的时间，对于需要比有效传输更多数据的大型模型[^fn-memory-bottleneck]来说，这个问题尤为严重。
 
-The most critical bottleneck in modern computing stems from memory bandwidth scaling differently than computational capacity. While compute power scales linearly through additional processing units, memory bandwidth scales approximately as the square root of chip area due to physical routing constraints. This creates a progressively worsening bottleneck where processors become data-starved. In practice, this manifests as ML models spending more time awaiting memory transfers than performing calculations, particularly problematic for large models[^fn-memory-bottleneck] that require more data than can be efficiently transferred.
+[^fn-memory-bottleneck]: **内存瓶颈**：当从内存到处理器的数据传输速率成为计算的限制因素时。大型模型需要如此多的参数，以至于内存带宽（而非计算能力）决定了性能。
 
-[^fn-memory-bottleneck]: **Memory Bottleneck**: When the rate of data transfer from memory to processor becomes the limiting factor in computation. Large models require so many parameters that memory bandwidth, rather than computational capacity, determines performance.
+除了这些内存挑战之外，Dennard 缩放定律[^fn-dennard-scaling]的失效在 2005 年左右改变了计算约束，当时晶体管的缩小停止了功率密度的降低。现在，单位面积的功耗随着每一代技术的更迭保持不变或增加，从而对计算密度造成了硬性限制。对于移动设备，这转化为热限流，即当持续计算产生过多热量时会降低性能。数据中心在大规模运行时也面临类似的限制，需要消耗总功率预算 30-40% 的广泛冷却基础设施。这些功率密度限制直接驱动了移动和嵌入式环境中对专用低功耗架构的需求，并解释了为什么在功耗预算受限时，边缘部署变得必要。
 
-Compounding these memory challenges, the breakdown of Dennard scaling[^fn-dennard-scaling] transformed computing constraints around 2005, when transistor shrinking stopped reducing power density. Power dissipation per unit area now remains constant or increases with each technology generation, creating hard limits on computational density. For mobile devices, this translates to thermal throttling that reduces performance when sustained computation generates excessive heat. Data centers face similar constraints at scale, requiring extensive cooling infrastructure that can consume 30-40% of total power budget. These power density limits directly drive the need for specialized low-power architectures in mobile and embedded contexts, and explain why edge deployment becomes necessary when power budgets are constrained.
+[^fn-dennard-scaling]: **Dennard 缩放定律**：以 Robert Dennard（IBM，1974）命名，该观察发现随着晶体管变小，它们可以在消耗相同功率密度的同时以更高的频率运行。这种缩放使得摩尔定律得以持续到 2005 年，之后物理限制迫使行业转向多核架构和 GPU、TPU 等专用处理器。
 
-[^fn-dennard-scaling]: **Dennard Scaling**: Named after Robert Dennard (IBM, 1974), the observation that as transistors became smaller, they could operate at higher frequencies while consuming the same power density. This scaling enabled Moore's Law until 2005, when physics limitations forced the industry toward multi-core architectures and specialized processors like GPUs and TPUs.
+正如@sec-ml-systems-deployment-spectrum-38d0中所确立的，光速延迟和热约束加剧了这些内存和功耗挑战，创造了硬性边界，使得延迟敏感型应用必须进行本地处理。这些物理限制共同驱动了本章研究的四种截然不同的部署范式的演变，并且仍然是选择合适部署方法和建立现实性能预期的基本考虑因素。
 
-As established in @sec-ml-systems-deployment-spectrum-38d0, speed of light latency and thermal constraints compound these memory and power challenges, creating hard boundaries that necessitate local processing for latency-sensitive applications. These physical limitations collectively drove the evolution of the four distinct deployment paradigms examined in this chapter and remain essential considerations for selecting appropriate deployment approaches and establishing realistic performance expectations.
+这些理论约束体现在整个部署频谱中具体的硬件差异上。为了理解这些物理限制的实际影响，@tbl-representative-systems为每个类别提供了代表性的硬件平台。这些示例展示了机器学习系统频谱中计算资源、功耗要求和成本考虑[^fn-cost-spectrum]的范围，说明了每种部署方法的实际意义。[^fn-pue]
 
-These theoretical constraints manifest in concrete hardware differences across the deployment spectrum. To understand the practical implications of these physical limitations, @tbl-representative-systems provides representative hardware platforms for each category. These examples demonstrate the range of computational resources, power requirements, and cost considerations[^fn-cost-spectrum] across the ML systems spectrum, illustrating the practical implications of each deployment approach.[^fn-pue]
+这些量化阈值反映了计算需求、能源消耗和部署可行性之间的基本关系。这些缩放关系决定了分布式云部署何时相对于边缘或移动方案具有优势。理解这些量化权衡能够在整个机器学习系统频谱中做出明智的部署决策。@fig-vMLsizes展示了云端机器学习、边缘机器学习、移动端机器学习和 Tiny ML 在硬件规格、延迟特性、连接要求、功耗和模型复杂度约束方面的差异。随着系统从云端转向边缘再到 Tiny ML，可用资源剧烈减少，为机器学习模型部署带来了重大挑战。当在微控制器（Tiny ML 的主要硬件平台）上部署机器学习模型时，这种资源差距变得尤为明显。这些设备的内存和存储容量严重受限，事实证明不足以支撑传统的复杂机器学习模型。
 
-These quantitative thresholds reflect essential relationships between computational requirements, energy consumption, and deployment feasibility. These scaling relationships determine when distributed cloud deployment becomes advantageous relative to edge or mobile alternatives. Understanding these quantitative trade-offs enables informed deployment decisions across the spectrum of ML systems.
+[^fn-cost-spectrum]: **机器学习硬件成本频谱**：成本范围跨越 6 个数量级，从 10 美元的 ESP32-CAM 模块到数百万美元的 TPU Pod 系统。这种 100,000 倍以上的成本差异反映了计算能力的相应差异，使得部署能够跨越截然不同的经济环境和用例，从爱好者项目到超大规模云基础设施。
 
-@fig-vMLsizes illustrates the differences between Cloud ML, Edge ML, Mobile ML, and Tiny ML in terms of hardware specifications, latency characteristics, connectivity requirements, power consumption, and model complexity constraints. As systems transition from Cloud to Edge to Tiny ML, available resources decrease dramatically, presenting significant challenges for machine learning model deployment. This resource disparity becomes particularly evident when deploying ML models on microcontrollers, the primary hardware platform for Tiny ML. These devices possess severely constrained memory and storage capacities that prove insufficient for conventional complex ML models.
+[^fn-pue]: **电能利用效率 (PUE)**：数据中心效率指标，计算方式为设施总功率除以 IT 设备功率。PUE 为 1.0 代表完美的效率（在实践中不可能），而 1.1-1.3 表示使用先进冷却和电源管理的高效设施。Google 的数据中心实现了 1.12 的 PUE，而行业平均水平为 1.8。
 
-[^fn-cost-spectrum]: **ML Hardware Cost Spectrum**: The cost range spans 6 orders of magnitude, from $10 ESP32-CAM modules to multi-million dollar TPU Pod systems. This 100,000x+ cost difference reflects proportional differences in computational capability, enabling deployment across vastly different economic contexts and use cases, from hobbyist projects to hyperscale cloud infrastructure.
+[^fn-computer-vision]: **计算机视觉**：人工智能领域，使机器能够解释和理解来自图像和视频的视觉信息。实时应用需要以 30+ fps 的速度处理每张 200-5000 万像素的图像，产生了巨大的计算和内存带宽需求，驱动了 GPU 和视觉处理单元等专用硬件的发展。
 
-[^fn-pue]: **Power Usage Effectiveness (PUE)**: Data center efficiency metric measuring total facility power divided by IT equipment power. A PUE of 1.0 represents perfect efficiency (impossible in practice), while 1.1-1.3 indicates highly efficient facilities using advanced cooling and power management. Google's data centers achieve PUE of 1.12 compared to industry average of 1.8.
-
-[^fn-computer-vision]: **Computer Vision**: Field of AI enabling machines to interpret and understand visual information from images and videos. Requires processing 2-50 megapixels per image at 30+ fps for real-time applications, creating massive computational and memory bandwidth demands that drive specialized hardware like GPUs and vision processing units.
-
-[^fn-ensemble-methods]: **Ensemble Methods**: ML technique combining predictions from multiple models to improve accuracy and robustness. Requires training and running 5-100+ models simultaneously, increasing compute requirements by 10-50x but enabling 2-5% accuracy improvements that justify cloud deployment costs.
+[^fn-ensemble-methods]: **集成方法**：结合多个模型预测以提高准确性和鲁棒性的机器学习技术。需要同时训练和运行 5-100+ 个模型，使计算需求增加 10-50 倍，但能带来 2-5% 的准确率提升，从而证明了云端部署成本的合理性。
 
 +---------------+--------------------+----------------------------------+-------------+-------------+-------------+-----------------+--------------------------------+-------------------------------------------+
-| **Category**  | **Example Device** | **Processor**                    | **Memory**  | **Storage** | **Power**   | **Price Range** | **Example Models/Tasks**       | **Quantitative Thresholds**               |
+| **类别**      | **示例设备**       | **处理器**                       | **内存**    | **存储**    | **功率**    | **价格范围**    | **示例模型/任务**              | **量化阈值**                              |
 +:==============+===================:+=================================:+============:+:============+============:+:================+:===============================+==========================================:+
-| **Cloud ML**  | Google TPU v4 Pod  | 4,096x TPU v4 chips              | 131 TB HBM2 | Cloud-scale | ~3 MW       | Cloud service   | Large language models,         | &gt;1000 TFLOPS compute, real-time video  |
-|               |                    | (1.1 exaflops peak)              |             | (PB-scale)  |             | (rental only)   | massive-scale training         | processing, &gt;100GB/s memory bandwidth, |
-|               |                    |                                  |             |             |             |                 |                                | PUE 1.1-1.3, 100-500ms latency            |
+| **云端机器学习**| Google TPU v4 Pod  | 4,096x TPU v4 芯片               | 131 TB HBM2 | 云规模      | ~3 MW       | 云服务          | 大语言模型，                   | &gt;1000 TFLOPS 计算能力，实时视频        |
+|               |                    | (1.1 exaflops 峰值)              |             | (PB 级)     |             | (仅限租赁)      | 大规模训练                     | 处理，&gt;100GB/s 内存带宽，              |
+|               |                    |                                  |             |             |             |                 |                                | PUE 1.1-1.3, 100-500ms 延迟               |
 +---------------+--------------------+----------------------------------+-------------+-------------+-------------+-----------------+--------------------------------+-------------------------------------------+
-| **Edge ML**   | NVIDIA DGX Spark   | GB10 Grace Blackwell Superchip   | 128 GB      | 4 TB NVMe   | ~200 W      | ~$5,000         | Model fine-tuning,             | ~1 PFLOPS AI compute,                     |
+| **边缘机器学习**| NVIDIA DGX Spark   | GB10 Grace Blackwell 超级芯片    | 128 GB      | 4 TB NVMe   | ~200 W      | ~$5,000         | Model fine-tuning,             | ~1 PFLOPS AI compute,                     |
 |               |                    | (20-core Arm, 1 PFLOPS AI)       | LPDDR5x     |             |             |                 | on-premise inference,          | &gt;270 GB/s memory bandwidth,            |
 |               |                    |                                  |             |             |             |                 | prototype development          | desktop deployment, local processing      |
 +---------------+--------------------+----------------------------------+-------------+-------------+-------------+-----------------+--------------------------------+-------------------------------------------+
-| **Mobile ML** | iPhone 15 Pro      | A17 Pro (6-core CPU, 6-core GPU) | 8 GB RAM    | 128 GB-1 TB | 3-5 W       | $999+           | Face ID, computational         | 1-10 TOPS compute,                        |
-|               |                    |                                  |             |             |             |                 | photography, voice recognition | &lt;2W sustained power,                   |
-|               |                    |                                  |             |             |             |                 |                                | &lt;50ms UI response                      |
+| **Mobile ML** | iPhone 15 Pro      | A17 Pro (6-core CPU, 6-core GPU) | 8 GB RAM    | 128 GB-1 TB | 3-5 W       | $999+           | 面部识别，计算                 | 1-10 TOPS 计算能力，                      |
+|               |                    |                                  |             |             |             |                 | 摄影，语音识别                 | &lt;2W 持续功耗，                         |
+|               |                    |                                  |             |             |             |                 |                                | &lt;50ms UI 响应                          |
 +---------------+--------------------+----------------------------------+-------------+-------------+-------------+-----------------+--------------------------------+-------------------------------------------+
-| **Tiny ML**   | ESP32-CAM          | Dual-core @ 240MHz               | 520 KB RAM  | 4 MB Flash  | 0.05-0.25 W | $10             | Image classification,          | &lt;1 TOPS compute,                       |
-|               |                    |                                  |             |             |             |                 | motion detection               | &lt;1mW power,                            |
-|               |                    |                                  |             |             |             |                 |                                | microsecond response times                |
+| **Tiny ML**   | ESP32-CAM          | 双核 @ 240MHz                    | 520 KB RAM  | 4 MB Flash  | 0.05-0.25 W | $10             | 图像分类，                     | &lt;1 TOPS 计算能力，                      |
+|               |                    |                                  |             |             |             |                 | 运动检测                       | &lt;1mW 功耗，                            |
+|               |                    |                                  |             |             |             |                 |                                | 微秒级响应时间                            |
 +---------------+--------------------+----------------------------------+-------------+-------------+-------------+-----------------+--------------------------------+-------------------------------------------+
 
-: **Hardware Spectrum**: Machine learning system design necessitates trade-offs between computational resources, power consumption, and cost, as exemplified by the diverse hardware platforms suitable for cloud, edge, mobile, and TinyML deployments. This table quantifies those trade-offs, revealing how device capabilities, from specialized ML accelerators in cloud data centers to low-power microcontrollers in embedded systems, shape the types of models and tasks each platform can effectively support. The quantitative thresholds provide specific decision criteria to help practitioners determine the most appropriate deployment paradigm for their applications. {#tbl-representative-systems}
+: **硬件频谱**：机器学习系统设计需要在计算资源、功耗和成本之间进行权衡，适用于云端、边缘、移动端和 TinyML 部署的多样化硬件平台就证明了这一点。本表量化了这些权衡，揭示了从云端数据中心的专用机器学习加速器到嵌入式系统中的低功耗微控制器，设备能力如何塑造每个平台可以有效支持的模型和任务类型。量化阈值提供了具体的决策标准，帮助从业者为其应用确定最合适的部署范式。 {#tbl-representative-systems}
 
 ::: {#fig-vMLsizes fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -377,27 +375,29 @@ node[above](GAD){gap}(B34);
       minimum height=8mm]at($(B2)!0.5!(B3)$) {};
 \end{tikzpicture}
 ```
-**Device Memory Constraints**: AI model deployment spans a wide range of devices with drastically different memory capacities, from cloud servers with 16 GB to microcontroller-based systems with only 320 kb. This progression necessitates specialized optimization techniques and efficient architectures to enable on-device intelligence with limited resources. Source: [@lin2023tiny].
+**设备内存限制**：人工智能模型部署涵盖了各种内存容量迥异的设备，从具有 16 GB 内存的云服务器到仅有 320 kb 内存的基于微控制器的系统。这种演进过程需要专门的优化技术和高效的架构，以便在资源有限的情况下实现设备端的智能化。来源：[@lin2023tiny]。
 :::
 
-## Cloud ML: Maximizing Computational Power {#sec-ml-systems-cloud-ml-maximizing-computational-power-f232}
+## 云端机器学习：最大化计算能力 {#sec-ml-systems-cloud-ml-maximizing-computational-power-f232}
 
-Having established the constraints and evolutionary progression that shape ML deployment paradigms, this analysis addresses each paradigm systematically, beginning with Cloud ML, the foundation from which other paradigms emerged. This approach maximizes computational resources while accepting latency constraints, providing the optimal choice when computational power matters more than response time. Cloud deployments prove ideal for complex training tasks and inference workloads that can tolerate network delays.
+在确立了塑造机器学习部署范式的约束条件和演进历程之后，本分析将系统地探讨每种范式，首先从云端机器学习（Cloud ML）开始，它是其他范式出现的基石。这种方法在接受延迟约束的同时实现了计算资源的最大化，当计算能力比响应时间更重要时，它提供了最佳选择。云端部署被证明是复杂训练任务和能够容忍网络延迟的推理工作负载的理想选择。
 
-Cloud Machine Learning leverages the scalability and power of centralized infrastructures[^fn-cloud-evolution] to handle computationally intensive tasks: large-scale data processing, collaborative model development, and advanced analytics. Cloud data centers utilize distributed architectures and specialized resources to train complex models and support diverse applications, from recommendation systems to natural language processing[^fn-nlp-compute]. The subsequent analysis addresses the deployment characteristics that make cloud ML systems effective for large-scale applications.
+云端机器学习利用集中式基础设施[^fn-cloud-evolution]的可扩展性和强大功能来处理计算密集型任务：大规模数据处理、协作模型开发和高级分析。云端数据中心利用分布式架构和专用资源来训练复杂模型，并支持从推荐系统到自然语言处理[^fn-nlp-compute]的各种应用。随后的分析将探讨使云端机器学习系统能够有效处理大规模应用的部署特征。
 
-[^fn-cloud-evolution]: **Cloud Infrastructure Evolution**: Cloud computing for ML emerged from Amazon's decision in 2002 to treat their internal infrastructure as a service. AWS launched in 2006, followed by Google Cloud (2008) and Azure (2010). By 2024, global cloud infrastructure spending reached approximately $138 billion annually, with total public cloud services exceeding $675 billion.
+[^fn-cloud-evolution]: **云端基础设施演进**：用于机器学习的云计算起源于亚马逊在 2002 年将其内部基础设施作为服务对待的决定。AWS 于 2006 年推出，随后是 Google Cloud (2008) 和 Azure (2010)。到 2024 年，全球云端基础设施年支出达到约 1,380 亿美元，公共云服务总额超过 6,750 亿美元。
 
-[^fn-nlp-compute]: **NLP Computational Demands**: Modern language models like GPT-3 required 3,640 petaflop-days of compute for training, equivalent to running 1,000 NVIDIA V100 GPUs continuously for 355 days [@strubell2019energy]. This computational scale drove the need for massive cloud infrastructure.
+[^fn-nlp-compute]: **NLP 计算需求**：像 GPT-3 这样的现代语言模型需要 3,640 petaflop-days 的计算量进行训练，相当于 1,000 个 NVIDIA V100 GPU 连续运行 355 天[@strubell2019energy]。这种计算规模推动了对海量云端基础设施的需求。
 
-::: {.callout-definition title="Cloud ML"}
+::: {.callout-definition title="云端机器学习"}
 
-***Cloud Machine Learning (Cloud ML)*** is the deployment of machine learning models on _centralized data center infrastructure_, offering _massive computational capacity_ and _scalability_ for training and serving complex models at the cost of _network latency_ and _connectivity dependence_.
+***云端机器学习 (Cloud ML)*** 是指在*集中式数据中心基础设施*上部署机器学习模型，它为训练和提供复杂模型服务提供了*海量的计算能力*和*可扩展性*，但代价是*网络延迟*和*对连接性的依赖*。
+
 :::
 
-@fig-cloud-ml provides an overview of Cloud ML's capabilities, which we will discuss in greater detail throughout this section.
+@fig-cloud-ml概述了云端机器学习的能力，我们将在本节中详细讨论这些能力。
 
 ::: {#fig-cloud-ml fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -460,79 +460,87 @@ above=1of $(B2.north east)!0.5!(B3.north west)$](B0){Cloud ML};
 \end{tikzpicture}
 
 ```
-**Cloud ML Capabilities**: Cloud machine learning systems address challenges related to scale, complexity, and resource management through centralized computing infrastructure and specialized hardware. This figure outlines key considerations for deploying models in the cloud, including the need for reliable infrastructure and efficient resource allocation to handle large datasets and complex computations.
+**云端机器学习能力**：云端机器学习系统通过集中式计算基础设施和专用硬件解决与规模、复杂性和资源管理相关的挑战。此图概述了在云端部署模型的关键考虑因素，包括对可靠基础设施的需求以及高效的资源分配，以处理大型数据集和复杂的计算。
+
 :::
 
-### Cloud Infrastructure and Scale {#sec-ml-systems-cloud-infrastructure-scale-848e}
+### 云端基础设施与规模 {#sec-ml-systems-cloud-infrastructure-scale-848e}
 
-To understand cloud ML's position in the deployment spectrum, we must first consider its defining characteristics. Cloud ML's primary distinguishing feature is its centralized infrastructure operating at unprecedented scale. @fig-cloudml-example illustrates this concept with an example from Google's Cloud TPU[^fn-mlsys-tpu] data center. As detailed in @tbl-representative-systems, cloud systems like Google's TPU v4 Pod represent a 100-1000x computational advantage over mobile devices, with >1000 TFLOPS compute power and megawatt-scale power consumption. Cloud service providers offer virtual platforms with >100GB/s memory bandwidth housed in globally distributed data centers[^fn-hyperscale]. These centralized facilities enable computational workloads impossible on resource-constrained devices. However, this centralization introduces critical trade-offs: network round-trip latency of 100-500ms eliminates real-time applications, while operational costs scale linearly with usage.
+为了理解云端机器学习在部署光谱中的地位，我们必须首先考虑其定义特征。云端机器学习的主要区别特征是其以前所未有的规模运行的集中式基础设施。@fig-cloudml-example通过 Google Cloud TPU[^fn-mlsys-tpu] 数据中心的示例说明了这一概念。如@tbl-representative-systems中详述，像 Google TPU v4 Pod 这样的云端系统代表了相对于移动设备 100-1000 倍的计算优势，具有 >1000 TFLOPS 的计算能力和兆瓦级的功耗。云服务提供商提供内存带宽 >100GB/s 的虚拟平台，并安置在遍布全球的数据中心[^fn-hyperscale]中。这些集中式设施实现了在资源受限设备上无法完成的计算工作负载。然而，这种集中化引入了关键的权衡：100-500ms 的网络往返延迟排除了实时应用，而运营成本随使用量线性增加。
 
-[^fn-mlsys-tpu]: **Tensor Processing Unit (TPU)**: Google's custom ASIC designed specifically for tensor operations, first used internally in 2015 for neural network inference. A single TPU v4 Pod contains 4,096 chips and delivers 1.1 exaflops of peak performance, representing one of the world's largest publicly available ML clusters.
+[^fn-mlsys-tpu]: **张量处理单元 (TPU)**：Google 的定制 ASIC，专门为张量运算设计，于 2015 年首次在内部用于神经网络推理。单个 TPU v4 Pod 包含 4,096 个芯片，提供 1.1 exaflops 的峰值性能，代表了世界上公开可用的最大机器学习集群之一。
 
-[^fn-hyperscale]: **Hyperscale Data Centers**: These facilities contain 5,000+ servers and cover 10,000+ square feet. Microsoft's data centers span over 200 locations globally, with some individual facilities consuming enough electricity to power 80,000 homes.
+[^fn-hyperscale]: **超大规模数据中心**：这些设施包含 5,000 多个服务器，占地超过 10,000 平方英尺。微软的数据中心遍布全球 200 多个地点，其中一些单独的设施消耗的电力足以供 80,000 个家庭使用。
 
 ::: {.content-visible when-format="html"}
-![**Cloud Data Center Scale**: Large-scale machine learning systems require centralized infrastructure with massive computational resources and storage capacity. Google's cloud TPU data center provides this need, housing specialized AI accelerator hardware to efficiently manage the demands of training and deploying complex models. Source: [@google2024gemini].](images/jpg/cloud_ml_tpu.jpeg){#fig-cloudml-example}
+
+![**云端数据中心规模**：大规模机器学习系统需要具有海量计算资源和存储能力的集中式基础设施。Google 的云端 TPU 数据中心满足了这一需求，其中容纳了专用的 AI 加速器硬件，以高效管理训练和部署复杂模型的需求。来源：[@google2024gemini]。](images/jpg/cloud_ml_tpu.jpeg){#fig-cloudml-example}
+
 :::
+
 
 ::: {.content-visible when-format="pdf"}
-![Cloud TPU data center at Google. Source: [@google2024gemini]](images/jpg/cloud_ml_tpu.jpeg){#fig-cloudml-example fig-pos='htb'}
+
+![Google 的云端 TPU 数据中心。来源：[@google2024gemini]](images/jpg/cloud_ml_tpu.jpeg){#fig-cloudml-example fig-pos='htb'}
+
 :::
 
-Cloud ML excels in processing massive data volumes through parallelized architectures. Through techniques detailed in @sec-model-optimizations, distributed training across hundreds of GPUs enables processing that would require months on single devices, while @sec-ai-acceleration covers the memory bandwidth analysis underlying this performance. This enables training on datasets requiring hundreds of terabytes of storage and petaflops of computation, resources impossible on constrained devices.
+云端机器学习擅长通过并行化架构处理海量数据。通过@sec-model-optimizations中详述的技术，跨数百个 GPU 的分布式训练实现了在单个设备上需要数月才能完成的处理，而@sec-ai-acceleration涵盖了支撑这一性能的内存带宽分析。这使得在需要数百 TB 存储和 petaflops 计算的数据集上进行训练成为可能，而这些资源在受限设备上是不可能实现的。
 
-The centralized infrastructure creates exceptional deployment flexibility through cloud APIs[^fn-ml-apis], making trained models accessible worldwide across mobile, web, and IoT platforms. Seamless collaboration enables multiple teams to access projects simultaneously with integrated version control. Pay-as-you-go pricing models[^fn-paas-pricing] eliminate upfront capital expenditure while resources scale elastically with demand.
+集中式基础设施通过云端 API[^fn-ml-apis] 创造了卓越的部署灵活性，使训练好的模型可以在全球范围内的移动、网页和物联网平台上访问。无缝协作使多个团队能够通过集成的版本控制同时访问项目。按需付费定价模式[^fn-paas-pricing]消除了前期资本支出，同时资源随需求弹性扩展。
 
-A common misconception assumes that Cloud ML's vast computational resources make it universally superior to alternative deployment approaches. Cloud infrastructure offers exceptional computational power and storage, yet this advantage doesn't automatically translate to optimal solutions for all applications. Cloud deployment introduces significant trade-offs including network latency (often 100-500ms round trip), privacy concerns when transmitting sensitive data, ongoing operational costs that scale with usage, and complete dependence on network connectivity. Edge and embedded deployments excel in scenarios requiring real-time response (autonomous vehicles need sub-10ms decision making), strict data privacy (medical devices processing patient data), predictable costs (one-time hardware investment versus recurring cloud fees), or operation in disconnected environments (industrial equipment in remote locations). The optimal deployment paradigm depends on specific application requirements rather than raw computational capability.
+一个常见的误解认为，云端机器学习巨大的计算资源使其普遍优于其他部署方法。云端基础设施提供了卓越的计算能力和存储，但这种优势并不会自动转化为所有应用的最优解决方案。云端部署引入了显著的权衡，包括网络延迟（通常为 100-500ms 往返）、传输敏感数据时的隐私问题、随使用量增加的持续运营成本，以及对网络连接的完全依赖。边缘和嵌入式部署在需要实时响应（自动驾驶车辆需要小于 10ms 的决策）、严格的数据隐私（处理患者数据的医疗设备）、可预测的成本（一次性硬件投资对比经常性的云端费用）或在断网环境下运行（偏远地区的工业设备）的场景中表现出色。最佳部署范式取决于特定的应用需求，而非单纯的计算能力。
 
-[^fn-ml-apis]: **ML APIs**: Application Programming Interfaces that democratized AI by providing pre-trained models as web services. Google's Vision API launched in 2016, processing over 1 billion images monthly within two years, enabling developers to add AI capabilities without ML expertise.
+[^fn-ml-apis]: **机器学习 API**：通过将预训练模型作为 Web 服务提供，使人工智能大众化的应用程序编程接口。Google 的 Vision API 于 2016 年推出，在两年内每月处理超过 10 亿张图像，使开发人员无需机器学习专业知识即可添加 AI 功能。
 
-[^fn-paas-pricing]: **Pay-as-You-Go Pricing**: Revolutionary model where users pay only for actual compute time used, measured in GPU-hours or inference requests. Training a model might cost $50-500 on demand versus $50,000-500,000 to purchase equivalent hardware.
+[^fn-paas-pricing]: **按需付费定价**：一种革命性的模式，用户只需支付实际使用的计算时间，以 GPU 小时或推理请求计。训练一个模型按需付费可能花费 50-500 美元，而购买同等硬件则需 50,000-500,000 美元。
 
-### Cloud ML Trade-offs and Constraints {#sec-ml-systems-cloud-ml-tradeoffs-constraints-1654}
+### 云端机器学习的权衡与约束 {#sec-ml-systems-cloud-ml-tradeoffs-constraints-1654}
 
-Cloud ML's substantial advantages carry inherent trade-offs that shape deployment decisions. Latency represents the most significant physical constraint. Network round-trip delays typically range from 100-500ms, making cloud processing unsuitable for real-time applications requiring sub-10ms responses, such as autonomous vehicles and industrial control systems. Beyond basic timing constraints, unpredictable response times complicate performance monitoring and debugging across geographically distributed infrastructure.
+云端机器学习的巨大优势伴随着塑造部署决策的固有权衡。延迟代表了最重要的物理约束。网络往返延迟通常在 100-500ms 之间，这使得云端处理不适用于需要小于 10ms 响应的实时应用，如自动驾驶车辆和工业控制系统。除了基本的时间约束外，不可预测的响应时间还增加了跨地理分布基础设施进行性能监控和调试的复杂性。
 
-Privacy and security present significant challenges when adopting cloud deployment. Transmitting sensitive data to remote data centers creates potential vulnerabilities and complicates regulatory compliance. Organizations handling data subject to regulations like GDPR[^fn-gdpr] or HIPAA[^fn-hipaa] must implement comprehensive security measures including encryption, strict access controls, and continuous monitoring to meet stringent data handling requirements.
+采用云端部署时，隐私和安全提出了重大挑战。将敏感数据传输到远程数据中心会产生潜在的漏洞，并使监管合规变得复杂。处理受 GDPR[^fn-gdpr] 或 HIPAA[^fn-hipaa] 等法规约束的数据的组织必须实施全面的安全措施，包括加密、严格的访问控制和持续监控，以满足严格的数据处理要求。
 
-[^fn-gdpr]: **GDPR (General Data Protection Regulation)**: European privacy law effective 2018, imposing fines up to €20 million or 4% of global revenue for violations. Forces ML systems to implement "right to be forgotten" and data processing transparency.
+[^fn-gdpr]: **GDPR（通用数据保护条例）**：2018 年生效的欧洲隐私法，对违规行为处以高达 2000 万欧元或全球收入 4% 的罚款。强制机器学习系统实施“被遗忘权”和数据处理透明度。
 
-[^fn-hipaa]: **HIPAA (Health Insurance Portability and Accountability Act)**: US healthcare privacy law requiring strict data security measures. ML systems handling medical data must implement encryption, access controls, and audit trails, adding 30-50% to development costs.
+[^fn-hipaa]: **HIPAA（健康保险流通与责任法案）**：美国医疗保健隐私法，要求采取严格的数据安全措施。处理医疗数据的机器学习系统必须实施加密、访问控制和审计追踪，这会增加 30-50% 的开发成本。
 
-Cost management introduces operational complexity as expenses scale with usage. Consider a production system serving 1 million daily inferences at $0.001 each: annual costs reach $365,000, compared to $100,000 for equivalent edge hardware purchased once. The break-even point occurs around 100,000-1,000,000 requests, directly influencing deployment strategy. Unpredictable usage spikes further complicate budgeting, requiring sophisticated monitoring and cost governance frameworks.
+成本管理引入了运营复杂性，因为费用随使用量而增加。考虑一个每天提供 100 万次推理的生产系统，每次推理成本为 0.001 美元时，年成本将达到 365,000 美元，而一次性购买等效边缘硬件的成本为 100,000 美元。盈亏平衡点出现在 100,000 到 1,000,000 次请求之间，这直接影响部署策略。不可预测的使用峰值进一步增加了预算编制的复杂性，需要复杂的监控和成本治理框架。
 
-Network dependency creates another critical constraint. Any connectivity disruption directly impacts system availability, proving particularly problematic where network access is limited or unreliable. Vendor lock-in further complicates the landscape, as dependencies on specific tools and APIs create portability and interoperability challenges when transitioning between providers. Organizations must carefully balance these constraints against cloud benefits based on application requirements and risk tolerance, with resilience strategies detailed in @sec-robust-ai.
+网络依赖创造了另一个关键约束。任何连接中断都会直接影响系统的可用性，在网络访问受限或不可靠的地方，这被证明是特别有问题的。供应商锁定进一步使情况复杂化，因为对特定工具和 API 的依赖在不同供应商之间转换时会产生移植性和互操作性挑战。组织必须根据应用需求和风险承受能力，仔细平衡这些约束与云端优势，相关的复原策略详见@sec-robust-ai。
 
-### Large-Scale Training and Inference {#sec-ml-systems-largescale-training-inference-f7a8}
+### 大规模训练与推理 {#sec-ml-systems-largescale-training-inference-f7a8}
 
-Cloud ML's computational advantages manifest most visibly in consumer-facing applications requiring massive scale. Virtual assistants like Siri and Alexa exemplify cloud ML's ability to handle computationally intensive natural language processing, leveraging extensive computational resources to process vast numbers of concurrent interactions while continuously improving through exposure to diverse linguistic patterns and use cases.
+云端机器学习的计算优势在需要大规模处理的面向消费者的应用中表现得最为明显。Siri 和 Alexa 等虚拟助手体现了云端机器学习处理计算密集型自然语言处理的能力，利用广泛的计算资源处理海量的并发交互，同时通过接触多样的语言模式和用例不断改进。
 
-Recommendation engines deployed by Netflix and Amazon demonstrate another compelling application of cloud resources. These systems process massive datasets using collaborative filtering[^fn-collaborative-filtering] and other machine learning techniques to uncover patterns in user preferences and behavior. Cloud computational resources enable continuous updates and refinements as user data grows, with Netflix processing over 100 billion data points daily to deliver personalized content suggestions that directly enhance user engagement.
+Netflix 和亚马逊部署的推荐引擎展示了云端资源的另一个引人注目的应用。这些系统使用协同过滤[^fn-collaborative-filtering]和其他机器学习技术处理海量数据集，以发现用户偏好和行为模式。云端计算资源支持随着用户数据的增长进行持续的更新和优化，Netflix 每天处理超过 1000 亿个数据点，以提供个性化的内容建议，直接增强用户参与度。
 
-Financial institutions have revolutionized fraud detection through cloud ML capabilities. By analyzing vast amounts of transactional data in real-time, ML algorithms trained on historical fraud patterns can detect anomalies and suspicious behavior across millions of accounts, enabling proactive fraud prevention that minimizes financial losses.
+金融机构通过云端机器学习能力彻底改变了欺诈检测。通过实时分析海量的交易数据，根据历史欺诈模式训练的机器学习算法可以检测数百万个账户中的异常和可疑行为，从而实现主动的欺诈预防，最大限度地减少财务损失。
 
-These applications demonstrate how cloud ML's computational advantages translate into transformative capabilities for large-scale, complex processing tasks. Beyond these flagship applications, cloud ML permeates everyday online experiences through personalized advertisements on social media, predictive text in email services, product recommendations in e-commerce, enhanced search results, and security anomaly detection systems that continuously monitor for cyber threats at scale.
+这些应用展示了云端机器学习的计算优势如何转化为大规模、复杂处理任务的变革能力。除了这些旗舰应用之外，云端机器学习还渗透到日常的在线体验中，包括社交媒体上的个性化广告、电子邮件服务中的预测文本、电子商务中的产品推荐、增强的搜索结果，以及在大规模范围内持续监控网络威胁的安全异常检测系统。
 
-[^fn-collaborative-filtering]: **Collaborative Filtering**: Recommendation technique analyzing user behavior patterns to predict preferences. Netflix's algorithm contributes to 80% of watched content and saves $1 billion annually in customer retention.
+[^fn-collaborative-filtering]: **协同过滤**：分析用户行为模式以预测偏好的推荐技术。Netflix 的算法贡献了 80% 的观看内容，并每年在客户留存方面节省 10 亿美元。
 
-## Edge ML: Reducing Latency and Privacy Risk {#sec-ml-systems-edge-ml-reducing-latency-privacy-risk-31f9}
+## 边缘 ML：降低延迟和隐私风险 {#sec-ml-systems-edge-ml-reducing-latency-privacy-risk-31f9}
 
-Cloud ML's computational advantages come with inherent trade-offs that limit its applicability for many real-world scenarios. The 100-500ms latency and privacy concerns that we examined create fundamental barriers for applications requiring immediate response or local data processing. Edge ML emerged as a direct response to these specific limitations, moving computation closer to data sources and trading unlimited computational resources for sub-100ms latency and local data sovereignty.
+云端 ML 的计算优势伴随着固有的权衡，限制了其在许多现实场景中的适用性。我们研究过的 100-500ms 延迟和隐私问题为需要即时响应或本地数据处理的应用制造了根本性障碍。边缘 ML 的出现是对这些特定限制的直接回应，它将计算移至更接近数据源的地方，并以无限的计算资源换取低于 100ms 的延迟和本地数据主权。
 
-This paradigm shift becomes essential for applications where cloud's 100-500ms round-trip delays prove unacceptable. Autonomous systems requiring split-second decisions and industrial IoT[^fn-industrial-iot] applications demanding real-time response cannot tolerate network delays. Similarly, applications subject to strict data privacy regulations must process information locally rather than transmitting it to remote data centers. Edge devices (gateways and IoT hubs[^fn-iot-hubs]) occupy a middle ground in the deployment spectrum, maintaining acceptable performance while operating under intermediate resource constraints.
+对于云端 100-500ms 往返延迟被证明无法接受的应用，这种范式转变变得至关重要。需要瞬间决策的自主系统和要求实时响应的工业物联网[^fn-industrial-iot]应用无法容忍网络延迟。同样，受严格数据隐私法规约束的应用必须在本地处理信息，而不是将其传输到远程数据中心。边缘设备（网关和物联网枢纽[^fn-iot-hubs]）在部署频谱中占据中间地带，在中间资源约束下运行时保持可接受的性能。
 
-[^fn-industrial-iot]: **Industrial IoT**: Manufacturing generates over 1 exabyte of data annually, but less than 1% is analyzed due to connectivity constraints. Edge ML enables real-time analysis, with predictive maintenance alone saving manufacturers $630 billion globally by 2025.
+[^fn-industrial-iot]: **工业物联网**：制造业每年产生超过 1 艾字节的数据，但由于连接限制，只有不到 1% 的数据得到分析。边缘 ML 实现了实时分析，到 2025 年，仅预测性维护一项就能在全球范围内为制造商节省 6300 亿美元。
 
-[^fn-iot-hubs]: **IoT Hubs**: Central connection points that aggregate data from multiple sensors before cloud transmission. A typical smart building might have 1 hub managing 100-1000 IoT sensors, reducing cloud traffic by 90% while enabling local decision-making.
+[^fn-iot-hubs]: **物联网枢纽**：在云传输之前汇总来自多个传感器的数据的中央连接点。一个典型的智能建筑可能有 1 个枢纽管理 100-1000 个物联网传感器，在实现本地决策的同时减少 90% 的云端流量。
 
-::: {.callout-definition title="Edge ML"}
+::: {.callout-definition title="边缘 ML"}
 
-***Edge Machine Learning (Edge ML)*** is the deployment of machine learning models on _localized infrastructure_ at the network edge, enabling _low-latency processing_ and _data privacy_ through local computation on stationary devices like gateways and industrial controllers.
+***边缘机器学习 (Edge ML)*** 是指在网络边缘的*本地化基础设施*上部署机器学习模型，通过在网关和工业控制器等固定设备上进行本地计算，实现*低延迟处理*和*数据隐私*。
+
 :::
 
-@fig-edge-ml provides an overview of Edge ML's key dimensions, which this analysis addresses in detail.
+@fig-edge-ml提供了边缘 ML 关键维度的概述，本分析将对其进行详细探讨。
 
 ::: {#fig-edge-ml fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -593,61 +601,64 @@ above=1of $(B2.north east)!0.5!(B3.north west)$](B0){Edge ML};
 }
 \end{tikzpicture}
 ```
-**Edge ML Dimensions**: This figure outlines key considerations for edge machine learning, contrasting challenges with benefits and providing representative examples and characteristics. Understanding these dimensions enables designing and deploying effective AI solutions on resource-constrained devices.
+**边缘 ML 维度**：此图概述了边缘机器学习的关键考虑因素，将挑战与收益进行对比，并提供了代表性的示例和特征。了解这些维度有助于在资源受限的设备上设计和部署有效的 AI 解决方案。
+
 :::
 
-### Distributed Processing Architecture {#sec-ml-systems-distributed-processing-architecture-8d28}
+### 分布式处理架构 {#sec-ml-systems-distributed-processing-architecture-8d28}
 
-Edge ML's diversity spans wearables, industrial sensors, and smart home appliances, devices that process data locally[^fn-iot-growth] without depending on central servers (@fig-edgeml-example). Edge devices occupy the middle ground between cloud systems and mobile devices in computational resources, power consumption, and cost. Memory bandwidth at 25-100 GB/s enables models requiring 100MB-1GB parameters, using optimization techniques (@sec-model-optimizations) to achieve 2-4x speedup compared to cloud models. Local processing eliminates network round-trip latency, enabling <100ms response times while generating substantial bandwidth savings: processing 1000 camera feeds locally avoids 1Gbps uplink costs and reduces cloud expenses by $10,000-100,000 annually.
+边缘 ML 的多样性涵盖了可穿戴设备、工业传感器和智能家用电器，这些设备在不依赖中央服务器的情况下本地处理数据[^fn-iot-growth] (@fig-edgeml-example)。在计算资源、功耗和成本方面，边缘设备处于云端系统和移动设备之间的中间地带。25-100 GB/s 的内存带宽支持需要 100MB-1GB 参数的模型，利用优化技术 (@sec-model-optimizations)，与云端模型相比可实现 2-4 倍的加速。本地处理消除了网络往返延迟，实现了 <100ms 的响应时间，同时节省了大量带宽：在本地处理 1000 个摄像头馈送可避免 1Gbps 的上行链路成本，每年减少 10,000-100,000 美元的云端支出。
 
-[^fn-iot-growth]: **IoT Device Growth**: From 8.4 billion connected devices in 2017 to a projected 25.4 billion by 2030. Each device generates 2.5 quintillion bytes of data daily, making edge processing essential for bandwidth management.
+[^fn-iot-growth]: **物联网设备增长**：从 2017 年的 84 亿个连接设备预计增长到 2030 年的 254 亿个。每个设备每天产生 2.5 百万兆字节的数据，使得边缘处理对于带宽管理至关重要。
 
-[^fn-latency-critical]: **Latency-Critical Applications**: Autonomous vehicles require <10ms response times for emergency braking decisions. Industrial robotics needs <1ms for precision control. Cloud round-trip latency typically ranges from 100-500ms, making edge processing essential for safety-critical applications.
+[^fn-latency-critical]: **延迟敏感型应用**：自动驾驶汽车需要 <10ms 的响应时间来进行紧急制动决策。工业机器人需要 <1ms 的响应时间进行精密控制。云端往返延迟通常在 100-500ms 之间，这使得边缘处理对于安全至关重要的应用必不可少。
 
-### Edge ML Benefits and Deployment Challenges {#sec-ml-systems-edge-ml-benefits-deployment-challenges-6e28}
+### 边缘 ML 的收益与部署挑战 {#sec-ml-systems-edge-ml-benefits-deployment-challenges-6e28}
 
-Edge ML provides quantifiable benefits that address key cloud limitations. Latency reduction from 100-500ms in cloud deployments to 1-50ms at the edge enables safety-critical applications[^fn-latency-critical] requiring real-time response. Bandwidth savings prove equally substantial: a retail store with 50 cameras streaming video can reduce bandwidth requirements from 100 Mbps (costing $1,000-2,000 monthly) to less than 1 Mbps by processing locally and transmitting only metadata, a 99% reduction. Privacy improves through local processing, eliminating transmission risks and simplifying regulatory compliance. Operational resilience ensures systems continue functioning during network outages, proving critical for manufacturing, healthcare, and building management applications.
+边缘 ML 提供了可量化的收益，解决了云端的关键局限性。延迟从云端部署的 100-500ms 降低到边缘的 1-50ms，使得需要实时响应的安全至关重要型应用[^fn-latency-critical]成为可能。带宽节省同样显著：一个拥有 50 个摄像头流式传输视频的零售店，通过本地处理并仅传输元数据，可以将带宽需求从 100 Mbps（每月成本 1,000-2,000 美元）降低到不足 1 Mbps，降幅达 99%。通过本地处理提高了隐私性，消除了传输风险并简化了监管合规性。运营韧性确保系统在网络中断期间继续运行，这对于制造、医疗保健和建筑管理应用至关重要。
 
-These benefits carry corresponding limitations. Limited computational resources[^fn-endpoint-constraints] significantly constrain model complexity: edge servers typically provide 10-100x less processing power than cloud infrastructure, limiting deployable models to millions rather than billions of parameters. Managing distributed networks introduces complexity that scales nonlinearly with deployment size. Coordinating version control and updates across thousands of devices requires sophisticated orchestration systems[^fn-edge-coordination]. Security challenges intensify with physical accessibility—edge devices deployed in retail stores or public infrastructure face tampering risks requiring hardware-based protection mechanisms. Hardware heterogeneity further complicates deployment, as diverse platforms with varying capabilities demand different optimization strategies. Initial deployment costs of $500-2,000 per edge server create substantial capital requirements. Deploying 1,000 locations requires $500,000-2,000,000 upfront investment, though these costs are offset by long-term operational savings.
+这些收益也带来了相应的限制。有限的计算资源[^fn-endpoint-constraints]显著限制了模型的复杂性：边缘服务器提供的处理能力通常比云端基础设施低 10-100 倍，将可部署模型的参数限制在数百万而非数十亿级别。管理分布式网络引入了随部署规模非线性增长的复杂性。在成千上万个设备上协调版本控制和更新需要复杂的编排系统[^fn-edge-coordination]。随着物理可接触性的增加，安全挑战也随之加剧——部署在零售店或公共基础设施中的边缘设备面临篡改风险，需要基于硬件的保护机制。硬件异构性进一步增加了部署的复杂性，因为具有不同能力的各种平台需要不同的优化策略。$500-2,000 per edge server create substantial capital requirements. Deploying 1,000 locations requires $500,000-2,000,000 的初始部署成本是前期投资，尽管这些成本会被长期的运营节省所抵消。
 
-[^fn-endpoint-constraints]: **Edge Server Constraints**: Typical edge servers have 1-8GB RAM and 2-32GB storage, versus cloud servers with 128-1024GB RAM and petabytes of storage. Processing power differs by 10-100x, necessitating specialized model compression techniques.
+[^fn-endpoint-constraints]: **边缘服务器约束**：典型的边缘服务器具有 1-8GB RAM 和 2-32GB 存储空间，而云端服务器具有 128-1024GB RAM 和数 PB 的存储空间。处理能力相差 10-100 倍，因此需要专门的模型压缩技术。
 
-[^fn-edge-coordination]: **Edge Network Coordination**: For n edge devices, the number of potential communication paths is n(n-1)/2. A network of 1,000 devices has 499,500 possible connections. Kubernetes K3s and similar platforms help manage this complexity.
+[^fn-edge-coordination]: **边缘网络协调**：对于 n 个边缘设备，潜在的通信路径数量为 n(n-1)/2。一个拥有 1,000 个设备的网络有 499,500 条可能的连接。Kubernetes K3s 和类似平台有助于管理这种复杂性。
 
-![**Edge Device Deployment**: Diverse IoT devices, from wearables to home appliances, enable decentralized machine learning by performing inference locally, reducing reliance on cloud connectivity and improving response times. Source: Edge Impulse.](images/jpg/edge_ml_iot.jpg){#fig-edgeml-example}
+![**边缘设备部署**：从可穿戴设备到家用电器的各种物联网设备，通过在本地执行推理，减少对云端连接的依赖并缩短响应时间，从而实现去中心化的机器学习。来源：Edge Impulse。](images/jpg/edge_ml_iot.jpg){#fig-edgeml-example}
 
-### Real-Time Industrial and IoT Systems {#sec-ml-systems-realtime-industrial-iot-systems-f946}
+### 实时工业和物联网系统 {#sec-ml-systems-realtime-industrial-iot-systems-f946}
 
-Industries deploy Edge ML widely where low latency, data privacy, and operational resilience justify the additional complexity of distributed processing. Autonomous vehicles represent perhaps the most demanding application, where safety-critical decisions must occur within milliseconds based on sensor data that cannot be transmitted to remote servers. Systems like Tesla's Full Self-Driving process inputs from eight cameras at 36 frames per second through custom edge hardware, making driving decisions with latencies under 10ms, a response time physically impossible with cloud processing due to network delays.
+工业界在低延迟、数据隐私和运营韧性足以抵消分布式处理额外复杂性的场景下广泛部署边缘 ML。自动驾驶汽车或许是最苛刻的应用，其安全至关重要的决策必须在几毫秒内根据无法传输到远程服务器的传感器数据做出。像特斯拉的全自动驾驶系统通过定制的边缘硬件以每秒 36 帧的速度处理来自八个摄像头的输入，驾驶决策延迟低于 10ms，由于网络延迟，这种响应时间在物理上是不可能通过云端处理实现的。
 
-Smart retail environments demonstrate edge ML's practical advantages for privacy-sensitive, bandwidth-intensive applications. Amazon Go stores process video from hundreds of cameras through local edge servers, tracking customer movements and item selections to enable checkout-free shopping. This edge-based approach addresses both technical and privacy concerns: transmitting high-resolution video from hundreds of cameras would require over 200 Mbps sustained bandwidth, while local processing ensures customer video never leaves the premises, addressing privacy concerns and regulatory requirements.
+智能零售环境展示了边缘 ML 在隐私敏感、带宽密集型应用中的实际优势。Amazon Go 商店通过本地边缘服务器处理来自数百个摄像头的视频，跟踪客户的移动和商品选择，从而实现无结算购物。这种基于边缘的方法同时解决了技术和隐私问题：传输来自数百个摄像头的高分辨率视频将需要超过 200 Mbps 的持续带宽，而本地处理确保客户视频永远不会离开场所，从而解决了隐私担忧和监管要求。
 
-The Industrial IoT[^fn-industry-40] leverages edge ML for applications where millisecond-level responsiveness directly impacts production efficiency and worker safety. Manufacturing facilities deploy edge ML systems for real-time quality control, with vision systems inspecting welds at speeds exceeding 60 parts per minute, and predictive maintenance[^fn-predictive-maintenance] applications that monitor over 10,000 industrial assets per facility. This approach has demonstrated 25-35% reductions in unplanned downtime across various manufacturing sectors.
+工业物联网[^fn-industry-40]在毫秒级响应直接影响生产效率和工人安全的场景中利用边缘 ML。制造设施部署边缘 ML 系统进行实时质量控制，视觉系统以超过每分钟 60 个零件的速度检查焊缝，而预测性维护[^fn-predictive-maintenance]应用则监控每个设施超过 10,000 个工业资产。这种方法已在各个制造部门证明能减少 25-35% 的计划外停机时间。
 
-Smart buildings utilize edge ML to optimize energy consumption while maintaining operational continuity during network outages. Commercial buildings equipped with edge-based building management systems process data from 5,000-10,000 sensors monitoring temperature, occupancy, air quality, and energy usage, with edge processing reducing cloud transmission requirements by 95% while enabling sub-second response times. Healthcare applications similarly leverage edge ML for patient monitoring and surgical assistance, maintaining HIPAA compliance through local processing while achieving sub-100ms latency for real-time surgical guidance.
+智能建筑利用边缘 ML 来优化能源消耗，同时在网络中断期间保持运营连续性。配备了基于边缘的建筑管理系统的商业建筑处理来自 5,000-10,000 个传感器的数据，这些传感器监控温度、占用率、空气质量和能源使用情况，边缘处理将云端传输需求降低了 95%，同时实现了亚秒级的响应时间。医疗保健应用同样利用边缘 ML 进行患者监测和手术辅助，通过本地处理保持 HIPAA 合规性，同时为实时手术指导实现低于 100ms 的延迟。
 
-[^fn-industry-40]: **Industry 4.0**: Fourth industrial revolution integrating cyber-physical systems into manufacturing. Expected to increase productivity by 20-30% and reduce costs by 15-25% globally.
+[^fn-industry-40]: **工业 4.0**：将信息物理系统整合到制造业中的第四次工业革命。预计将在全球范围内提高 20-30% 的生产力并降低 15-25% 的成本。
 
-[^fn-predictive-maintenance]: **Predictive Maintenance**: ML-driven maintenance scheduling based on equipment condition. Reduces unplanned downtime by 35-45% and costs by 20-25%. GE saves $1.5 billion annually using predictive analytics.
+[^fn-predictive-maintenance]: **预测性维护**：基于设备状态的 ML 驱动的维护调度。减少 35-45% 的计划外停机时间和 20-25% 的成本。GE 利用预测分析每年节省 15 亿美元。
 
-## Mobile ML: Personal and Offline Intelligence {#sec-ml-systems-mobile-ml-personal-offline-intelligence-7905}
+## 移动端机器学习：个人化与离线智能 {#sec-ml-systems-mobile-ml-personal-offline-intelligence-7905}
 
-While Edge ML addressed the latency and privacy limitations of cloud deployment, it introduced new constraints: the need for dedicated edge infrastructure, ongoing network connectivity, and substantial upfront hardware investments. The proliferation of billions of personal computing devices (smartphones, tablets, and wearables) created an opportunity to extend ML capabilities even further by bringing intelligence directly to users' hands. Mobile ML represents this next step in the distribution of intelligence, prioritizing user proximity, offline capability, and personalized experiences while operating under the strict power and thermal constraints inherent to battery-powered devices.
+虽然边缘端机器学习解决了云端部署的延迟和隐私局限性，但它也引入了新的约束：需要专用的边缘基础设施、持续的网络连接以及大量的期初硬件投资。数十亿个人计算设备（智能手机、平板电脑和可穿戴设备）的普及创造了一个机会，通过将智能直接带到用户手中，进一步扩展机器学习能力。移动端机器学习（Mobile ML）代表了智能分布的下一个阶段，它在电池供电设备固有的严格功耗和散热约束下运行，优先考虑用户邻近性、离线能力和个人化体验。
 
-Mobile ML integrates machine learning directly into portable devices like smartphones and tablets, providing users with real-time, personalized capabilities. This paradigm excels when user privacy, offline operation, and immediate responsiveness matter more than computational sophistication. Mobile ML supports applications such as voice recognition[^fn-voice-recognition], computational photography[^fn-computational-photography], and health monitoring while maintaining data privacy through on-device computation. These battery-powered devices must balance performance with power efficiency and thermal management, making them ideal for frequent, short-duration AI tasks.
+移动端机器学习将机器学习直接集成到智能手机和平板电脑等便携式设备中，为用户提供实时、个人化的功能。当用户隐私、离线运行和即时响应比计算复杂性更重要时，这种范式表现卓越。移动端机器学习支持语音识别[^fn-voice-recognition]、计算摄影[^fn-computational-photography]和健康监测等应用，同时通过设备端计算维护数据隐私。这些电池供电的设备必须在性能与能效和散热管理之间取得平衡，使其成为频繁、短时间人工智能任务的理想选择。
 
-[^fn-voice-recognition]: **Voice Recognition Evolution**: Apple's Siri (2011) required cloud processing with 200-500ms latency. By 2017, on-device processing reduced latency to <50ms while improving privacy. Modern smartphones process 16kHz audio at 20-30ms latency using specialized neural engines.
+[^fn-voice-recognition]: **语音识别的演进**：Apple 的 Siri (2011) 需要云端处理，延迟为 200-500 毫秒。到 2017 年，设备端处理将延迟降低至 50 毫秒以下，同时提高了隐私性。现代智能手机使用专用的神经引擎，以 20-30 毫秒的延迟处理 16kHz 音频。
 
-[^fn-computational-photography]: **Computational Photography**: Combines multiple exposures and ML algorithms to enhance image quality. Google's Night Sight captures 15 frames in 6 seconds, using ML to align and merge them. Portrait mode uses depth estimation ML models to create professional-looking bokeh effects in real-time.
+[^fn-computational-photography]: **计算摄影**：结合多次曝光和机器学习算法来增强图像质量。Google 的 Night Sight 在 6 秒内捕捉 15 帧，并使用机器学习进行对齐和合并。人像模式使用深度估计机器学习模型实时创建专业的散景（bokeh）效果。
 
-::: {.callout-definition title="Mobile ML"}
+::: {.callout-definition title="移动端机器学习"}
 
-***Mobile Machine Learning (Mobile ML)*** is the deployment of machine learning models directly on _portable, battery-powered devices_, enabling _personalization_, _privacy_, and _offline operation_ within severe energy and resource constraints.
+***移动端机器学习 (Mobile ML)*** 是指直接在_便携式、电池供电的设备_上部署机器学习模型，从而在严苛的能源和资源限制下实现_个人化_、_隐私保护_和_离线运行_。
+
 :::
 
-This section analyzes Mobile ML across four key dimensions, revealing how this paradigm balances capability with constraints. @fig-mobile-ml provides an overview of Mobile ML's capabilities.
+本节从四个关键维度分析移动端机器学习，揭示这种范式如何在能力与约束之间取得平衡。@fig-mobile-ml概述了移动端机器学习的能力。
 
 ::: {#fig-mobile-ml fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -713,69 +724,72 @@ above=1of $(B2.north east)!0.5!(B3.north west)$](B0){Mobile ML};
 \end{tikzpicture}
 
 ```
-**Mobile ML Capabilities**: Mobile machine learning systems balance performance with resource constraints through on-device processing, specialized hardware acceleration, and optimized frameworks. This figure outlines key considerations for deploying ML models on mobile devices, including the trade-offs between computational efficiency, battery life, and model performance.
+**移动端机器学习能力**：移动端机器学习系统通过设备端处理、专用硬件加速和优化框架，在性能与资源约束之间取得平衡。本图概述了在移动设备上部署机器学习模型的关键考虑因素，包括计算效率、电池寿命和模型性能之间的权衡。
+
 :::
 
-### Battery and Thermal Constraints {#sec-ml-systems-battery-thermal-constraints-52eb}
+### 电池与散热约束 {#sec-ml-systems-battery-thermal-constraints-52eb}
 
-Mobile devices exemplify intermediate constraints: 8GB RAM, 128GB-1TB storage, 1-10 TOPS AI compute through Neural Processing Units[^fn-npu] consuming 3-5W power. System-on-Chip architectures[^fn-mobile-soc] integrate computation and memory to minimize energy costs. Memory bandwidth of 25-50 GB/s limits models to 10-100MB parameters, requiring aggressive optimization (@sec-model-optimizations). Battery constraints (18-22Wh capacity) make energy optimization critical: 1W continuous ML processing reduces device lifetime from 24 to 18 hours. Specialized frameworks (TensorFlow Lite[^fn-tflite], Core ML[^fn-coreml]) provide hardware-optimized inference enabling <50ms UI response times.
+移动设备体现了中等程度的约束：8GB RAM、128GB-1TB 存储空间，通过神经网络处理器[^fn-npu]提供 1-10 TOPS 的人工智能算力，功耗为 3-5W。片上系统 (SoC) 架构[^fn-mobile-soc]集成了计算和内存，以最大限度地降低能源成本。25-50 GB/s 的内存带宽将模型限制在 10-100MB 参数量，这需要激进的优化 (@sec-model-optimizations)。电池约束（18-22Wh 容量）使得能源优化至关重要：1W 的持续机器学习处理会将设备续航时间从 24 小时缩短至 18 小时。专用框架（TensorFlow Lite[^fn-tflite]、Core ML[^fn-coreml]）提供硬件优化的推理，实现低于 50 毫秒的用户界面响应时间。
 
-[^fn-mobile-soc]: **Mobile System-on-Chip**: Modern flagship SoCs integrate CPU, GPU, NPU, and memory controllers on a single chip. Apple's A17 Pro contains 19 billion transistors in a 3nm process.
+[^fn-mobile-soc]: **移动片上系统 (SoC)**：现代旗舰 SoC 在单个芯片上集成了 CPU、GPU、NPU 和内存控制器。Apple 的 A17 Pro 在 3 纳米工艺中包含了 190 亿个晶体管。
 
-[^fn-npu]: **Neural Processing Unit (NPU)**: Specialized processors optimized for neural network operations. Apple's Neural Engine performs 600 billion operations per second. Qualcomm's Hexagon NPU delivers up to 75 TOPS while consuming <1W.
+[^fn-npu]: **神经网络处理器 (NPU)**：针对神经网络操作优化的专用处理器。Apple 的神经引擎每秒执行 6000 亿次操作。Qualcomm 的 Hexagon NPU 提供高达 75 TOPS 的算力，而功耗低于 1W。
 
-[^fn-tflite]: **TensorFlow Lite**: Google's mobile ML framework launched in 2017, designed to run models <100MB with <100ms inference time. Used in over 4 billion devices worldwide.
+[^fn-tflite]: **TensorFlow Lite**：Google 于 2017 年推出的移动端机器学习框架，旨在运行小于 100MB 且推理时间低于 100 毫秒的模型。全球超过 40 亿台设备正在使用。
 
-[^fn-coreml]: **Core ML**: Apple's framework introduced in iOS 11 (2017), optimized for on-device inference. Supports models from 1KB to 1GB, with automatic optimization for Apple Silicon.
+[^fn-coreml]: **Core ML**：Apple 在 iOS 11 (2017) 中引入的框架，针对设备端推理进行了优化。支持从 1KB 到 1GB 的模型，并针对 Apple 芯片进行自动优化。
 
-### Mobile ML Benefits and Resource Constraints {#sec-ml-systems-mobile-ml-benefits-resource-constraints-63a1}
+### 移动端机器学习的优势与资源限制 {#sec-ml-systems-mobile-ml-benefits-resource-constraints-63a1}
 
-Mobile ML excels at delivering responsive, privacy-preserving user experiences. Real-time processing achieves sub-10ms latency, enabling imperceptible response: face detection operates at 60fps with under 5ms latency, while voice wake-word detection responds within 2-3ms. Privacy guarantees emerge from complete data sovereignty through on-device processing. Face ID processes biometric data entirely within a hardware-isolated Secure Enclave[^fn-face-detection], keyboard prediction trains locally on user data, and health monitoring maintains HIPAA compliance without complex infrastructure requirements. Offline functionality eliminates network dependency: Google Maps analyzes millions of road segments locally for navigation, translation[^fn-real-time-translation] supports 40+ language pairs using 35-45MB models that achieve 90% of cloud accuracy, and music identification matches against on-device databases. Personalization reaches unprecedented depth by leveraging behavioral data accumulated over months: iOS predicts which app users will open next with 70-80% accuracy, notification management optimizes delivery timing based on individual patterns, and camera systems continuously adapt to user preferences through implicit feedback.
+移动端机器学习擅长提供响应迅速、保护隐私的用户体验。实时处理可实现低于 10 毫秒的延迟，从而实现难以察觉的响应：人脸检测以 60fps 运行，延迟低于 5 毫秒，而语音唤醒词检测在 2-3 毫秒内即可响应。隐私保证源于通过设备端处理实现的完全数据主权。Face ID 完全在硬件隔离的安全隔离区 (Secure Enclave)[^fn-face-detection] 内处理生物特征数据，键盘预测在用户数据上进行本地训练，健康监测无需复杂的基础设施要求即可保持 HIPAA 合规性。离线功能消除了网络依赖：Google 地图在本地分析数百万个路段进行导航，翻译[^fn-real-time-translation]使用 35-45MB 的模型支持 40 多种语言对，并达到云端准确率的 90%，音乐识别则与设备端数据库进行匹配。通过利用数月积累的行为数据，个人化达到了前所未有的深度：iOS 以 70-80% 的准确率预测用户下一步将打开哪个应用程序，通知管理根据个人模式优化推送时间，摄像头系统通过隐式反馈不断适应用户偏好。
 
-[^fn-real-time-translation]: **Real-Time Translation**: Google Translate processes 40+ languages offline using on-device neural networks. Models are 35-45MB versus 2GB+ cloud versions, achieving 90% accuracy while enabling instant translation without internet.
+[^fn-real-time-translation]: **实时翻译**：Google 翻译使用设备端神经网络离线处理 40 多种语言。模型大小为 35-45MB，而云端版本超过 2GB，在实现 90% 准确率的同时，无需互联网即可实现即时翻译。
 
-[^fn-face-detection]: **Mobile Face Detection**: Apple's Face ID processes biometric data entirely on-device using the Secure Enclave, making extraction practically impossible even with physical device access.
+[^fn-face-detection]: **移动端人脸检测**：Apple 的 Face ID 使用安全隔离区 (Secure Enclave) 完全在设备端处理生物特征数据，即使拥有物理设备访问权限，提取数据也几乎不可能。
 
-These benefits require accepting significant resource constraints. Flagship phones allocate only 100MB-1GB to individual ML applications, representing just 0.5-5% of total memory, forcing models to remain under 100-500MB compared to cloud's ability to deploy 350GB+ models. Battery life[^fn-mobile-constraints] presents visible user impact: processing 100 inferences per hour at 0.1 joules each consumes 0.36% of battery daily, compounding with baseline drain; video processing at 30fps can reduce battery life from 24 hours to 6-8 hours. Thermal throttling unpredictably limits sustained performance, with the A17 Pro chip achieving 35 TOPS peak performance but sustaining only 10-15 TOPS during extended operation, requiring adaptive performance strategies. Development complexity multiplies across platforms, demanding separate implementations for Core ML and TensorFlow Lite, while device heterogeneity—particularly Android's span from $100 budget phones to $1,500 flagships—requires multiple model variants. Deployment friction adds further challenges: app store approval processes taking 1-7 days prevent rapid bug fixes that cloud deployments can deploy instantly.
+这些优势需要接受显著的资源限制。旗舰手机仅为单个机器学习应用分配 100MB-1GB 内存，仅占总内存的 0.5-5%，这迫使模型必须保持在 100-500MB 以下，而云端则能够部署 350GB 以上的模型。电池寿命[^fn-mobile-constraints]对用户产生显著影响：每小时处理 100 次推理（每次 0.1 焦耳）每天会消耗 0.36% 的电量，并与基础耗电叠加；以 30fps 进行视频处理可能会将电池寿命从 24 小时缩短至 6-8 小时。热节流会不可预测地限制持续性能，例如 A17 Pro 芯片虽然峰值性能可达 35 TOPS，但在长时间运行期间只能维持 10-15 TOPS，这需要采取自适应性能策略。开发复杂性跨平台成倍增加，需要为 Core ML 和 TensorFlow Lite 分别实现，而设备异构性——特别是 Android 系统涵盖了从$100 budget phones to $1,500 美元的旗舰机——需要多个模型变体。部署摩擦增加了进一步的挑战：应用商店 1-7 天的审批流程阻碍了快速修复 Bug，而云端部署则可以即时发布更新。
 
-[^fn-mobile-constraints]: **Mobile Device Constraints**: Flagship phones typically have 12-24GB RAM and 512GB-2TB storage, versus cloud servers with 256-2048GB RAM and unlimited storage. Mobile processors operate at 15-25W peak power compared to server CPUs at 200-400W.
+[^fn-mobile-constraints]: **移动设备约束**：旗舰手机通常拥有 12-24GB RAM 和 512GB-2TB 存储空间，而云端服务器拥有 256-2048GB RAM 和无限存储空间。移动处理器的峰值功率为 15-25W，而服务器 CPU 为 200-400W。
 
-### Personal Assistant and Media Processing {#sec-ml-systems-personal-assistant-media-processing-3419}
+### 个人助手与媒体处理 {#sec-ml-systems-personal-assistant-media-processing-3419}
 
-Mobile ML has achieved transformative success across diverse applications that showcase the unique advantages of on-device processing for billions of users worldwide. Computational photography represents perhaps the most visible success, transforming smartphone cameras into sophisticated imaging systems. Modern flagships process every photo through multiple ML pipelines operating in real-time: portrait mode[^fn-portrait-mode] uses depth estimation and segmentation networks to achieve DSLR-quality bokeh effects, night mode captures and aligns 9-15 frames with ML-based denoising that reduces noise by 10-20dB, and systems like Google Pixel process 10-15 distinct ML models per photo for HDR merging, super-resolution, and scene optimization.
+移动端机器学习在各种应用中取得了变革性的成功，向全球数十亿用户展示了设备端处理的独特优势。计算摄影或许是最显而易见的成功案例，它将智能手机摄像头转变为复杂的成像系统。现代旗舰机通过多个实时运行的机器学习流水线处理每一张照片：人像模式[^fn-portrait-mode]使用深度估计和分割网络实现单反级的散景效果，夜间模式捕捉并对齐 9-15 帧，并通过基于机器学习的去噪技术将噪声降低 10-20dB，像 Google Pixel 这样的系统每张照片会处理 10-15 个不同的机器学习模型，用于 HDR 合并、超分辨率和场景优化。
 
-Voice-driven interactions demonstrate mobile ML's transformation of human-device communication. These systems combine ultra-low-power wake-word detection consuming less than 1mW with on-device speech recognition achieving under 10ms latency for simple commands. Keyboard prediction has evolved to context-aware neural models achieving 60-70% phrase prediction accuracy, reducing typing effort by 30-40%. Real-time camera translation processes over 100 languages at 15-30fps entirely on-device, enabling instant visual translation without internet connectivity.
+语音驱动的交互展示了移动端机器学习对人机通信的变革。这些系统结合了功耗低于 1mW 的超低功耗唤醒词检测，以及针对简单命令实现低于 10 毫秒延迟的设备端语音识别。键盘预测已演变为上下文感知的神经模型，短语预测准确率达到 60-70%，打字工作量减少了 30-40%。实时摄像头翻译完全在设备端以 15-30fps 处理 100 多种语言，无需互联网连接即可实现即时视觉翻译。
 
-Health monitoring through wearables like Apple Watch extracts sophisticated insights from sensor data while maintaining complete privacy. These systems achieve over 95% accuracy in activity detection and include FDA-cleared atrial fibrillation detection with 98%+ sensitivity, processing extraordinarily sensitive health data entirely on-device to maintain HIPAA compliance. Accessibility features demonstrate transformative social impact through continuous local processing: Live Text detects and recognizes text from camera feeds, Sound Recognition alerts deaf users to environmental cues through haptic feedback, and VoiceOver generates natural language descriptions of visual content.
+通过 Apple Watch 等可穿戴设备进行的健康监测，在保持完全隐私的同时，从传感器数据中提取出复杂的洞察。这些系统在活动检测方面的准确率超过 95%，并包含经过 FDA 批准、敏感度超过 98% 的房颤检测，完全在设备端处理极其敏感的健康数据以保持 HIPAA 合规性。辅助功能通过持续的本地处理展示了变革性的社会影响：实况文本（Live Text）从相机馈送中检测并识别文本，声音识别（Sound Recognition）通过触觉反馈提醒听障用户环境线索，旁白（VoiceOver）生成视觉内容的自然语言描述。
 
-Augmented reality frameworks leverage mobile ML for real-time environment understanding at 60fps. ARCore and ARKit track device position with centimeter-level accuracy while simultaneously mapping 3D surroundings, enabling hand tracking that extracts 21-joint 3D poses and face analysis of 50+ landmark meshes for real-time effects. These applications demand consistent sub-16ms frame times, making only on-device processing viable for delivering the seamless experiences users expect.
+增强现实框架利用移动端机器学习以 60fps 的速度实现实时环境理解。ARCore 和 ARKit 以厘米级的精度跟踪设备位置，同时绘制 3D 周围环境地图，实现可提取 21 个关节 3D 姿态的手部跟踪，以及针对 50 多个地标网格的人脸分析以实现实时效果。这些应用要求一致的低于 16 毫秒的帧时间，这使得只有设备端处理才能提供用户所期望的无缝体验。
 
-[^fn-portrait-mode]: **Portrait Mode Photography**: Uses dual cameras or LiDAR for depth maps, then ML segmentation to separate subjects from backgrounds, achieving DSLR-quality depth-of-field effects in real-time.
+[^fn-portrait-mode]: **人像模式摄影**：使用双摄像头或 LiDAR 获取深度图，然后通过机器学习分割将主体与背景分离，实时实现单反级的景深效果。
 
-Despite mobile ML's demonstrated capabilities, a common pitfall involves attempting to deploy desktop-trained models directly to mobile or edge devices without architecture modifications. Models developed on powerful workstations often fail dramatically when deployed to resource-constrained devices. A ResNet-50 model requiring 4GB memory for inference (including activations and batch processing) and 4 billion FLOPs per inference cannot run on a device with 512MB of RAM and a 1 GFLOP/s processor. Beyond simple resource violations, desktop-optimized models may use operations unsupported by mobile hardware (specialized mathematical operations), assume floating-point precision unavailable on embedded systems, or require batch processing incompatible with single-sample inference. Successful deployment demands architecture-aware design from the beginning, including specialized architectural techniques for mobile devices [@howard2017mobilenets], integer-only operations for microcontrollers, and optimization strategies that maintain accuracy while reducing computation.
+尽管移动端机器学习已证明了其能力，但一个常见的陷阱是尝试在不修改架构的情况下，将桌面端训练的模型直接部署到移动或边缘设备。在强大工作站上开发的模型在部署到资源受限的设备时往往会遭遇惨重失败。一个推理时需要 4GB 内存（包括激活值和批处理）且每次推理需要 40 亿次浮点运算（FLOPs）的 ResNet-50 模型，无法在只有 512MB RAM 和 1 GFLOP/s 处理器的设备上运行。除了简单的资源违规外，针对桌面端优化的模型可能会使用移动端硬件不支持的操作（专用数学运算），假设嵌入式系统无法提供的浮点精度，或者需要与单样本推理不兼容的批处理。成功的部署要求从一开始就进行架构感知设计，包括针对移动设备的专用架构技术[@howard2017mobilenets]、针对微控制器的仅整数运算，以及在减少计算量的同时保持准确性的优化策略。
 
-## Tiny ML: Ubiquitous Sensing at Scale {#sec-ml-systems-tiny-ml-ubiquitous-sensing-scale-51d8}
+## Tiny ML：无处不在的大规模感知 {#sec-ml-systems-tiny-ml-ubiquitous-sensing-scale-51d8}
 
-The progression from Cloud to Edge to Mobile ML demonstrates the increasing distribution of intelligence across computing platforms, yet each step still requires significant resources. Even mobile devices, with their sophisticated processors and gigabytes of memory, represent a relatively privileged position in the global computing landscape, demanding watts of power and hundreds of dollars in hardware investment. For truly ubiquitous intelligence (sensors in every surface, monitor on every machine, intelligence in every object), these resource requirements remain prohibitive. Tiny ML completes the deployment spectrum by pushing intelligence to its absolute limits, using devices costing less than $10 and consuming less than 1 milliwatt of power. This paradigm makes ubiquitous sensing not just technically feasible but economically practical at massive scales.
+从云端到边缘再到移动端机器学习的演进，展示了智能在计算平台上的分布日益广泛，但每一步仍然需要大量的资源。即使是拥有先进处理器和数 GB 内存的移动设备，在全球计算版图中也代表着一个相对优越的位置，需要数瓦的功耗和数百美元的硬件投资。对于真正无处不在的智能（每个表面都有传感器，每台机器都有监控，每个物体都有智能），这些资源需求仍然令人望而却步。Tiny ML 通过将智能推向绝对极限，使用成本低于 10 美元且功耗低于 1 毫瓦的设备，完善了部署频谱。这一范式使得无处不在的感知不仅在技术上可行，而且在大规模应用中具有经济实用性。
 
-Where mobile ML still requires sophisticated hardware with gigabytes of memory and multi-core processors, Tiny Machine Learning operates on microcontrollers with kilobytes of RAM and single-digit dollar price points. This extreme constraint forces a significant shift in how we approach machine learning deployment, prioritizing ultra-low power consumption and minimal cost over computational sophistication. The result enables entirely new categories of applications impossible at any other scale.
+移动端机器学习仍然需要具有数 GB 内存和多核处理器的复杂硬件，而微型机器学习（Tiny Machine Learning）则运行在内存仅为数 KB、价格仅为个位数的微控制器上。这种极端的限制迫使我们改变机器学习部署的方式，优先考虑超低功耗和极低成本，而非计算的复杂性。其结果是开启了在任何其他规模下都不可能实现的全新应用类别。
 
-Tiny ML brings intelligence to the smallest devices, from microcontrollers[^fn-microcontrollers] to embedded sensors, enabling real-time computation in severely resource-constrained environments. This paradigm excels in applications requiring ubiquitous sensing, autonomous operation, and extreme energy efficiency. Tiny ML systems power applications such as predictive maintenance, environmental monitoring, and simple gesture recognition while optimized for energy efficiency[^fn-energy-efficiency], often running for months or years on limited power sources such as coin-cell batteries[^fn-coin-cell]. These systems deliver actionable insights in remote or disconnected environments where power, connectivity, and maintenance access are impractical.
+Tiny ML 将智能带到了最小的设备中，从微控制器 [^fn-microcontrollers] 到嵌入式传感器，在资源严重受限的环境中实现实时计算。这一范式在需要无处不在的感知、自主运行和极高能源效率的应用中表现出色。Tiny ML 系统为预测性维护、环境监测和简单的手势识别等应用提供动力，同时针对能源效率 [^fn-energy-efficiency] 进行了优化，通常仅靠纽扣电池 [^fn-coin-cell] 等有限电源即可运行数月或数年。这些系统在电力、连接和维护通道不切实际的远程或断连环境中提供可操作的见解。
 
-[^fn-microcontrollers]: **Microcontrollers**: Single-chip computers with integrated CPU, memory, and peripherals, typically operating at 1-100MHz with 32KB-2MB RAM. Arduino Uno uses an ATmega328P with 32KB flash and 2KB RAM, while ESP32 provides WiFi capability with 520KB RAM, still thousands of times less than a smartphone.
+[^fn-microcontrollers]: **微控制器**：集成 CPU、内存和外设的单芯片计算机，通常运行频率为 1-100MHz，配备 32KB-2MB RAM。Arduino Uno 使用 ATmega328P，具有 32KB 闪存和 2KB RAM，而 ESP32 提供 WiFi 功能并配备 520KB RAM，但仍比智能手机少几千倍。
 
-[^fn-energy-efficiency]: **Energy Efficiency in TinyML**: Ultra-low power consumption enables deployment in remote locations. Modern ARM Cortex-M0+ microcontrollers consume <1µW in sleep mode and 100-300µW/MHz when active. Efficient ML inference can run for years on a single coin-cell battery.
+[^fn-energy-efficiency]: **TinyML 中的能源效率**：超低功耗使得在偏远地区部署成为可能。现代 ARM Cortex-M0+ 微控制器的待机功耗 <1µW，激活时功耗为 100-300µW/MHz。高效的机器学习推理仅靠一颗纽扣电池即可运行数年。
 
-[^fn-coin-cell]: **Coin-Cell Batteries**: Small, round batteries (CR2032 being most common) providing 200-250mAh at 3V. When powering TinyML devices at 10-50mW average consumption, these batteries can operate devices for 1-5 years, enabling "deploy-and-forget" IoT applications.
+[^fn-coin-cell]: **纽扣电池**：小型圆形电池（CR2032 最常见），在 3V 电压下提供 200-250mAh 电量。当以 10-50mW 的平均功耗为 TinyML 设备供电时，这些电池可支持设备运行 1-5 年，从而实现“部署后即忘”的物联网应用。
 
-::: {.callout-definition title="Tiny ML"}
+::: {.callout-definition title="微型机器学习"}
 
-***Tiny Machine Learning (Tiny ML)*** is the deployment of machine learning models on _microcontrollers_ and _ultra-constrained devices_, enabling _autonomous decision-making_ with milliwatt-scale power consumption for applications requiring years of battery life.
+***微型机器学习 (Tiny ML)*** 是指在微控制器和极端受限的设备上部署机器学习模型，为需要数年电池寿命的应用实现毫瓦级功耗的自主决策。
+
 :::
 
-This section analyzes Tiny ML through four critical dimensions that define its unique position in the ML deployment spectrum. @fig-tiny-ml encapsulates the key aspects of Tiny ML discussed in this section.
+本节通过四个关键维度分析 Tiny ML，这些维度定义了其在机器学习部署频谱中的独特地位。@fig-tiny-ml概括了本节讨论的 Tiny ML 的关键方面。
 
 ::: {#fig-tiny-ml fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -838,97 +852,98 @@ above=1of $(B2.north east)!0.5!(B3.north west)$](B0){Tiny ML};
 }
 \end{tikzpicture}
 ```
-**TinyML System Characteristics**: Constrained devices necessitate a focus on efficiency, driving trade-offs between model complexity, accuracy, and energy consumption, while enabling localized intelligence and real-time responsiveness in embedded applications. This figure outlines key aspects of TinyML, including the challenges of resource limitations, example applications, and the benefits of on-device machine learning.
+**TinyML 系统特性**：受限设备必须关注效率，在模型复杂度、准确性和能耗之间进行权衡，同时在嵌入式应用中实现本地化智能和实时响应。此图概述了 TinyML 的关键方面，包括资源限制的挑战、应用示例以及设备端机器学习的优势。
+
 :::
 
-### Extreme Resource Constraints {#sec-ml-systems-extreme-resource-constraints-b788}
+### 极端的资源限制 {#sec-ml-systems-extreme-resource-constraints-b788}
 
-TinyML operates at hardware extremes: Arduino Nano 33 BLE Sense (256KB RAM, 1MB Flash, 0.02-0.04W, $35) and ESP32-CAM (520KB RAM, 4MB Flash, 0.05-0.25W, $10) represent 30,000-50,000x memory reduction versus cloud systems and 160,000x power reduction (@fig-TinyML-example). These constraints enable months or years of autonomous operation[^fn-on-device-training] but demand specialized algorithms delivering acceptable performance at <1 TOPS compute with microsecond response times. Devices range from palm-sized to 5x5mm chips[^fn-device-size], enabling ubiquitous sensing in previously impossible contexts.
+TinyML 在硬件极限下运行：Arduino Nano 33 BLE Sense（256KB RAM，1MB Flash，0.02-0.04W，35 美元）和 ESP32-CAM（520KB RAM，4MB Flash，0.05-0.25W，10 美元）代表了与云端系统相比 30,000-50,000 倍的内存减少和 160,000 倍的功耗降低 (@fig-TinyML-example)。这些限制实现了数月或数年的自主运行 [^fn-on-device-training]，但需要专门的算法在 <1 TOPS 的计算能力下提供微秒级的响应时间。设备范围从手掌大小到 5x5mm 的芯片 [^fn-device-size]，使得在以前不可能的语境中实现无处不在的感知成为可能。
 
-[^fn-on-device-training]: **On-Device Training Constraints**: Microcontrollers rarely support full training due to memory limitations. Instead, they use transfer learning with minimal on-device adaptation or federated learning aggregation.
+[^fn-on-device-training]: **设备端训练限制**：由于内存限制，微控制器很少支持完整训练。相反，它们使用具有极少设备端自适应能力的迁移学习或联邦学习聚合。
 
-[^fn-device-size]: **TinyML Device Scale**: The smallest ML-capable devices measure just 5x5mm (Syntiant NDP chips). Google's Coral Dev Board Mini (40x48mm) includes WiFi and full Linux capability.
+[^fn-device-size]: **TinyML 设备规模**：最小的具备机器学习能力的设备尺寸仅为 5x5mm（Syntiant NDP 芯片）。谷歌的 Coral Dev Board Mini (40x48mm) 则包含了 WiFi 和完整的 Linux 能力。
 
-![**TinyML System Scale**: These device kits exemplify the extreme miniaturization achievable with TinyML, enabling deployment of machine learning on resource-constrained devices with limited power and memory. such compact systems broaden the applicability of ML to previously inaccessible edge applications, including wearable sensors and embedded IoT devices. Source: [@warden2018speech]](images/png/tiny_ml.png){#fig-TinyML-example}
+![**TinyML 系统规模**：这些设备套件例证了通过 TinyML 可以实现的极端小型化，使得在电力和内存有限的资源受限设备上部署机器学习成为可能。这种紧凑的系统扩大了机器学习在以前无法触及的边缘应用中的适用性，包括可穿戴传感器和嵌入式物联网设备。来源：[@warden2018speech]](images/png/tiny_ml.png){#fig-TinyML-example}
 
-### TinyML Advantages and Operational Trade-offs {#sec-ml-systems-tinyml-advantages-operational-tradeoffs-db08}
+### TinyML 的优势与运行权衡 {#sec-ml-systems-tinyml-advantages-operational-tradeoffs-db08}
 
-TinyML's extreme resource constraints enable unique advantages impossible at other scales. Microsecond-level latency eliminates all transmission overhead, achieving 10-100μs response times that enable applications requiring sub-millisecond decisions: industrial vibration monitoring processes 10kHz sampling at under 50μs latency, audio wake-word detection analyzes 16kHz audio streams under 100μs, and precision manufacturing systems inspect over 1000 parts per minute. Economic advantages prove transformative for massive-scale deployments: complete ESP32-CAM systems cost $8-12, enabling 1000-sensor deployments for $10,000 versus $500,000-1,000,000 for cellular alternatives. Agricultural monitoring can instrument buildings for $5,000 versus $50,000+ for camera-based systems, while city-scale networks of 100,000 sensors become economically viable at $1-2 million versus $50-100 million for edge alternatives. Energy efficiency enables 1-10 year operation on coin-cell batteries consuming just 1-10mW, supporting applications like wildlife tracking for years without recapture, structural health monitoring embedded in concrete during construction, and agricultural sensors deployed where power infrastructure doesn't exist. Energy harvesting from solar, vibration, or thermal sources can even enable perpetual operation. Privacy surpasses all other paradigms through physical data confinement—data never leaves the sensor, providing mathematical guarantees impossible in networked systems regardless of encryption strength.
+TinyML 极端的资源限制带来了在其他规模下无法实现的独特优势。微秒级的延迟消除了所有传输开销，实现了 10-100μs 的响应时间，从而支持需要亚毫秒级决策的应用：工业振动监测以低于 50μs 的延迟处理 10kHz 的采样，音频唤醒词检测在 100μs 内分析 16kHz 音频流，精密制造系统每分钟检查超过 1000 个零件。经济优势证明了大规模部署的变革性：完整的 ESP32-CAM 系统成本仅为 8-12 美元，使得 1000 个传感器的部署成本仅为 10,000 美元，而蜂窝网络边缘替代方案则需 500,000-1,000,000 美元。农业监测可以以 5,000 至 50,000 美元以上的成本为建筑配备传感器（基于摄像头的方案），而由 100,000 个传感器组成的城市级网络在 1-2 百万美元的预算下即可实现经济可行（甚至更高方案对比高达 5,000-10,000 万美元的替代方案）。能源效率实现了仅消耗 1-10mW 的纽扣电池即可运行 1-10 年，支持诸如多年无需重新捕获的野生动物追踪、施工期间嵌入混凝土的结构健康监测，以及部署在没有电力基础设施地区的农业传感器。从太阳能、振动或热源进行能量收集甚至可以实现永久运行。隐私性通过物理数据隔离超越了所有其他范式——数据永远不会离开传感器，提供了无论加密强度如何，在网络系统中都无法实现的数学保证。
 
-These capabilities require substantial trade-offs. Computational constraints impose severe limits: microcontrollers provide 256KB-2MB RAM versus smartphones' 12-24GB (a 5,000-50,000x difference), forcing models to remain under 100-500KB with 10,000-100,000 parameters compared to mobile's 1-10 million parameters. Development complexity requires expertise spanning neural network optimization, hardware-level memory management, embedded toolchains, and specialized debugging using oscilloscopes and JTAG debuggers across diverse microcontroller architectures. Model accuracy suffers from extreme compression: TinyML models typically achieve 70-85% of cloud model accuracy versus mobile's 90-95%, limiting suitability for applications requiring high precision. Deployment inflexibility constrains adaptation, as devices typically run single fixed models requiring power-intensive firmware flashing for updates that risk bricking devices. With operational lifetimes spanning years, initial deployment decisions become critical. Ecosystem fragmentation[^fn-model-compression] across microcontroller vendors and ML frameworks creates substantial development overhead and platform lock-in challenges.
+这些能力需要大量的权衡。计算约束施加了严格的限制：微控制器提供 256KB-2MB RAM，而智能手机为 12-24GB（相差 5,000-50,000 倍），迫使模型必须保持在 100-500KB 以下，参数量为 10,000-100,000 个，而移动端则为 100 万至 1000 万个参数。开发复杂性需要涵盖神经网络优化、硬件级内存管理、嵌入式工具链以及跨多种微控制器架构使用示波器和 JTAG 调试器进行专门调试的专业知识。模型准确率受极端压缩影响：TinyML 模型的准确率通常达到云端模型的 70-85%，而移动端为 90-95%，这限制了其在需要高精度的应用中的适用性。部署的灵活性受限，因为设备通常运行单一的固定模型，更新需要消耗大量电能的固件刷写，且存在设备变砖的风险。由于运行寿命长达数年，初始部署决策变得至关重要。微控制器供应商和机器学习框架之间的生态系统碎片化 [^fn-model-compression] 带来了巨大的开发开销和平台锁定挑战。
 
-[^fn-model-compression]: **TinyML Model Optimization**: Specialized techniques dramatically reduce model size. A typical 50MB smartphone model might optimize to 250KB for microcontroller deployment while retaining 95% accuracy (detailed in @sec-model-optimizations).
+[^fn-model-compression]: **TinyML 模型优化**：专门的技术可以显著减小模型大小。一个典型的 50MB 智能手机模型可以优化到 250KB 以用于微控制器部署，同时保留 95% 的准确率（详见@sec-model-optimizations）。
 
-### Environmental and Health Monitoring {#sec-ml-systems-environmental-health-monitoring-c9b0}
+### 环境与健康监测 {#sec-ml-systems-environmental-health-monitoring-c9b0}
 
-Tiny ML succeeds remarkably across domains where its unique advantages—ultra-low power, minimal cost, and complete data privacy—enable applications impossible with other paradigms. Industrial predictive maintenance demonstrates TinyML's ability to transform traditional infrastructure through distributed intelligence. Manufacturing facilities deploy thousands of vibration sensors operating continuously for 5-10 years on coin-cell batteries while consuming less than 2mW average power. These sensors cost $15-50 compared to traditional wired sensors at $500-2,000 per point, reducing deployment costs from $5-20 million to $150,000-500,000 for 10,000 monitoring points. Local anomaly detection provides 7-14 day advance warning of equipment failures, enabling companies to achieve 25-45% reductions in unplanned downtime.
+Tiny ML 在其独特优势（超低功耗、极低成本和完全的数据隐私）能够实现其他范式无法实现的应用领域取得了显著成功。工业预测性维护展示了 TinyML 通过分布式智能改变传统基础设施的能力。制造设施部署了数千个振动传感器，使用纽扣电池连续运行 5-10 年，平均功耗低于 2mW。这些传感器的成本为每个监测点 15-50 美元，而传统有线传感器则需 500-2,000 美元，将 10,000 个监控点的部署成本从 500-2,000 万美元降低至 15-50 万美元。本地异常检测可提前 7-14 天提供设备故障警告，使公司能够减少 25-45% 的非计划停机时间。
 
-Wake-word detection represents TinyML's most visible consumer application, with billions of devices employing always-listening capabilities at under 1mW continuous power consumption. These systems process 16kHz audio through neural networks containing 5,000-20,000 parameters compressed to 10-50KB, detecting wake phrases with over 95% accuracy. Amazon Echo devices use dedicated TinyML chips like the AML05 that consume less than 10mW for detection, only activating the main processor when wake words trigger—reducing average power consumption by 10-20x[^fn-fitness-trackers].
+唤醒词检测是 TinyML 最显眼的消费级应用，数十亿台设备以低于 1mW 的持续功耗实现了“始终监听”功能。这些系统通过包含 5,000-20,000 个参数、压缩至 10-50KB 的神经网络处理 16kHz 音频，以超过 95% 的准确率检测唤醒短语。亚马逊 Echo 设备使用专门的 TinyML 芯片（如 AML05），其检测功耗低于 10mW，仅在唤醒词触发时才激活主处理器，从而将平均功耗降低了 10-20 倍 [^fn-fitness-trackers]。
 
-Precision agriculture leverages TinyML's economic advantages where traditional solutions prove cost-prohibitive. Monitoring 100 hectares requires approximately 1,000 monitoring points, which TinyML enables for $15,000-30,000 compared to $100,000-200,000+ for cellular-connected alternatives. These sensors operate 3-5 years on batteries while analyzing temporal patterns locally, transmitting only actionable insights rather than raw data streams.
+精准农业利用了 TinyML 的经济优势，而传统解决方案在这些领域被证明成本过高。监测 100 公顷土地需要大约 1,000 个监测点，TinyML 的实现成本为 15,000-30,000 美元，而传统方案则需 100,000-200,000 美元以上。这些传感器依靠电池运行 3-5 年，同时在本地分析时间模式，仅传输可操作的见解而非原始数据流。
 
-Wildlife conservation demonstrates TinyML's transformative potential for remote environmental monitoring. Researchers deploy solar-powered audio sensors consuming 100-500mW that process continuous audio streams for species identification. By performing local analysis, these systems reduce satellite transmission requirements from 4.3GB per day to 400KB of detection summaries, a 10,000x reduction that makes large-scale deployments of 100-1,000 sensors economically feasible. Medical wearables achieve FDA-cleared cardiac monitoring with 95-98% sensitivity while processing 250-500 ECG samples per second at under 5mW power consumption. This efficiency enables week-long continuous monitoring versus hours for smartphone-based alternatives, while reducing diagnostic costs from $2,000-5,000 for traditional in-lab studies to under $100 for at-home testing.
+野生动物保护展示了 TinyML 在远程环境监测方面的变革潜力。研究人员部署了功耗为 100-500mW 的太阳能音频传感器，处理连续音频流以进行物种识别。通过进行本地分析，这些系统将卫星传输需求从每天 4.3GB 减少到 400KB 的检测摘要，实现了 10,000 倍的缩减，使得部署 100-1,000 个传感器的大规模方案在经济上变得可行。医疗可穿戴设备以低于 5mW 的功耗每秒处理 250-500 个 ECG 样本，实现了经 FDA 批准且灵敏度达 95-98% 的心脏监测。这种效率实现了长达一周的连续监测，而基于智能手机的替代方案仅能维持数小时，同时将诊断成本从远程监控的$2,000-5,000 for traditional in-lab studies to under $100 降低。
 
-[^fn-fitness-trackers]: **TinyML in Fitness Trackers**: Apple Watch detects falls using accelerometer data and on-device ML, automatically calling emergency services. The algorithm analyzes motion patterns in real-time using <1mW power.
+[^fn-fitness-trackers]: **健身追踪器中的 TinyML**：Apple Watch 利用加速度计数据和设备端机器学习来检测跌倒，并自动呼叫紧急服务。该算法使用 <1mW 的功耗实时分析运动模式。
 
-## Hybrid Architectures: Combining Paradigms {#sec-ml-systems-hybrid-architectures-combining-paradigms-c1f2}
+## 混合架构：范式结合 {#sec-ml-systems-hybrid-architectures-combining-paradigms-c1f2}
 
-Our examination of individual deployment paradigms—from cloud's massive computational power to tiny ML's ultra-efficient sensing—reveals a spectrum of engineering trade-offs, each with distinct advantages and limitations. Cloud ML maximizes algorithmic sophistication but introduces latency and privacy constraints. Edge ML reduces latency but requires dedicated infrastructure and constrains computational resources. Mobile ML prioritizes user experience but operates within strict battery and thermal limitations. Tiny ML achieves ubiquity through extreme efficiency but severely constrains model complexity. Each paradigm occupies a distinct niche, optimized for specific constraints and use cases.
+我们对各个部署范式的考察——从云端的强大计算能力到微型机器学习（Tiny ML）的超高效感知——揭示了一系列工程权衡，每种范式都有其独特的优势和局限性。云端机器学习（Cloud ML）最大限度地提高了算法的复杂性，但引入了延迟和隐私限制。边缘机器学习（Edge ML）降低了延迟，但需要专门的基础设施并限制了计算资源。移动端机器学习（Mobile ML）优先考虑用户体验，但在严格的电池和散热限制下运行。微型机器学习（Tiny ML）通过极高的效率实现了无处不在，但严重限制了模型的复杂度。每种范式都占据一个独特的生态位，针对特定的约束和用例进行了优化。
 
-Yet in practice, production systems rarely confine themselves to a single paradigm, as the limitations of each approach create opportunities for complementary integration. A voice assistant that uses tiny ML for wake-word detection, mobile ML for local speech recognition, edge ML for contextual processing, and cloud ML for complex natural language understanding demonstrates a more powerful approach. Hybrid Machine Learning formalizes this integration strategy, creating unified systems that leverage each paradigm's complementary strengths while mitigating individual limitations.
+然而在实践中，生产系统很少局限于单一范式，因为每种方法的局限性都为互补集成创造了机会。一个语音助手，如果使用微型机器学习进行唤醒词检测，使用移动端机器学习进行本地语音识别，使用边缘机器学习进行上下文处理，并使用云端机器学习进行复杂的自然语言理解，就能展示出一种更强大的方法。混合机器学习（Hybrid Machine Learning）将这种集成策略正式化，创建了统一的系统，利用每种范式的互补优势，同时减轻各自的局限性。
 
-::: {.callout-definition title="Hybrid ML"}
+::: {.callout-definition title="混合机器学习"}
 
-***Hybrid Machine Learning (Hybrid ML)*** is the integration of _multiple deployment paradigms_ into unified systems, strategically distributing workloads across _computational tiers_ to achieve _scalability_, _privacy_, and _performance_ impossible with single-paradigm approaches.
+***混合机器学习 (Hybrid Machine Learning, Hybrid ML)*** 是将*多种部署范式*集成到统一系统中，战略性地将工作负载分布在各个*计算层级*，以实现单一范式方法无法达到的*可扩展性*、*隐私性*和*性能*。
+
 :::
 
-### Multi-Tier Integration Patterns {#sec-ml-systems-multitier-integration-patterns-c96b}
+### 多层级集成模式 {#sec-ml-systems-multitier-integration-patterns-c96b}
 
-Hybrid ML design patterns provide reusable architectural solutions for integrating paradigms effectively. Each pattern represents a strategic approach to distributing ML workloads across computational tiers, optimized for specific trade-offs in latency, privacy, resource efficiency, and scalability.
+混合机器学习设计模式为有效集成各种范式提供了可重用的架构解决方案。每种模式都代表了一种在计算层级间分配机器学习工作负载的战略方法，针对延迟、隐私、资源效率和可扩展性方面的特定权衡进行了优化。
 
-This analysis identifies five essential patterns that address common integration challenges in hybrid ML systems.
+本分析确定了五种基本模式，旨在解决混合机器学习系统中常见的集成挑战。
 
-#### Train-Serve Split {#sec-ml-systems-trainserve-split-b9a1}
+#### 训练-服务分离 {#sec-ml-systems-trainserve-split-b9a1}
 
-One of the most common hybrid patterns is the train-serve split, where model training occurs in the cloud but inference happens on edge, mobile, or tiny devices. This pattern takes advantage of the cloud's vast computational resources for the training phase while benefiting from the low latency and privacy advantages of on-device inference[^fn-train-serve-split]. For example, smart home devices often use models trained on large datasets in the cloud but run inference locally to ensure quick response times and protect user privacy. In practice, this might involve training models on powerful cloud systems like TPU Pods with exaflop-scale compute and hundreds of terabytes of memory, before deploying optimized versions to edge servers or embedded edge devices for efficient inference. Similarly, mobile vision models for computational photography are typically trained on powerful cloud infrastructure but deployed to run efficiently on phone hardware.
+最常见的混合模式之一是训练-服务分离，即模型训练在云端进行，但推理发生在边缘、移动端或微型设备上。这种模式利用了云端巨大的计算资源进行训练阶段，同时受益于设备端推理带来的低延迟和隐私优势[^fn-train-serve-split]。例如，智能家居设备通常使用在云端海量数据集上训练的模型，但在本地运行推理以确保快速响应并保护用户隐私。在实践中，这可能涉及在拥有艾级（exaflop）规模算力和数百 TB 内存的 TPU Pod 等强大云系统上训练模型，然后将优化后的版本部署到边缘服务器或嵌入式边缘设备以进行高效推理。同样，用于计算摄影的移动端视觉模型通常在强大的云基础设施上训练，但部署在手机硬件上高效运行。
 
-[^fn-train-serve-split]: **Train-Serve Split Economics**: Training large models can cost $1-10M (GPT-3: $4.6M in compute costs) but inference costs <$0.01 per query when deployed efficiently [@brown2020language]. This 1,000,000x cost difference drives the pattern of expensive cloud training with cost-effective edge inference.
+[^fn-train-serve-split]: **训练-服务分离的经济性**：训练大型模型的计算成本可能高达$1-10M (GPT-3: $（460 万美元），但高效部署后，每次查询的推理成本 <0.01 美元[@brown2020language]。这种 1,000,000 倍的成本差异驱动了昂贵的云端训练与具有成本效益的边缘推理相结合的模式。
 
-#### Hierarchical Processing {#sec-ml-systems-hierarchical-processing-17a5}
+#### 分层处理 {#sec-ml-systems-hierarchical-processing-17a5}
 
-Hierarchical processing creates a multi-tier system where data and intelligence flow between different levels of the ML stack. This pattern effectively combines the capabilities of Cloud ML systems (like the large-scale training infrastructure discussed in previous sections) with multiple Edge ML systems (like edge servers and embedded devices from our edge deployment examples) to balance central processing power with local responsiveness. In industrial IoT applications, tiny sensors might perform basic anomaly detection, edge devices aggregate and analyze data from multiple sensors, and cloud systems handle complex analytics and model updates. For instance, we might see ESP32-CAM devices (from our Tiny ML examples) performing basic image classification at the sensor level with their minimal 520 KB RAM, feeding data up to edge servers or embedded systems for more sophisticated analysis, and ultimately connecting to cloud infrastructure for complex analytics and model updates.
+分层处理创建了一个多层级系统，数据和智能在机器学习栈的不同层级之间流动。这种模式有效地将云端机器学习系统的能力（如前几节讨论的大规模训练基础设施）与多个边缘机器学习系统（如我们边缘部署示例中的边缘服务器和嵌入式设备）结合起来，以平衡中央处理能力与本地响应能力。在工业物联网应用中，微型传感器可能执行基础的异常检测，边缘设备聚合并分析来自多个传感器的数据，而云系统处理复杂的分析和模型更新。例如，我们可能会看到 ESP32-CAM 设备（来自我们的微型机器学习示例）利用其极小的 520 KB RAM 在传感器层级执行基础图像分类，将数据上传到边缘服务器或嵌入式系统进行更复杂的分析，并最终连接到云基础设施进行深度分析和模型更新。
 
-This hierarchy allows each tier to handle tasks appropriate to its capabilities. Tiny ML devices handle immediate, simple decisions; edge devices manage local coordination; and cloud systems tackle complex analytics and learning tasks. Smart city installations often use this pattern, with street-level sensors feeding data to neighborhood-level edge processors, which in turn connect to city-wide cloud analytics.
+这种层次结构允许每个层级处理与其能力相匹配的任务。微型机器学习设备处理即时的、简单的决策；边缘设备管理本地协调；云系统则应对复杂的分析和学习任务。智慧城市设施经常使用这种模式，街道级传感器将数据传送到社区级边缘处理器，后者再连接到全市范围的云端分析系统。
 
-#### Progressive Deployment {#sec-ml-systems-progressive-deployment-c8b7}
+#### 渐进式部署 {#sec-ml-systems-progressive-deployment-c8b7}
 
-Progressive deployment creates tiered intelligence architectures by adapting models across computational tiers through systematic compression. A model might start as a large cloud version, then be progressively optimized for edge servers, mobile devices, and finally tiny sensors using techniques detailed in @sec-model-optimizations.
+渐进式部署通过系统化的压缩使模型适应不同的计算层级，从而创建分层智能架构。一个模型最初可能是一个大型云端版本，然后使用@sec-model-optimizations中详述的技术，逐步针对边缘服务器、移动设备以及最后的微型传感器进行优化。
 
-Amazon Alexa exemplifies this pattern: wake-word detection uses <1KB models on TinyML devices consuming <1mW, edge processing handles simple commands with 1-10MB models at 1-10W, while complex natural language understanding requires GB+ models in cloud infrastructure. This tiered approach reduces cloud inference costs by 95% while maintaining user experience.
+亚马逊 Alexa 是这种模式的典范：唤醒词检测在功耗 <1mW 的微型机器学习设备上使用 <1KB 的模型；边缘处理使用 1-10MB 的模型在 1-10W 功率下处理简单命令；而复杂的自然语言理解则需要在云基础设施中使用 GB 级以上的模型。这种分层方法在保持用户体验的同时，将云端推理成本降低了 95%。
 
-However, progressive deployment introduces operational complexity: model versioning across tiers, ensuring consistency between generations, managing failure cascades during connectivity loss, and coordinating updates across millions of devices. Production teams must maintain specialized expertise spanning TinyML optimization, edge orchestration, and cloud scaling.
+然而，渐进式部署引入了操作复杂性：跨层级的模型版本控制、确保各代模型之间的一致性、管理连接中断期间的故障级联，以及协调数百万台设备的更新。生产团队必须具备涵盖微型机器学习优化、边缘编排和云端扩展的专业知识。
 
-#### Federated Learning {#sec-ml-systems-federated-learning-9850}
+#### 联邦学习 {#sec-ml-systems-federated-learning-9850}
 
-Federated learning[^fn-federated-architecture] enables learning from distributed data while maintaining privacy. Google's production system processes 6 billion mobile keyboards, training improved models while keeping typed text local. Each training round involves 100-10,000 devices contributing model updates, requiring orchestration to manage device availability, network conditions, and computational heterogeneity.
+联邦学习[^fn-federated-architecture]能够在保持隐私的同时从分布式数据中学习。谷歌的生产系统处理着 60 亿个移动键盘，在保持输入文本本地化的同时训练改进模型。每个训练轮次涉及 100 到 10,000 台设备贡献模型更新，这需要编排系统来管理设备可用性、网络状况和计算异构性。
 
-Production deployments face significant operational challenges: device dropout rates of 50-90% during training rounds, network bandwidth constraints limiting update frequency, and differential privacy mechanisms preventing information leakage. Aggregation servers must handle intermittent connectivity, varying device capabilities, and ensure convergence despite non-IID data distributions. This requires specialized monitoring infrastructure to track distributed training progress and debug issues without accessing raw data.
+生产部署面临着巨大的运营挑战：训练轮次中 50-90% 的设备掉线率、限制更新频率的网络带宽约束，以及防止信息泄露的差分隐私机制。聚合服务器必须处理间歇性连接、多样的设备能力，并确保在非独立同分布（non-IID）数据分布下实现收敛。这需要专门的监控基础设施来跟踪分布式训练进度，并在不访问原始数据的情况下调试问题。
 
-[^fn-federated-architecture]: **Federated Learning Architecture**: Coordinates learning across millions of devices without centralizing data [@mcmahan2017federated]. Google's federated learning processes 6 billion mobile keyboards, training improved models while keeping all typed text local. Each round involves 100-10,000 devices contributing model updates.
+[^fn-federated-architecture]: **联邦学习架构**：在不集中数据的情况下协调数百万台设备进行学习[@mcmahan2017federated]。谷歌的联邦学习处理 60 亿个移动键盘，在保持所有输入文本本地化的同时训练改进模型。每一轮涉及 100 到 10,000 台设备贡献模型更新。
 
-#### Collaborative Learning {#sec-ml-systems-collaborative-learning-6f7b}
+#### 协作学习 {#sec-ml-systems-collaborative-learning-6f7b}
 
-Collaborative learning enables peer-to-peer learning between devices at the same tier, often complementing hierarchical structures.[^fn-tiered-voice] Autonomous vehicle fleets, for example, might share learning about road conditions or traffic patterns directly between vehicles while also communicating with cloud infrastructure. This horizontal collaboration allows systems to share time-sensitive information and learn from each other's experiences without always routing through central servers.
+协作学习实现了同一层级设备之间的点对点学习，通常作为分层结构的补充。[^fn-tiered-voice] 例如，自动驾驶车队可以直接在车辆之间共享关于路况或交通模式的学习成果，同时也与云基础设施通信。这种横向协作允许系统共享对时间敏感的信息并从彼此的经验中学习，而不必总是通过中央服务器路由。
 
-[^fn-tiered-voice]: **Tiered Voice Processing**: Amazon Alexa uses a 3-tier system: tiny wake-word detection on-device (<1KB model), edge processing for simple commands (1-10MB models), and cloud processing for complex queries (GB+ models). This reduces cloud costs by 95% while maintaining functionality.
+[^fn-tiered-voice]: **分层语音处理**：亚马逊 Alexa 使用三层系统：设备端微型唤醒词检测（<1KB 模型）、处理简单命令的边缘处理（1-10MB 模型）以及处理复杂查询的云端处理（GB+ 模型）。这在保持功能的同时降低了 95% 的云端成本。
 
-### Production System Case Studies {#sec-ml-systems-production-system-case-studies-17a6}
+### 生产系统案例研究 {#sec-ml-systems-production-system-case-studies-17a6}
 
-Real-world implementations integrate multiple design patterns into cohesive solutions rather than applying them in isolation. Production ML systems form interconnected networks where each paradigm plays a specific role while communicating with others, following integration patterns that leverage the strengths and address the limitations established in our four-paradigm framework (@sec-ml-systems-deployment-spectrum-38d0).
-
-@fig-hybrid illustrates these key interactions through specific connection types: "Deploy" paths show how models flow from cloud training to various devices, "Data" and "Results" show information flow from sensors through processing stages, "Analyze" shows how processed information reaches cloud analytics, and "Sync" demonstrates device coordination. Notice how data generally flows upward from sensors through processing layers to cloud analytics, while model deployments flow downward from cloud training to various inference points. The interactions aren't strictly hierarchical. Mobile devices might communicate directly with both cloud services and tiny sensors, while edge systems can assist mobile devices with complex processing tasks.
+现实世界的实现通常将多种设计模式整合到内聚的解决方案中，而不是孤立地应用它们。生产级机器学习系统形成了互连的网络，其中每个范式扮演特定角色并与其他范式通信，遵循集成模式，利用我们四范式框架（@sec-ml-systems-deployment-spectrum-38d0）中确立的优势并解决其局限性。@fig-hybrid通过特定的连接类型展示了这些关键交互：“部署（Deploy）”路径显示了模型如何从云端训练流向各种设备；“数据（Data）”和“结果（Results）”显示了信息从传感器流经各处理阶段的过程；“分析（Analyze）”显示了处理后的信息如何到达云端分析系统；而“同步（Sync）”展示了设备间的协调。请注意，数据通常从传感器向上流经处理层到达云端分析，而模型部署则从云端训练向下流向各个推理点。这些交互并非严格的层级结构。移动设备可能直接与云服务和微型传感器通信，而边缘系统可以协助移动设备处理复杂的计算任务。
 
 ::: {#fig-hybrid fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -998,22 +1013,24 @@ Line/.style={line width=1.0pt,black!50,text=black},
 \node[above=3pt of  BB2.south,anchor=south]{Mobile ML};
 \end{tikzpicture}
 ```
-**Hybrid System Interactions**: Data flows upward from sensors through processing layers to cloud analytics for insights, while trained models deploy downward from the cloud to enable inference at the edge, mobile, and Tiny ML devices. These connection types (deploy, data/results, analyze, and sync) establish a distributed architecture where each paradigm contributes unique capabilities to the overall machine learning system.
+**混合系统交互**：数据从传感器向上流经处理层到达云端分析以获取洞察，而训练好的模型从云端向下部署，以在边缘、移动端和微型机器学习（Tiny ML）设备上实现推理。这些连接类型（部署、数据/结果、分析和同步）建立了一个分布式架构，其中每个范式都为整个机器学习系统贡献了独特的能力。
+
 :::
 
-Production systems demonstrate these integration patterns across diverse applications where no single paradigm could deliver the required functionality. Industrial defect detection exemplifies model deployment patterns: cloud infrastructure trains vision models on datasets from multiple facilities, then distributes optimized versions to edge servers managing factory operations, tablets for quality inspectors, and embedded cameras on manufacturing equipment. This demonstrates how a single ML solution flows from centralized training to inference points at multiple computational scales.
+生产系统在多种应用中展示了这些集成模式，在这些应用中，单一范式都无法提供所需的功能。工业缺陷检测体现了模型部署模式：云基础设施在来自多个设施的数据集上训练视觉模型，然后将优化后的版本分发到管理工厂运营的边缘服务器、质量检测员使用的平板电脑以及制造设备上的嵌入式摄像头。这展示了一个单一的机器学习解决方案如何从集中式训练流向多个计算规模的推理点。
 
-Agricultural monitoring illustrates hierarchical data flow: soil sensors perform local anomaly detection, transmit results to edge processors that aggregate data from dozens of sensors, which then route insights to cloud infrastructure for farm-wide analytics while simultaneously updating farmers' mobile applications. Information traverses upward through processing layers, with each tier adding analytical sophistication appropriate to its computational resources.
+农业监测说明了分层数据流：土壤传感器执行本地异常检测，将结果传输到边缘处理器，后者聚合来自数十个传感器的数据，然后将洞察路由到云基础设施进行全农场分析，同时更新农民的移动应用程序。信息向上穿过处理层，每个层级都根据其计算资源增加相应的分析深度。
 
-Fitness trackers exemplify gateway patterns between Tiny ML and mobile devices: wearables continuously monitor activity using algorithms optimized for microcontroller execution, sync processed data to smartphones that combine metrics from multiple sources, then transmit periodic updates to cloud infrastructure for long-term analysis. This enables tiny devices to participate in large-scale systems despite lacking direct network connectivity.
+健身追踪器体现了微型机器学习与移动设备之间的网关模式：可穿戴设备使用针对微控制器执行优化的算法持续监测活动，将处理后的数据同步到智能手机（智能手机结合来自多个来源的指标），然后定期向云基础设施传输更新以进行长期分析。这使得微型设备尽管缺乏直接的网络连接，也能参与到大规模系统中。
 
-These integration patterns reveal how deployment paradigms complement each other through orchestrated data flows, model deployments, and cross-tier assistance. Industrial systems compose capabilities from Cloud, Edge, Mobile, and Tiny ML into distributed architectures that optimize for latency, privacy, cost, and operational requirements simultaneously. The interactions between paradigms often determine system success more than individual component capabilities.
+这些集成模式揭示了部署范式如何通过编排好的数据流、模型部署和跨层级协助实现互补。工业系统将云端、边缘、移动端和微型机器学习的能力组合成分布式架构，同时优化延迟、隐私、成本和运营需求。范式之间的交互往往比单个组件的能力更能决定系统的成功。
 
-## Shared Principles Across Deployment Paradigms {#sec-ml-systems-shared-principles-across-deployment-paradigms-915d}
+## 跨部署范式的共享原则 {#sec-ml-systems-shared-principles-across-deployment-paradigms-915d}
 
-Despite their diversity, all ML deployment paradigms share core principles that enable systematic understanding and effective hybrid combinations. @fig-ml-systems-convergence illustrates how implementations spanning cloud to tiny devices converge on core system challenges: managing data pipelines, balancing resource constraints, and implementing reliable architectures. This convergence explains why techniques transfer effectively between paradigms and hybrid approaches work successfully in practice.
+尽管各具特色，但所有机器学习部署范式都共享核心原则，从而实现系统性的理解和有效的混合组合。@fig-ml-systems-convergence展示了从云端到微型设备的实现如何汇聚在核心系统挑战上：管理数据流水线、平衡资源约束以及实现可靠的架构。这种趋同解释了为什么技术可以在不同范式之间有效迁移，以及混合方法在实践中为何能成功运作。
 
 ::: {#fig-ml-systems-convergence fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \tikzset{
@@ -1083,70 +1100,68 @@ Line/.style={line width=1.0pt,black!50,text=black},
 \draw[-latex,Line](2B3.south)--++(270:0.95)-|(3B3);
 \end{tikzpicture}
 ```
-**Convergence of ML Systems**: Diverse machine learning deployments (cloud, edge, mobile, and tiny) share foundational principles in data pipelines, resource management, and system architecture, enabling hybrid solutions and systematic design approaches. Understanding these shared principles allows practitioners to adapt techniques across different paradigms and build cohesive, efficient ML workflows despite varying constraints and optimization goals.
+**机器学习系统的趋同**：多样化的机器学习部署（云端、边缘、移动端和 TinyML）在数据流水线、资源管理和系统架构方面共享基础原则，从而支持混合解决方案和系统化设计方法。理解这些共享原则使从业者能够跨不同范式调整技术，并构建凝聚且高效的机器学习工作流，尽管存在不同的约束和优化目标。
+
 :::
 
-@fig-ml-systems-convergence reveals three distinct layers of abstraction that unify ML system design across deployment contexts.
+@fig-ml-systems-convergence揭示了统一跨部署上下文的机器学习系统设计的三个不同抽象层。
 
-The top layer represents ML system implementations—the four deployment paradigms examined throughout this chapter. Cloud ML operates in data centers with training at scale, Edge ML performs local processing focused on inference, Mobile ML runs on personal devices for user applications, and TinyML executes on embedded systems under severe resource constraints. Despite their apparent differences, these implementations share deeper commonalities that emerge in the underlying layers.
+顶层代表机器学习系统的实现——即本章贯穿讨论的四种部署范式。云端机器学习在大数据中心进行大规模训练；边缘机器学习执行侧重于推理的本地处理；移动端机器学习在个人设备上运行用户应用程序；而 TinyML 在资源极其受限的嵌入式系统上执行。尽管它们表面上存在差异，但这些实现在底层共享更深层次的共同点。
 
-The middle layer identifies core system principles that unite all paradigms. Data pipeline management (@sec-data-engineering) governs information flow from collection through deployment, maintaining consistent patterns whether processing petabytes in cloud data centers or kilobytes on microcontrollers. Resource management creates universal challenges in balancing competing demands for computation, memory, energy, and network capacity across all scales. System architecture principles guide the integration of models, hardware, and software components regardless of deployment context. These foundational principles remain remarkably consistent even as implementations vary by orders of magnitude in available resources.
+中间层确定了统一所有范式的核心系统原则。数据流水线管理（@sec-data-engineering）控制从采集到部署的信息流，无论是在云端数据中心处理 PB 级数据，还是在微控制器上处理 KB 级数据，都保持一致的模式。资源管理在所有规模上都构成了平衡计算、内存、能源和网络容量竞争需求的普遍挑战。系统架构原则指导模型、硬件和软件组件的集成，而无需考虑部署上下文。即使可用资源的实现差异达到几个数量级，这些基础原则仍保持显著的一致性。
 
-The bottom layer shows how system considerations manifest these principles across practical dimensions. Optimization and efficiency strategies (@sec-model-optimizations) take different forms at each scale: cloud GPU cluster training, edge model compression, mobile thermal management, and TinyML numerical precision, yet all pursue maximizing performance within available resources. Operational aspects (@sec-ml-operations) address deployment, monitoring, and updates with paradigm-specific approaches that tackle fundamentally similar challenges. Trustworthy AI (@sec-responsible-ai, @sec-robust-ai) requirements for security, privacy, and reliability apply universally, though implementation techniques necessarily adapt to each deployment context.
+底层展示了系统考量如何在实际维度中体现这些原则。优化与效率策略（@sec-model-optimizations）在每个规模上采取不同的形式：云端 GPU 集群训练、边缘模型压缩、移动端热管理以及 TinyML 数值精度，但都在追求在可用资源内实现性能最大化。运维方面（@sec-ml-operations）通过特定范式的方法来解决部署、监控和更新问题，这些方法应对的是本质上相似的挑战。可信人工智能（@sec-responsible-ai，@sec-robust-ai）对安全性、隐私性和可靠性的要求具有普遍适用性，尽管实现技术必须适应每个部署上下文。
 
-This three-layer structure explains why techniques transfer effectively between scales. Cloud-trained models deploy successfully to edge devices because training and inference optimize similar objectives under different constraints. Mobile optimization insights inform cloud efficiency strategies because both manage the same fundamental resource trade-offs. TinyML innovations drive cross-paradigm advances precisely because extreme constraints force solutions to core problems that exist at all scales. Hybrid approaches work effectively (train-serve splits, hierarchical processing, federated learning) because underlying principles align across paradigms, enabling seamless integration despite vast differences in available resources.
+这种三层结构解释了为什么技术可以在不同规模之间有效迁移。云端训练的模型能够成功部署到边缘设备，是因为训练和推理在不同约束下优化了相似的目标。移动端优化的见解可以为云端效率策略提供参考，因为两者都管理着相同的基本资源权衡。TinyML 的创新推动了跨范式的进步，正是因为极端约束迫使人们去解决存在于所有规模中的核心问题。混合方法（训练-服务分离、分层处理、联邦学习）之所以能有效工作，是因为底层原则在各范式之间是一致的，从而实现了无缝集成，尽管可用资源存在巨大差异。
 
-## Comparative Analysis and Selection Framework {#sec-ml-systems-comparative-analysis-selection-framework-832e}
+## 对比分析与选择框架 {#sec-ml-systems-comparative-analysis-selection-framework-832e}
 
-Building from this understanding of shared principles, systematic comparison across deployment paradigms reveals the precise trade-offs that should drive deployment decisions and highlights scenarios where each paradigm excels, providing practitioners with analytical frameworks for making informed architectural choices.
+基于对这些共同原则的理解，跨部署范式的系统化比较揭示了驱动部署决策的精确权衡，并突出了每种范式表现优异的场景，为从业者提供了做出明智架构选择的分析框架。
 
-The relationship between computational resources and deployment location forms one of the most important comparisons across ML systems. As we move from cloud deployments to tiny devices, we observe a dramatic reduction in available computing power, storage, and energy consumption. Cloud ML systems, with their data center infrastructure, can leverage virtually unlimited resources, processing data at the scale of petabytes and training models with billions of parameters. Edge ML systems, while more constrained, still offer significant computational capability through specialized hardware like edge GPUs and neural processing units. Mobile ML represents a middle ground, balancing computational power with energy efficiency on devices like smartphones and tablets. At the far end of the spectrum, TinyML operates under severe resource constraints, often limited to kilobytes of memory and milliwatts of power consumption.
+计算资源与部署位置之间的关系构成了机器学习系统最重要的比较维度之一。随着我们从云端部署转向微型设备，我们可以观察到可用算力、存储和能耗的急剧减少。云端机器学习系统凭借其数据中心基础设施，可以利用几乎无限的资源，处理拍字节（petabytes）规模的数据，并训练拥有数千亿参数的模型。边缘机器学习系统虽然受到更多限制，但仍通过边缘 GPU 和神经处理单元等专用硬件提供可观的计算能力。移动端机器学习代表了一种折中方案，在智能手机和平板电脑等设备上平衡了算力和能效。在光谱的另一端，TinyML 在严苛的资源约束下运行，通常仅限于千字节级别的内存和毫瓦级别的功耗。
 
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Aspect**                 | **Cloud ML**                             | **Edge ML**                            | **Mobile ML**                 | **Tiny ML**                                           |
+| **维度**                   | **云端机器学习**                         | **边缘机器学习**                       | **移动端机器学习**            | **TinyML**                                            |
 +:===========================+:=========================================+:=======================================+:==============================+:======================================================+
-| **Performance**            |                                          |                                        |                               |                                                       |
+| **性能**                   |                                          |                                        |                               |                                                       |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Processing Location**    | Centralized cloud servers (Data Centers) | Local edge devices (gateways, servers) | Smartphones and tablets       | Ultra-low-power microcontrollers and embedded systems |
+| **处理位置**               | 集中式云服务器（数据中心）               | 本地边缘设备（网关、服务器）           | 智能手机和平板电脑            | 超低功耗微控制器和嵌入式系统                          |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Latency**                | High (100 ms-1000 ms+)                   | Moderate (10-100 ms)                   | Low-Moderate (5-50 ms)        | Very Low (1-10 ms)                                    |
+| **延迟**                   | 高 (100 ms-1000 ms+)                     | 中等 (10-100 ms)                       | 低至中等 (5-50 ms)            | 极低 (1-10 ms)                                        |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Compute Power**          | Very High (Multiple GPUs/TPUs)           | High (Edge GPUs)                       | Moderate (Mobile NPUs/GPUs)   | Very Low (MCU/tiny processors)                        |
+| **算力**                   | 极高（多 GPU/TPU）                       | 高（边缘 GPU）                         | 中等（移动端 NPU/GPU）        | 极低（MCU/微型处理器）                                |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Storage Capacity**       | Unlimited (petabytes+)                   | Large (terabytes)                      | Moderate (gigabytes)          | Very Limited (kilobytes-megabytes)                    |
+| **存储容量**               | 无限制（拍字节+）                        | 大（太字节）                           | 中等（吉字节）                | 非常有限（千字节-兆字节）                              |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Energy Consumption**     | Very High (kW-MW range)                  | High (100 s W)                         | Moderate (1-10 W)             | Very Low (mW range)                                   |
+| **能耗**                   | 极高（kW-MW 范围）                       | 高（百瓦级别）                         | 中等 (1-10 W)                 | 极低（毫瓦级别）                                      |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Scalability**            | Excellent (virtually unlimited)          | Good (limited by edge hardware)        | Moderate (per-device scaling) | Limited (fixed hardware)                              |
+| **可扩展性**               | 极佳（几乎无限）                         | 良好（受边缘硬件限制）                 | 中等（按设备扩展）            | 有限（固定硬件）                                      |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Operational**            |                                          |                                        |                               |                                                       |
+| **运营**                   |                                          |                                        |                               |                                                       |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Data Privacy**           | Basic-Moderate (Data leaves device)      | High (Data stays in local network)     | High (Data stays on phone)    | Very High (Data never leaves sensor)                  |
+| **数据隐私**               | 基础至中等（数据离开设备）               | 高（数据留在本地网络）                 | 高（数据留在手机上）          | 极高（数据从未离开传感器）                            |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Connectivity Required**  | Constant high-bandwidth                  | Intermittent                           | Optional                      | None                                                  |
+| **联网需求**               | 持续高带宽                               | 间歇性                                 | 可选                          | 无                                                    |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Offline Capability**     | None                                     | Good                                   | Excellent                     | Complete                                              |
+| **离线能力**               | 无                                       | 良好                                   | 极佳                          | 完全                                                  |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Real-time Processing**   | Dependent on network                     | Good                                   | Very Good                     | Excellent                                             |
+| **实时处理**               | 取决于网络                               | 良好                                   | 非常好                        | 极佳                                                  |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Deployment**             |                                          |                                        |                               |                                                       |
+| **部署**                   |                                          |                                        |                               |                                                       |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Cost**                   | High ($1000s+/month)                     | Moderate ($100s-1000s)                 | Low ($0-10s)                  | Very Low ($1-10s)                                     |
+| **成本**                   | 高 ($1000s+/month)                     | Moderate ($100s-1000s)                 | 低 ($0-10s)                  | Very Low ($1-10s)                                     |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Hardware Requirements**  | Cloud infrastructure                     | Edge servers/gateways                  | Modern smartphones            | MCUs/embedded systems                                 |
+| **硬件要求**               | 云基础设施                               | 边缘服务器/网关                        | 现代智能手机                  | MCU/嵌入式系统                                        |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Development Complexity** | High (cloud expertise needed)            | Moderate-High (edge+networking)        | Moderate (mobile SDKs)        | High (embedded expertise)                             |
+| **开发复杂度**             | 高（需要云专业知识）                     | 中等到高（边缘+网络）                  | 中等（移动端 SDK）            | 高（需要嵌入式专业知识）                              |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
-| **Deployment Speed**       | Fast                                     | Moderate                               | Fast                          | Slow                                                  |
+| **部署速度**               | 快                                       | 中等                                   | 快                            | 慢                                                    |
 +----------------------------+------------------------------------------+----------------------------------------+-------------------------------+-------------------------------------------------------+
 
-: **Deployment Locations**: Machine learning systems vary in where computation occurs, from centralized cloud servers to local edge devices and ultra-low-power TinyML chips, each impacting latency, bandwidth, and energy consumption. This table categorizes these deployments by their processing location and associated characteristics, enabling informed decisions about system architecture and resource allocation. {#tbl-big_vs_tiny}
-
-@tbl-big_vs_tiny quantifies these paradigm differences across performance, operational, and deployment dimensions, revealing clear gradients in latency (cloud: 100-1000ms → edge: 10-100ms → mobile: 5-50ms → tiny: 1-10ms) and privacy guarantees (strongest with TinyML's complete local processing).
-
-@fig-op_char visualizes performance and operational characteristics through radar plots. Plot a) contrasts compute power and scalability (Cloud ML's strengths) against latency and energy efficiency (TinyML's advantages), with Edge and Mobile ML occupying intermediate positions.
+: **部署位置**：机器学习系统在计算发生的位置上各不相同，从集中式云服务器到本地边缘设备以及超低功耗 TinyML 芯片，每种位置都会影响延迟、带宽和能耗。本表按处理位置及相关特征对这些部署进行了分类，以便在系统架构和资源分配方面做出明智的决策。 {#tbl-big_vs_tiny}@tbl-big_vs_tiny从性能、运营和部署维度量化了这些范式差异，揭示了延迟（云端：100-1000ms → 边缘：10-100ms → 移动端：5-50ms → TinyML：1-10ms）和隐私保障（TinyML 的完全本地处理最强）的明显梯度。@fig-op_char通过雷达图可视化了性能和运营特征。图 a) 将算力和可扩展性（云端机器学习的优势）与延迟和能效（TinyML 的优势）进行了对比，边缘和移动端机器学习处于中间位置。
 
 ::: {#fig-op_char fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\usefont{T1}{phv}{m}{n}]
 %\node[anchor=center]at(13.13,3.22){\includegraphics[scale=0.31]{1}};
@@ -1243,22 +1258,24 @@ xticklabels={Connectivity\\ Dependency, Data Privacy, Real-time\\ Processing,Off
 \node[below=2mm of GR2]{\large b)};
 \end{tikzpicture}
 ```
-**ML System Trade-Offs**: Radar plots quantify performance and operational characteristics across cloud, edge, mobile, and Tiny ML paradigms, revealing inherent trade-offs between compute power, latency, energy consumption, and scalability. These visualizations enable informed selection of the most suitable deployment approach based on application-specific constraints and priorities.
+**机器学习系统权衡**：雷达图量化了云端、边缘、移动端和 TinyML 范式的性能和运营特征，揭示了算力、延迟、能耗和可扩展性之间的内在权衡。这些可视化图表能够根据特定应用的约束和优先级，帮助选择最合适的部署方案。
+
 :::
 
-Plot b) emphasizes operational dimensions where TinyML excels (privacy, connectivity independence, offline capability) versus Cloud ML's dependency on centralized infrastructure and constant connectivity.
+图 b) 强调了 TinyML 擅长的运营维度（隐私、连接独立性、离线能力），而云端机器学习则依赖于集中式基础设施和持续的连接。
 
-Development complexity varies inversely with hardware capability: Cloud and TinyML require deep expertise (cloud infrastructure and embedded systems respectively), while Mobile and Edge leverage more accessible SDKs and tooling. Cost structures show similar inversion: Cloud incurs ongoing operational expenses ($1000s+/month), Edge requires moderate upfront investment ($100s-1000s), Mobile leverages existing devices ($0-10s), and TinyML minimizes hardware costs ($1-10s) while demanding higher development investment.
+开发复杂度与硬件能力成反比：云端和 TinyML 都需要深厚的专业知识（分别为云基础设施和嵌入式系统），而移动端和边缘端则可以利用更易于获取的 SDK 和工具。成本结构也显示出类似的倒置：云端会产生持续的运营费用（$1000s+/month), Edge requires moderate upfront investment ($100s-1000s），移动端则利用现有设备（$0-10s), and TinyML minimizes hardware costs ($1-10s），但需要更高的开发投入。
 
-Understanding these trade-offs proves crucial for selecting appropriate deployment strategies that align application requirements with paradigm capabilities.
+理解这些权衡对于选择合适的部署策略至关重要，从而使应用需求与范式能力保持一致。
 
-A critical pitfall in deployment selection involves choosing paradigms based solely on model accuracy metrics without considering system-level constraints. Teams often select deployment strategies by comparing model accuracy in isolation, overlooking critical system requirements that determine real-world viability. A cloud-deployed model achieving 99% accuracy becomes useless for autonomous emergency braking if network latency exceeds reaction time requirements. Similarly, a sophisticated edge model that drains a mobile device's battery in minutes fails despite superior accuracy. Successful deployment requires evaluating multiple dimensions simultaneously: latency requirements, power budgets, network reliability, data privacy regulations, and total cost of ownership. Establish these constraints before model development to avoid expensive architectural pivots late in the project.
+部署选择中的一个关键陷阱是仅根据模型准确率指标选择范式，而不考虑系统级约束。团队在选择部署策略时，往往孤立地比较模型准确率，而忽略了决定实际可行性的关键系统要求。如果网络延迟超过了反应时间要求，那么准确率达到 99% 的云端部署模型对于自动紧急制动来说就毫无用处。同样，一个复杂的边缘模型如果在几分钟内就耗尽了移动设备的电池，那么尽管其准确率更高，也是失败的。成功的部署需要同时评估多个维度：延迟要求、功耗预算、网络可靠性、数据隐私法规以及总拥有成本。在模型开发之前确立这些约束，以避免在项目后期进行昂贵的架构调整。
 
-## Decision Framework for Deployment Selection {#sec-ml-systems-decision-framework-deployment-selection-f748}
+## 部署选择决策框架 {#sec-ml-systems-decision-framework-deployment-selection-f748}
 
-Selecting the appropriate deployment paradigm requires systematic evaluation of application constraints rather than organizational biases or technology trends. @fig-mlsys-playbook-flowchart provides a hierarchical decision framework that filters options through critical requirements: privacy (can data leave the device?), latency (sub-10ms response needed?), computational demands (heavy processing required?), and cost constraints (budget limitations?). This structured approach ensures deployment decisions emerge from application requirements, grounded in the physical constraints (@sec-ml-systems-deployment-paradigm-foundations-0c17) and quantitative comparisons (@sec-ml-systems-comparative-analysis-selection-framework-832e) established earlier.
+选择合适的部署范式需要对应用约束进行系统评估，而不是基于组织偏好或技术趋势。@fig-mlsys-playbook-flowchart提供了一个分层决策框架，通过关键需求过滤选项：隐私（数据能否离开设备？）、延迟（是否需要低于 10ms 的响应？）、计算需求（是否需要重度处理？）以及成本约束（预算限制？）。这种结构化方法确保部署决策源于应用需求，并基于早先建立的物理约束 (@sec-ml-systems-deployment-paradigm-foundations-0c17) 和定量比较 (@sec-ml-systems-comparative-analysis-selection-framework-832e)。
 
 ::: {#fig-mlsys-playbook-flowchart fig-env="figure" fig-pos="!t"}
+
 ```{.tikz}
 \resizebox{.7\textwidth}{!}{%
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n},line width=0.75pt]
@@ -1363,42 +1380,45 @@ Selecting the appropriate deployment paradigm requires systematic evaluation of 
 \draw[Line,-latex](3B2.west)--++(180:0.5)|-(5B2);
 \end{tikzpicture}}
 ```
-**Deployment Decision Logic**: This flowchart guides selection of an appropriate machine learning deployment paradigm by systematically evaluating privacy requirements and processing constraints, ultimately balancing performance, cost, and data security. Navigating the decision tree helps practitioners determine whether cloud, edge, mobile, or tiny machine learning best suits a given application.
+**部署决策逻辑**：此流程图通过系统地评估隐私要求和处理约束，指导选择合适的机器学习部署范式，最终平衡性能、成本和数据安全。浏览该决策树有助于从业者确定云端、边缘、移动或微型机器学习 (TinyML) 是否最适合给定的应用。
+
 :::
 
-The framework evaluates four critical decision layers sequentially. Privacy constraints form the first filter, determining whether data can be transmitted externally. Applications handling sensitive data under GDPR, HIPAA, or proprietary restrictions mandate local processing, immediately eliminating cloud-only deployments. Latency requirements establish the second constraint through response time budgets: applications requiring sub-10ms response times cannot use cloud processing, as physics-imposed network delays alone exceed this threshold. Computational demands form the third evaluation layer, assessing whether applications require high-performance infrastructure that only cloud or edge systems provide, or whether they can operate within the resource constraints of mobile or tiny devices. Cost considerations complete the framework by balancing capital expenditure, operational expenses, and energy efficiency across expected deployment lifetimes.
+该框架按顺序评估四个关键决策层。隐私约束构成了第一个过滤器，决定数据是否可以向外传输。在 GDPR、HIPAA 或专有限制下处理敏感数据的应用强制要求本地处理，从而立即排除了纯云端部署。延迟需求通过响应时间预算建立了第二个约束：要求响应时间低于 10ms 的应用无法使用云处理，因为仅物理规律导致的网络延迟就会超过这一阈值。计算需求构成了第三个评估层，评估应用是否需要只有云端或边缘系统才能提供的高性能基础设施，或者它们是否可以在移动设备或微型设备的资源约束内运行。成本考量完成了该框架，平衡了预期部署寿命内的资本支出、运营费用和能源效率。
 
-Technical constraints alone prove insufficient for deployment decisions. Organizational factors critically shape success by determining whether teams possess the capabilities to implement and maintain chosen paradigms. Team expertise must align with paradigm requirements: Cloud ML demands distributed systems knowledge, Edge ML requires device management capabilities, Mobile ML needs platform-specific optimization skills, and TinyML requires embedded systems expertise. Organizations lacking appropriate skills face extended development timelines and ongoing maintenance challenges that undermine technical advantages. Monitoring and maintenance capabilities similarly determine viability at scale: edge deployments require distributed device orchestration, while TinyML demands specialized firmware management that many organizations lack. Cost structures further complicate decisions through their temporal patterns: Cloud incurs recurring operational expenses favorable for unpredictable workloads, Edge requires substantial upfront investment offset by lower ongoing costs, Mobile leverages user-provided devices to minimize infrastructure expenses, and TinyML minimizes hardware and connectivity costs while demanding significant development investment.
+仅靠技术约束不足以做出部署决策。组织因素对于决定团队是否具备实施和维护所选范式的能力至关重要。团队专业知识必须与范式要求相匹配：云端机器学习需要分布式系统知识，边缘机器学习需要设备管理能力，移动机器学习需要特定平台的优化技能，而 TinyML 则需要嵌入式系统专业知识。缺乏相应技能的组织将面临开发周期延长和持续维护的挑战，从而削弱技术优势。监控和维护能力同样决定了大规模应用的可行性：边缘部署需要分布式设备编排，而 TinyML 需要许多组织所缺乏的专业固件管理。成本结构通过其时间模式进一步使决策复杂化：云端产生周期性运营费用，有利于不可预测的工作负载；边缘需要大量的初期投资，但会被较低的持续成本抵消；移动端利用用户提供的设备来最小化基础设施费用；而 TinyML 在最小化硬件和连接成本的同时，需要大量的开发投入。
 
-Successful deployment emerges from balancing technical optimization against organizational capability. Paradigm selection represents systems engineering challenges that extend well beyond pure technical requirements, encompassing team skills, operational capacity, and economic constraints. These decisions remain constrained by fundamental scaling laws explored in @sec-efficient-ai-ai-scaling-laws-a043, with operational aspects detailed in @sec-ml-operations and benchmarking approaches covered in @sec-benchmarking-ai.
+成功的部署源于技术优化与组织能力之间的平衡。范式选择代表了远超纯技术需求的系统工程挑战，涵盖了团队技能、运营能力和经济约束。这些决策仍然受到@sec-efficient-ai-ai-scaling-laws-a043中探讨的基本缩放法则的约束，运营细节见@sec-ml-operations，基准测试方法见@sec-benchmarking-ai。
 
-## Fallacies and Pitfalls {#sec-ml-systems-fallacies-pitfalls-8074}
+## 谬误与陷阱 {#sec-ml-systems-fallacies-pitfalls-8074}
 
-Understanding deployment paradigms requires recognizing common misconceptions that can lead to poor architectural decisions. These fallacies often stem from oversimplified thinking about the core trade-offs governing ML systems design.
+理解部署范式需要识别可能导致糟糕架构决策的常见误区。这些谬误通常源于对主导机器学习系统设计的核心权衡点的过度简化思考。
 
-**Fallacy: "One Paradigm Fits All"** - The most pervasive misconception assumes that one deployment approach can solve all ML problems. Teams often standardize on cloud, edge, or mobile solutions without considering application-specific constraints. This fallacy ignores the physics-imposed boundaries discussed in @sec-ml-systems-deployment-paradigm-foundations-0c17. Real-time robotics cannot tolerate cloud latency, while complex language models exceed tiny device capabilities. Effective systems often require hybrid architectures that leverage multiple paradigms strategically.
+**谬误：“一种范式适用于所有场景”** —— 最普遍的误解是认为一种部署方法可以解决所有的机器学习问题。团队通常在不考虑特定应用约束的情况下，就统一采用云端、边缘或移动解决方案。这种谬误忽略了@sec-ml-systems-deployment-paradigm-foundations-0c17中讨论的物理限制边界。实时机器人技术无法容忍云端延迟，而复杂的大语言模型则超出了微型设备的能力范围。有效的系统通常需要能够战略性地利用多种范式的混合架构。
 
-**Fallacy: "Edge Computing Always Reduces Latency"** - Many practitioners assume edge deployment automatically improves response times. However, edge systems introduce processing delays, load balancing overhead, and potential network hops that can exceed direct cloud connections. A poorly designed edge deployment with insufficient local compute power may exhibit worse latency than optimized cloud services. Edge benefits emerge only when local processing time plus reduced network distance outweighs the infrastructure complexity costs.
+**谬误：“边缘计算总能降低延迟”** —— 许多从业者认为边缘部署会自动缩短响应时间。然而，边缘系统会引入处理延迟、负载均衡开销以及潜在的网络跳数，这些可能超过直连云端的延迟。一个本地计算能力不足且设计不当的边缘部署，其延迟表现可能比优化后的云服务更差。只有当本地处理时间加上缩短的网络距离所带来的收益，超过基础设施复杂性成本时，边缘计算的优势才会显现。
 
-**Fallacy: "Mobile Devices Can Handle Any Workload with Optimization"** - This misconception underestimates the fundamental constraints imposed by battery life and thermal management. Teams often assume that model compression techniques can arbitrarily reduce resource requirements while maintaining performance. However, mobile devices face hard physical limits: battery capacity scales with volume while computational demand scales with model complexity. Some applications require computational resources that no amount of optimization can fit within mobile power budgets.
+**谬误：“通过优化，移动设备可以处理任何工作负载”** —— 这种误解低估了电池寿命和散热管理带来的根本约束。团队通常认为模型压缩技术可以在保持性能的同时任意降低资源需求。然而，移动设备面临着严苛的物理限制：电池容量随体积缩放，而计算需求随模型复杂度缩放。某些应用所需的计算资源，无论如何优化都无法适应移动设备的功耗预算。
 
-**Fallacy: "Tiny ML is Just Smaller Mobile ML"** - This fallacy misunderstands the qualitative differences between resource-constrained paradigms. Tiny ML operates under constraints so severe that different algorithmic approaches become necessary. The microcontroller environments impose memory limitations measured in kilobytes, not megabytes, requiring specialized techniques like quantization beyond what mobile optimization employs. Applications suitable for tiny ML represent a fundamentally different problem class, not simply scaled-down versions of mobile applications.
+**谬误：“Tiny ML 只是更小型的移动端机器学习”** —— 这种谬误误解了资源受限范式之间的质性差异。Tiny ML 在极其严苛的约束下运行，以至于必须采用不同的算法方法。微控制器环境施加了以千字节（KB）而非兆字节（MB）为单位的内存限制，这需要比移动端优化更专业的量化等技术。适合 Tiny ML 的应用代表了一类根本不同的问题，而不仅仅是移动端应用的缩减版。
 
-**Fallacy: "Cost Optimization Equals Resource Minimization"** - Teams frequently assume that minimizing computational resources automatically reduces costs. This perspective ignores operational complexity, development time, and infrastructure overhead. Cloud deployments may consume more compute resources while providing lower total cost of ownership through reduced maintenance, automatic scaling, and shared infrastructure. The optimal cost solution often involves accepting higher per-unit resource consumption in exchange for simplified operations and faster development cycles.
+**谬误：“成本优化等同于资源最小化”** —— 团队经常假设最小化计算资源会自动降低成本。这种观点忽略了运维复杂度、开发时间和基础设施开销。云部署可能会消耗更多的计算资源，但通过减少维护、自动扩展和共享基础设施，反而能提供更低的总体拥有成本。最佳成本方案通常涉及接受更高的单位资源消耗，以换取简化的操作和更快的开发周期。
 
-## Summary {#sec-ml-systems-summary-473b}
+## 总结 {#sec-ml-systems-summary-473b}
 
-This chapter analyzed the diverse landscape of machine learning systems, revealing how deployment context directly shapes every aspect of system design. From cloud environments with vast computational resources to tiny devices operating under extreme constraints, each paradigm presents unique opportunities and challenges that directly influence architectural decisions, algorithmic choices, and performance trade-offs. The spectrum from cloud to edge to mobile to tiny ML represents more than just different scales of computation; it reflects a significant evolution in how we distribute intelligence across computing infrastructure.
+本章分析了机器学习系统多样化的格局，揭示了部署上下文如何直接塑造系统设计的各个方面。从拥有庞大计算资源的云环境到在极端约束下运行的微型设备，每种范式都带来了独特的机遇和挑战，直接影响着架构决策、算法选择和性能权衡。从云端到边缘、移动端再到 Tiny ML 的这一系列范式不仅代表了不同规模的计算，更反映了我们在计算基础设施中分配智能方式的重大演进。
 
-The evolution from centralized cloud systems to distributed edge and mobile deployments shows how resource constraints drive innovation rather than simply limiting capabilities. Each paradigm emerged to address specific limitations of its predecessors: Cloud ML leverages centralized power for complex processing but must navigate latency and privacy concerns. Edge ML brings computation closer to data sources, reducing latency while introducing intermediate resource constraints. Mobile ML extends these capabilities to personal devices, balancing user experience with battery life and thermal management. Tiny ML pushes the boundaries of what's possible with minimal resources, enabling ubiquitous sensing and intelligence in previously impossible deployment contexts. This evolution showcases how thoughtful system design can transform limitations into opportunities for specialized optimization.
+从中心化云系统向分布式边缘和移动部署的演进表明，资源约束推动了创新，而非仅仅限制了能力。每种范式的出现都是为了解决其前身特定的局限性：云端机器学习利用中心化的算力进行复杂处理，但必须应对延迟和隐私问题。边缘机器学习使计算更接近数据源，在减少延迟的同时引入了中间资源约束。移动端机器学习将这些能力扩展到个人设备，在用户体验、电池续航和散热管理之间取得平衡。Tiny ML 突破了极小资源的限制，在以前不可能实现的部署上下文中实现了泛在感知和智能。这种演进展示了深思熟虑的系统设计如何将局限性转化为专门优化的机会。
 
-::: {.callout-important title="Key Takeaways"}
-* Deployment context drives architectural decisions more than algorithmic preferences
-* Resource constraints create opportunities for innovation, not just limitations
-* Hybrid approaches are emerging as the future of ML system design
-* Privacy and latency considerations increasingly favor distributed intelligence
+::: {.callout-important title="核心要点"}
+
+* 部署上下文对架构决策的影响超过了算法偏好
+* 资源约束创造了创新机会，而不仅仅是限制
+* 混合方法正成为机器学习系统设计的未来
+* 隐私和延迟考虑日益倾向于分布式智能
+
 :::
 
-These paradigms reflect an ongoing shift toward systems that are finely tuned to specific operational requirements, moving beyond one-size-fits-all approaches toward context-aware system design. As these deployment models mature, hybrid architectures emerge that combine their strengths: cloud-based training paired with edge inference, federated learning across mobile devices, and hierarchical processing that optimizes across the entire spectrum. This evolution demonstrates how deployment contexts will continue driving innovation in system architecture, training methodologies, and optimization techniques, creating more sophisticated and context-aware ML systems.
+这些范式反映了系统向针对特定运行要求进行精细调整的持续转变，从“一刀切”的方法转向上下文感知的系统设计。随着这些部署模型的成熟，结合各自优势的混合架构应运而生：云端训练与边缘推理相结合、跨移动设备的联邦学习，以及在整个光谱上进行优化的分层处理。这种演进证明了部署上下文将继续推动系统架构、训练方法和优化技术的创新，从而创造出更先进、更具上下文感知的机器学习系统。
 
-Yet deployment context represents only one dimension of system design. The algorithms executing within these environments equally influence resource requirements, computational patterns, and optimization strategies. A neural network requiring gigabytes of memory and billions of floating-point operations demands fundamentally different deployment approaches than a decision tree requiring kilobytes and integer comparisons. The next chapter (@sec-dl-primer) examines the mathematical foundations of neural networks, revealing why certain deployment paradigms suit specific algorithms and how algorithmic choices propagate through the entire system stack.
+然而，部署上下文仅代表系统设计的一个维度。在这些环境中执行的算法同样影响着资源需求、计算模式和优化策略。一个需要数 GB 内存和数十亿次浮点运算的神经网络，与一个仅需要数 KB 内存和整数比较的决策树相比，所需的部署方法截然不同。下一章（@sec-dl-primer）将探讨神经网络的数学基础，揭示为什么某些部署范式适合特定的算法，以及算法选择如何贯穿整个系统栈。
