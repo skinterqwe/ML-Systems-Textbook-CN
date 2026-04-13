@@ -31,9 +31,35 @@ jobs:
             texlive-fonts-recommended texlive-pictures texlive-luatex \
             lmodern inkscape
 
+      - name: Verify TikZ tools
+        run: |
+          echo "=== LuaLaTeX version ==="
+          lualatex --version | head -5
+          echo ""
+          echo "=== Inkscape version ==="
+          inkscape --version
+          echo ""
+          echo "=== Quarto version ==="
+          quarto --version
+          echo ""
+          echo "=== Check diagram.lua extension ==="
+          ls -la output/book/_extensions/pandoc-ext/diagram/ 2>/dev/null || echo "diagram extension not found"
+
       - name: Render website
         working-directory: output/book
-        run: quarto render --no-execute
+        run: quarto render --no-execute 2>&1 | tee ../render.log
+
+      - name: Check TikZ SVG output
+        if: always()
+        run: |
+          echo "=== SVG files in build output ==="
+          find output/book/_build/html -name "*.svg" 2>/dev/null | head -20 || echo "No SVG files found"
+          echo ""
+          echo "=== TikZ code blocks in rendered HTML ==="
+          grep -rl '{\.tikz}' output/book/_build/html/ 2>/dev/null | head -10 || echo "No .tikz references found"
+          echo ""
+          echo "=== Render log (last 50 lines) ==="
+          tail -50 output/render.log 2>/dev/null || echo "No render log found"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
