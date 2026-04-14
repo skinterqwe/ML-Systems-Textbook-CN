@@ -61,6 +61,13 @@ jobs:
           echo "=== Render log (last 50 lines) ==="
           tail -50 output/render.log 2>/dev/null || echo "No render log found"
 
+      - name: Create root index.html redirect
+        run: |
+          cat > output/book/_build/html/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html><head><meta http-equiv="refresh" content="0; url=contents/frontmatter/index.html"></head><body></body></html>
+          EOF
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
