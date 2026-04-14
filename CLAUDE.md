@@ -162,9 +162,63 @@ lmodern inkscape
 - **`\index{}` 在 `:::` 之前保护**：因为 `\index` 可能出现在 `:::` 的 `fig-cap` 属性中
 - **跨引用正则不贪婪到 `__`**：`[\w\-]+?(?=__|...)` 防止跨引用吃掉相邻的占位符名
 
+### 翻译后检查机制
+
+两层检查机制：
+
+**第一层：自动化检查**（翻译后必做）
+```bash
+# 运行全部检查（翻译语法 + 重复标签 + 引用完整性 + 脚注 + 列表格式）
+./scripts/run_checks.sh output/book/contents
+
+# 单独检查翻译语法（交叉引用粘连、fence div 配对、shortcode 误包裹等）
+python3 scripts/check_translation_syntax.py -d output/book/contents/ --strict
+python3 scripts/check_translation_syntax.py -f output/book/contents/core/dl_primer/dl_primer.qmd
+```
+
+检查项目：
+| 检查 | 脚本 | 说明 |
+|------|------|------|
+| 翻译语法（5 项） | `scripts/check_translation_syntax.py` | 交叉引用粘连、fence div 配对、shortcode 误包裹、`:::` 粘连、TikZ 结束符粘连 |
+| 重复标签 | `scripts/content/check_duplicate_labels.py` | `{#fig-xxx}` 等标签重复定义 |
+| 引用完整性 | `scripts/content/validate_citations.py` | `@key` 引用在 .bib 中是否存在 |
+| 脚注检查 | `scripts/content/footnote_cleanup.py` | 未定义引用、未使用的定义 |
+| 列表格式 | `scripts/utilities/check_list_formatting.py` | 冒号后列表缺空行 |
+
+**第二层：手动 qmd-lint skill**（详细检查工具）
+
 ### 翻译后工作流
 
-1. 执行翻译 → 2. **用 qmd-lint skill 检查** → 3. 修复发现的问题 → 4. `--deploy` 部署
+1. 执行翻译 → 2. **自动检查**（`scripts/run_checks.sh`） → 3. 修复发现的问题 → 4. `--deploy` 部署 → 5. CI 构建后验证部署页面
+
+**fence div 配对检查脚本**（内联运行）：
+```python
+in_code = False
+stack = []
+for i, line in enumerate(lines, 1):
+    stripped = line.rstrip('\n')
+    if stripped.startswith('```'):
+        in_code = not in_code
+        continue
+    if in_code: continue
+    if stripped.startswith(':::'):
+        rest = stripped[3:].strip()
+        if rest == '':
+            if stack: stack.pop()
+            else: print(f"L{i}: Unmatched closing :::")
+        elif rest.startswith('{') or rest.startswith('{{'):
+            stack.append((i, rest))
+```
+
+**交叉引用修复脚本**（翻译后批量修复）：
+```python
+content = re.sub(
+    r'(@(?:sec|fig|tbl|eq|lst)-)([a-zA-Z0-9_-]+)([\u4e00-\u9fff])',
+    lambda m: f'{m.group(1)}{m.group(2)} {m.group(3)}', content)
+content = re.sub(
+    r'(\[@[a-zA-Z0-9_-]+\])([\u4e00-\u9fff])',
+    lambda m: f'{m.group(1)} {m.group(3)}', content)
+```
 
 ### Gemini 翻译常见问题及修复
 
@@ -173,6 +227,9 @@ lmodern inkscape
 - **TikZ 代码块结束符粘连**：Gemini 翻译后，TikZ 代码块的 ` ``` ` 结束标记可能与后续描述文字合并到同一行（如 `` ```**描述文字**``），导致 Pandoc 无法识别代码块结束。修复方法：将 ` ``` ` 恢复到独立行
 - **TikZ 代码块内的 LaTeX 语法完整性**：修复粘连问题时需注意代码块内 `\scalebox{}{}` 等命令的闭合括号 `}` 不能误删，否则 LuaLaTeX 编译失败导致 diagram.lua 无声地放弃渲染
 - **Callout 内裸代码块**：`::: {.callout-example}` 内的 ` ``` ` 无语言标记会导致 Quarto 把后续 `:::` 当作代码块内容。需改为缩进代码块（4 空格）或加 `{.text}` 标记
+- **交叉引用粘连中文**：`@fig-xxx` 后直接跟中文（如 `@fig-xxx展示了`），导致 Quarto 交叉引用解析器失败，页面报 `innerHTML` 错误。修复正则：`(@(?:sec|fig|tbl|eq|lst)-)([a-zA-Z0-9_-]+)([\u4e00-\u9fff])` → `$1$2 $3`；以及 `([@...])([\u4e00-\u9fff])` → `$1 $2`。**注意**：Python 3 的 `\w` 匹配 CJK 字符，必须用 `[a-zA-Z0-9_-]` 代替
+- **Fence div 未闭合**：Gemini 可能吞掉 `:::` 闭合标记，导致 fence div 配对失败。检查方法：用栈模拟解析，统计未闭合的 `:::` 块
+- **Shortcode 误包裹在 `:::` 中**：`{{< margin-video >}}` 等 Quarto shortcode 是行内指令，不应放在 `:::` fence div 内。Gemini 可能错误地给 shortcode 加上 `:::` 前缀
 
 ## 目标网站
 
