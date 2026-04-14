@@ -16,6 +16,7 @@ project:
 
 website:
   title: "ML Systems Textbook"
+  site-url: "https://skinterqwe.github.io/ML-Systems-Textbook-CN/"
   description: "A comprehensive textbook on machine learning systems, covering hardware, software, and deployment."
 
   # High-level navigation enhancements
