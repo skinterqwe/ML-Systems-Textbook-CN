@@ -485,8 +485,7 @@ fit=(BB1)(DPE1)(DPE4)(B1),yshift=0mm](BB2){};
 
 ::: {#lst-dense_layer_def lst-cap="**Dense Layer Definition**: Defines a dense layer using a high-level API, illustrating how neural networks implement parallel transformations across input tensors."}
 
-```
-{.python}
+```{.python}
 dense = Dense(512)(input_tensor)
 ```
 
@@ -496,8 +495,7 @@ dense = Dense(512)(input_tensor)
 
 ::: {#lst-dense_expansion lst-cap="**Layer Computation**: Neural networks compute each layer's output via weighted input summation followed by an activation function transformation."}
 
-```
-{.python}
+```{.python}
 output = matmul(input_weights) + bias
 output = activation(output)
 ```
@@ -507,8 +505,7 @@ output = activation(output)
 
 ::: {#lst-loop_level_dense lst-cap="**Nested Loops**: Computes output values through sequential matrix multiplications and bias additions, followed by activation function application to produce final outputs."}
 
-```
-{.python}
+```{.python}
 for n in range(batch_size):
     for m in range(output_size):
         sum = bias[m]
@@ -532,8 +529,7 @@ AI计算原语的设计遵循三个架构标准。首先，原语必须足够频
 
 ::: {#lst-linear_layer_highlevel lst-cap="**Linear Layer**: Neural networks transform input data into a higher-dimensional space using linear mappings to enable complex feature extraction."}
 
-```
-{.python}
+```{.python}
 layer = nn.Linear(256, 512)  # 256 inputs to
 # 512 outputs
 output = layer(input_tensor)  # Process a batch of inputs
@@ -544,8 +540,7 @@ output = layer(input_tensor)  # Process a batch of inputs
 
 ::: {#lst-linear_math_internal lst-cap="**Fully Connected Layer**: Each output is computed as a weighted sum of all inputs plus a bias, followed by an activation function transformation. Linear transformations enable complex model architectures in neural networks."}
 
-```
-{.python}
+```{.python}
 Z = matmul(weights, input) + bias  # Each output needs all inputs
 output = activation(Z)  # Transform each result
 ```
@@ -555,8 +550,7 @@ output = activation(Z)  # Transform each result
 
 ::: {#lst-loop_linear_layer lst-cap="**Linear Layer Computation**: Each output neuron is computed by summing weighted inputs from all features, followed by an activation function application. Understanding this process helps in grasping the fundamental building blocks of neural networks."}
 
-```
-{.python}
+```{.python}
 for batch in range(32):            # Process 32 samples at once
     for out_neuron in range(512):  # Compute each output neuron
         sum = 0.0
@@ -640,8 +634,7 @@ loop_batch:
 
 ::: {#lst-linear_matrix_hierarchy lst-cap="**Matrix Operations**: Neural networks perform transformations using matrix multiplications and biases to achieve output predictions. Training requires careful management of input batches and activation functions to optimize model performance."}
 
-```
-{.python}
+```{.python}
 layer = nn.Linear(256, 512)  # Layer transforms 256 inputs to
 # 512 outputs
 output = layer(input_batch)  # Process a batch of 32 samples
@@ -667,8 +660,7 @@ output = relu(Z)  # Vector: applies activation to
 
 ::: {#lst-matrix_patterns lst-cap="**Linear Layers**: Layer transformations combine input features to produce hidden representations. Matrix operations in neural networks enable efficient feature extraction and transformation, forming the backbone of many machine learning architectures."}
 
-```
-{.python}
+```{.python}
 hidden = matmul(weights, inputs)
 # weights: [out_dim x in_dim], inputs: [in_dim x batch]
 # Result combines all inputs for each output
@@ -746,8 +738,7 @@ mstore (output_ptr), mr3    # Store computed output block
 
 ::: {#lst-nonlinear_layer lst-cap="**Non-Linear Transformations**: Neural networks process input data through a sequence of linear transformations followed by non-linear activations to capture complex patterns. This layer sequence enhances model expressiveness and learning capabilities."}
 
-```
-{.python}
+```{.python}
 layer = nn.Sequential(
     nn.Linear(256, 512), nn.ReLU(), nn.BatchNorm1d(512)
 )
@@ -760,8 +751,7 @@ output = layer(input_tensor)
 
 ::: {#lst-nonlinear_math lst-cap="**Non-linear Transformations**: Neural networks apply linear and non-linear operations to transform input data into meaningful features for learning. Machine learning models leverage these transformations to capture complex patterns in data efficiently."}
 
-```
-{.python}
+```{.python}
 Z = matmul(weights, input) + bias  # Linear transformation
 H = max(0, Z)  # ReLU activation
 mean = reduce_mean(H, axis=0)  # BatchNorm statistics
@@ -776,8 +766,7 @@ output = gamma * (H - mean) / sqrt(var + eps) + beta
 
 ::: {#lst-traditional_overhead lst-cap="**ReLU and BatchNorm Operations**: Neural networks process input data through conditional operations that can disrupt instruction pipelining and multiple passes required for normalization, highlighting efficiency challenges in traditional implementations. Source: IEEE Spectrum"}
 
-```
-{.python}
+```{.python}
 for batch in range(32):
     for feature in range(512):
        # ReLU: Requires branch prediction and potential
@@ -1897,19 +1886,11 @@ $$其中：
 
 ::: {#lst-matmul_data_movement lst-cap="**Matrix Multiplication**: Data movement bottlenecks can lead to underutilized hardware resources, illustrating the importance of efficient data flow in optimizing machine learning model performance. Via This operation"}
 
-```
-{.python}
-
+```{.python}
 ## 矩阵乘法，其中：
-
 ## 权重：[512 x 256] —— 模型参数
-
 ## 输入: [256 x 32] - 批次激活值
-
 ## Z:       [512 x 32]  - 输出激活值
-
-```
-python
 ## 计算每个输出元素 Z[i,j]：
 for i in range(512):
     for j in range(32):
@@ -1939,18 +1920,10 @@ for i in range(512):
 
 ::: {#lst-weight_stationary lst-cap="**Weight Stationary Matrix Multiplication**: Weight stationary matrix multiplication keeps weights fixed in local memory while input activations stream through, demonstrating how it maximizes weight reuse to reduce energy costs."}
 
-```
-{.python}
-```
-
+```{.python}
 ## 权重驻留矩阵乘法
-
 ## - 权重保持固定在本地内存中
-
 ## - 输入激活流过
-
-```
-python
 ## - 部分和累加得到最终输出
 
 for weight_block in weights:  # 加载并保持权重固定
@@ -1979,17 +1952,10 @@ for weight_block in weights:  # 加载并保持权重固定
 
 ::: {#lst-output_stationary lst-cap="**Output Stationary Execution**: Accumulates partial sums locally to reduce memory writes and enhance efficiency during matrix multiplication, making it ideal for transformer-based models."}
 
-```
-{.python}
-
+```{.python}
 ## - 部分和保留在本地内存中
-
 ## - 权重和输入激活通过动态方式流动
-
 ## - 最终输出只写入一次
-
-```
-python
 for output_block in outputs:  # 保持部分和静止
     accumulator = 0  # 初始化累加缓冲区
     for weight_block, input_block in zip(weights, inputs):
@@ -2022,8 +1988,7 @@ for output_block in outputs:  # 保持部分和静止
 
 ::: {#lst-input_stationary lst-cap="**Input Stationary**: This approach keeps input activations stationary while dynamically streaming weights to maximize memory reuse and reduce energy consumption."}
 
-```
-{.python}
+```{.python}
 
 ## - 输入激活保留在本地内存中
 
@@ -2139,8 +2104,7 @@ AI 加速中最具影响力的优化技术之一，是减少操作之间中间�
 
 ::: {#lst-naive_execution lst-cap="**Naïve Execution**: Each step writes intermediate results to memory before processing the next, leading to increased bandwidth usage and reduced efficiency. *Source: NVIDIA GPU Technology Conference 2017*[nvidia2017gpu]"}
 
-```
-{.python}
+```{.python}
 import torch
 
 ## 输入张量
@@ -2223,8 +2187,7 @@ $$
 
 ::: {#lst-naive_matmul lst-cap="Naïve matrix multiplication without tiling"}
 
-```
-{.python}
+```{.python}
 for i in range(N):
     for j in range(N):
         for k in range(N):
@@ -2317,8 +2280,7 @@ $$朴素实现会直接遵循该公式（@lst-naive_matmul_repeat）。
 
 ::: {#lst-naive_matmul_repeat lst-cap="**Naïve Matrix Multiplication**: This code directly implements matrix multiplication using nested loops, showing how each element in the output matrix is computed as a sum of products from corresponding elements in the input matrices."}
 
-```
-{.python}
+```{.python}
 for i in range(N):
     for j in range(N):
         for k in range(N):
@@ -2337,8 +2299,7 @@ for i in range(N):
 
 ::: {#lst-tiled_matmul lst-cap="**Tiled Matrix Multiplication**: This approach divides matrices into smaller blocks to optimize memory usage by reusing data within processor cache, thereby improving computational efficiency."}
 
-```
-{.python}
+```{.python}
 TILE_SIZE = 32  # Choose a tile size based on
 # hardware constraints
 
@@ -2374,8 +2335,7 @@ for i in range(0, N, TILE_SIZE):
 
 ::: {#lst-tiled_spatial lst-cap="**Spatial Tiling**: Reduces redundant memory accesses by processing matrix tiles sequentially."}
 
-```
-{.python}
+```{.python}
 TILE_SIZE = 32  # Tile size chosen based on available
 # fast memory
 
@@ -2402,8 +2362,7 @@ for i in range(0, N, TILE_SIZE):
 
 ::: {#lst-loop_blocking lst-cap="**Temporal Tiling**: Reduces redundant memory accesses by caching weights in fast memory across multiple matrix multiplications."}
 
-```
-{.python}
+```{.python}
 for i in range(0, N, TILE_SIZE):
     for j in range(0, N, TILE_SIZE):
         for k in range(0, N, TILE_SIZE):
