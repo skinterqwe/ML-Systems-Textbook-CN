@@ -4,83 +4,83 @@ quiz: efficient_ai_quizzes.json
 concepts: efficient_ai_concepts.yml
 glossary: efficient_ai_glossary.json
 crossrefs: efficient_ai_xrefs.json
+engine: jupyter
 ---
 
-# Efficient AI {#sec-efficient-ai}
+# 高效人工智能 {#sec-efficient-ai}
 
 ::: {layout-narrow}
+
 ::: {.column-margin}
-*DALL·E 3 Prompt: A conceptual illustration depicting efficiency in artificial intelligence using a shipyard analogy. The scene shows a bustling shipyard where containers represent bits or bytes of data. These containers are being moved around efficiently by cranes and vehicles, symbolizing the streamlined and rapid information processing in AI systems. The shipyard is meticulously organized, illustrating the concept of optimal performance within the constraints of limited resources. In the background, ships are docked, representing different platforms and scenarios where AI is applied. The atmosphere should convey advanced technology with an underlying theme of sustainability and wide applicability.*
-:::
 
-\noindent
-![](images/png/cover_efficient_ai.png)
+*DALL·E 3 提示词：一个概念性插图，借助船厂类比描绘人工智能中的效率。画面展示一个繁忙的船厂，其中集装箱代表数据的比特或字节。这些集装箱正被起重机和车辆高效地搬运，象征着 AI 系统中精简而快速的信息处理。船厂经过精心组织，体现了在有限资源约束下实现最优性能的概念。背景中停靠着船只，代表 AI 应用的不同平台和场景。整体氛围应传达先进技术，并带有可持续性和广泛适用性的潜在主题。*
 
 :::
 
-## Purpose {.unnumbered}
-
-_What key trade-offs shape the pursuit of efficiency in machine learning systems, and why must engineers balance competing objectives?_
-
-Machine learning system efficiency requires balancing trade-offs across algorithmic complexity, computational resources, and data utilization. Improvements in one dimension often degrade performance in others, creating engineering tensions that require systematic approaches. Understanding these interdependent relationships enables engineers to design systems achieving maximum performance within practical constraints of time, energy, and cost.
-
-::: {.callout-tip title="Learning Objectives"}
-
-- Analyze scaling law relationships to determine optimal resource allocation strategies for computational budget, model size, and dataset requirements
-
-- Compare and contrast algorithmic, compute, and data efficiency trade-offs across cloud, edge, mobile, and TinyML deployment contexts
-
-- Evaluate machine learning systems using efficiency metrics including throughput, latency, energy consumption, and resource utilization
-
-- Apply compression techniques such as pruning, quantization, and knowledge distillation to optimize model performance within resource constraints
-
-- Design context-aware efficiency strategies by prioritizing optimization dimensions based on deployment requirements and operational constraints
-
-- Critique scaling-based approaches by identifying saturation points and proposing efficiency-driven alternatives
-
-- Assess the environmental and accessibility implications of efficiency choices in machine learning system design
-
+\noindent![](images/png/cover_efficient_ai.png)
 :::
 
-## The Efficiency Imperative {#sec-efficient-ai-efficiency-imperative-d65c}
+## 目的 {.unnumbered}
 
-Machine learning efficiency has evolved from an afterthought to a fundamental discipline as models transitioned from simple statistical approaches to complex, resource-intensive architectures. The gap between theoretical capabilities and practical deployment has widened significantly, creating efficiency constraints that fundamentally affect system feasibility and scalability.
+_哪些关键权衡塑造了机器学习系统中对效率的追求，为什么工程师必须平衡相互竞争的目标？_
 
-Large-scale language models exemplify this challenge. GPT-3 required training costs estimated at $4.6 million (Lambda Labs estimate) and energy consumption of 1,287 MWh [@Patterson_et_al_2021]. The operational requirements, including memory footprints exceeding 700GB for inference (350GB for half-precision), create deployment barriers in resource-constrained environments. These constraints reveal a tension between model expressiveness and system practicality that requires rigorous analysis and optimization strategies.
+机器学习系统的效率要求在算法复杂度、计算资源和数据利用之间进行权衡。一个维度上的改进往往会削弱其他维度的表现，从而带来需要系统性方法来处理的工程张力。理解这些相互依赖的关系，使工程师能够在时间、能量和成本的实际约束下设计出实现最大性能的系统。
 
-Efficiency research extends beyond resource optimization to encompass the theoretical foundations of learning system design. Engineers must understand how algorithmic complexity, computational architectures, and data utilization strategies interact to determine system viability. These interdependencies create multi-objective optimization problems where improvements in one dimension may degrade performance in others.
+::: {.callout-tip title="学习目标"}
 
-This chapter establishes the framework for analyzing efficiency in machine learning systems within Part III's performance engineering curriculum. The efficiency principles here inform the optimization techniques in @sec-model-optimizations, where quantization and pruning methods realize algorithmic efficiency goals, the hardware acceleration strategies in @sec-ai-acceleration that maximize compute efficiency, and the measurement methodologies in @sec-benchmarking-ai for validating efficiency improvements.
+- 分析缩放定律关系，以确定计算预算、模型大小和数据集需求的最优资源分配策略
 
-## Defining System Efficiency {#sec-efficient-ai-defining-system-efficiency-a4b7}
+- 比较并对照云、边缘、移动和 TinyML 部署场景中的算法效率、计算效率和数据效率权衡
 
-Consider building a photo search application for a smartphone. You face three competing pressures: the model must be small enough to fit in memory (an algorithmic challenge), it must run fast enough on the phone's processor without draining the battery (a compute challenge), and it must learn from a user's personal photos without requiring millions of examples (a data challenge). Efficient AI is the discipline of navigating these interconnected trade-offs.
+- 使用包括吞吐量、延迟、功耗和资源利用率在内的效率指标评估机器学习系统
 
-Addressing these efficiency challenges requires coordinated optimization across three interconnected dimensions that determine system viability.
+- 应用剪枝、量化和知识蒸馏等压缩技术，在资源约束内优化模型性能
 
-::: {.callout-definition title="Machine Learning System Efficiency"}
+- 根据部署需求和运行约束，优先考虑不同的优化维度，设计具备上下文感知的效率策略
 
-***Machine Learning System Efficiency*** is the optimization of ML systems to minimize _computational_, _memory_, and _energy_ demands while maintaining performance, achieved through improvements in _algorithms_, _hardware utilization_, and _data usage_.
+- 通过识别饱和点并提出以效率为导向的替代方案，批判性评估基于缩放的 approaches
 
+- 评估机器学习系统设计中效率选择对环境和可访问性的影响
 :::
 
-Understanding these interdependencies is necessary for designing systems that achieve maximum performance within practical constraints. Examining how the three dimensions interact in practice reveals how scaling laws expose these constraints.
+## 效率的必要性 {#sec-efficient-ai-efficiency-imperative-d65c}
 
-### Efficiency Interdependencies {#sec-efficient-ai-efficiency-interdependencies-5d69}
+随着模型从简单的统计方法演变为复杂、资源密集型架构，机器学习效率已经从事后考虑转变为一门基础学科。理论能力与实际部署之间的差距已显著扩大，从而带来了效率约束，这些约束会从根本上影响系统的可行性和可扩展性。
 
-The three efficiency dimensions are deeply intertwined, creating a complex optimization landscape. Algorithmic efficiency reduces computational requirements through better algorithms and architectures, but may increase development complexity or require specialized hardware. Compute efficiency maximizes hardware utilization through optimized implementations and specialized processors, but may limit model expressiveness or require specific algorithmic approaches. Data efficiency enables learning with fewer examples through improved training procedures and data utilization, but may require more sophisticated algorithms or additional computational resources.
+大规模语言模型就是这一挑战的典型例子。GPT-3 的训练成本估计为 460 万美元（Lambda Labs 的估算），能耗为 1,287 MWh[@Patterson_et_al_2021]。其运行需求，包括推理时超过 700GB 的内存占用（半精度下为 350GB），在资源受限环境中构成了部署障碍。这些约束揭示了模型表达能力与系统实用性之间的张力，需要通过严格分析和优化策略来加以应对。
 
-A concrete example illustrates these interconnections through the design of a photo search application for smartphones. The system must fit in 2GB memory (compute constraint), achieve acceptable accuracy with limited training data (data constraint), and complete searches within 50ms (algorithmic constraint). Optimization of any single dimension in isolation proves inadequate:
+效率研究不仅限于资源优化，还涵盖学习系统设计的理论基础。工程师必须理解算法复杂度、计算架构以及数据利用策略如何相互作用，并共同决定系统的可用性。这些相互依赖关系形成了多目标优化问题：在某一维度上的改进，可能会降低其他维度的性能。
 
-**Algorithmic Efficiency** focuses on the model architecture. Using a compact vision-language model with 50 million parameters instead of a billion-parameter model reduces memory requirements from 4GB to 200MB and cuts inference time from 2 seconds to 100 milliseconds. However, accuracy decreases from 92% to 85%, necessitating careful evaluation of trade-off acceptability.
+本章在第 III 部分的性能工程课程中，为分析机器学习系统效率建立了框架。这里的效率原则将指导@sec-model-optimizations 中的优化技术，在那里量化和剪枝方法实现算法效率目标；指导@sec-ai-acceleration 中最大化计算效率的硬件加速策略；以及指导@sec-benchmarking-ai 中用于验证效率改进的测量方法。
 
-**Compute Efficiency** addresses hardware utilization. The optimized model runs efficiently on smartphone processors, consuming only 10% battery per hour. Techniques like 8-bit quantization reduce computation while maintaining quality, and batch processing[^fn-batch-processing] handles multiple queries simultaneously. However, these optimizations necessitate algorithmic modifications to support reduced precision operations.
+## 定义系统效率 {#sec-efficient-ai-defining-system-efficiency-a4b7}
 
-**Data Efficiency** shapes how the model learns. Rather than requiring millions of labeled image-text pairs, the system leverages pre-trained foundation models and adapts using only thousands of user-specific examples. Continuous learning from user interactions provides implicit feedback without explicit labeling. This data efficiency necessitates more sophisticated algorithmic approaches and careful management of computational resources during adaptation.
+以为智能手机构建一个照片搜索应用为例。你面临三种相互竞争的压力：模型必须足够小，能够装入内存中（这是一个算法挑战），它必须能在手机处理器上足够快地运行而不会耗尽电池（这是一个计算挑战），而且它必须能够从用户的个人照片中学习，而不需要数百万个样本（这是一个数据挑战）。高效人工智能就是在这些相互关联的权衡之间进行权衡取舍的学科。
 
-Synergy between these dimensions produces emergent benefits: the smaller model (algorithmic efficiency) enables on-device processing (compute efficiency), which facilitates learning from private user data (data efficiency) without transmitting personal images to remote servers. This integration provides enhanced performance and privacy protection, demonstrating how efficiency enables capabilities unattainable with less efficient approaches.
+应对这些效率挑战，需要在决定系统可行性的三个相互关联的维度上进行协调优化。
 
-These interdependencies appear across all deployment contexts, from cloud systems with abundant resources to edge devices with severe constraints. As illustrated in @fig-interdependece, understanding these relationships is essential before examining how scaling laws reveal fundamental efficiency limits.
+::: {.callout-definition title="机器学习系统效率"}
+
+***机器学习系统效率*** 是在保持性能的同时，通过在 _算法_、_硬件利用_ 和 _数据使用_ 上的改进，来优化机器学习系统，以最小化 _计算_、_内存_ 和 _能量_ 需求。
+:::
+
+理解这些相互依赖关系，对于设计能在实际约束下实现最大性能的系统是必要的。考察这三个维度在实践中如何相互作用，可以揭示扩展规律如何暴露这些约束。
+
+### 效率之间的相互依赖 {#sec-efficient-ai-efficiency-interdependencies-5d69}
+
+这三个效率维度深度交织，形成了一个复杂的优化空间。算法效率通过更好的算法和架构降低计算需求，但可能增加开发复杂度，或者需要专用硬件。计算效率通过优化实现和专用处理器最大化硬件利用率，但可能限制模型表达能力，或者需要特定的算法方法。数据效率通过改进训练流程和数据利用，使系统能够用更少的样本进行学习，但可能需要更复杂的算法或额外的计算资源。
+
+一个具体例子可以说明这些相互联系：为智能手机设计一个照片搜索应用。系统必须能够装入 2GB 内存中（计算约束），在有限训练数据下达到可接受的准确率（数据约束），并在 50ms 内完成搜索（算法约束）。孤立地优化任一单一维度都证明是不够的：
+
+**算法效率** 关注模型架构。使用一个紧凑的视觉-语言模型，参数量为 5000 万，而不是一个十亿参数模型，可将内存需求从 4GB 降至 200MB，并将推理时间从 2 秒缩短到 100 毫秒。然而，准确率会从 92% 下降到 85%，因此需要仔细评估这种权衡是否可接受。
+
+**计算效率** 关注硬件利用。优化后的模型能在智能手机处理器上高效运行，每小时仅消耗 10% 的电池电量。诸如 8 位量化之类的技术可以减少计算量，同时保持质量，而批处理[^fn-batch-processing] 则可以同时处理多个查询。然而，这些优化需要对算法进行修改，以支持降低精度的运算。
+
+**数据效率** 决定模型如何学习。系统不再需要数百万对带标签的图像-文本对，而是利用预训练的基础模型，并仅使用数千个用户特定示例进行适配。基于用户交互的持续学习可在无需显式标注的情况下提供隐式反馈。这种数据效率要求更复杂的算法方法，并在适配过程中对计算资源进行谨慎管理。
+
+这些维度之间的协同作用会产生涌现收益：更小的模型（算法效率）使得端侧处理成为可能（计算效率），从而可以在不将个人图像传输到远程服务器的情况下，从私有用户数据中学习（数据效率）。这种整合带来了更强的性能和隐私保护，说明效率如何支持那些效率较低的方法无法实现的能力。
+
+这些相互依赖关系存在于所有部署场景中，从资源充足的云系统到受严格约束的边缘设备皆是如此。正如@fig-interdependece 所示，在考察扩展规律如何揭示基本效率极限之前，理解这些关系至关重要。
 
 ::: {#fig-interdependece fig-env="figure" fig-pos="htb"}
 
@@ -105,105 +105,102 @@ These interdependencies appear across all deployment contexts, from cloud system
 \end{tikzpicture}}
 
 ```
-: **Efficiency Interdependencies**: The three efficiency dimensions (algorithmic, compute, and data) overlap and influence one another, creating systemic trade-offs in machine learning systems. Optimizing for one efficiency dimension often requires careful consideration of its impact on the others, shaping overall system performance and resource utilization.
+
+: **效率之间的相互依赖**：三种效率维度（算法、计算和数据）相互重叠并相互影响，在机器学习系统中形成系统性的权衡。针对某一效率维度进行优化，往往需要仔细考虑其对其他维度的影响，从而塑造整体系统性能和资源利用率。
+
 :::
 
-[^fn-batch-processing]: **Batch Processing**: Processing multiple inputs together to amortize computational overhead and maximize GPU utilization. Mobile vision models achieve 3-5× speedup with batch size 8 vs. individual processing, but introduces 50-200ms latency as queries wait for batch completion—a classic throughput vs. latency trade-off in ML systems.
+[^fn-batch-processing]: **批处理**：将多个输入一起处理，以摊销计算开销并最大化 GPU 利用率。移动端视觉模型在批大小为 8 时，相较于逐个处理可实现 3-5 倍加速，但会引入 50-200ms 的延迟，因为查询需要等待批次完成——这是机器学习系统中典型的吞吐量与延迟之间的权衡。
 
-With this understanding of efficiency dimension interactions, we can examine why brute-force scaling alone cannot address real-world efficiency requirements. Scaling laws provide the quantitative framework for understanding these limitations.
+有了对效率维度相互作用的理解，我们就可以考察为什么仅靠蛮力式扩展无法满足现实世界的效率需求。扩展规律为理解这些局限提供了定量框架。
 
-## AI Scaling Laws {#sec-efficient-ai-ai-scaling-laws-a043}
+## AI 扩展定律 {#sec-efficient-ai-ai-scaling-laws-a043}
 
-Machine learning systems have followed a consistent pattern: increasing model scale through parameters, training data, and computational resources typically improves performance. This empirical observation has driven progress across natural language processing, computer vision, and speech recognition, where larger models trained on extensive datasets consistently achieve state-of-the-art results.
+机器学习系统一直遵循一个一致的模式：通过参数、训练数据和计算资源增加模型规模，通常会提升性能。这一经验观察推动了自然语言处理、计算机视觉和语音识别等领域的进步，在这些领域中，使用海量数据集训练的大模型持续取得最先进的结果。
 
-These scaling laws can be seen as the quantitative expression of Richard Sutton's "Bitter Lesson" from @sec-introduction: performance in machine learning is primarily driven by leveraging general methods at massive scale. The predictable power-law relationships show *how* computation, when scaled, yields better models.
+这些扩展定律可以看作是 Richard Sutton 在@sec-introduction 中提出的“苦涩教训”的量化表达：机器学习中的性能主要由在大规模上利用通用方法来驱动。可预测的幂律关系展示了当计算规模扩大时，*如何*获得更好的模型。
 
-This scaling trajectory raises critical questions about efficiency and sustainability. As computational demands grow exponentially and data requirements increase, questions emerge regarding when scaling costs outweigh performance benefits. Researchers have developed scaling laws[^fn-scaling-laws] that quantify how model performance relates to training resources, revealing why efficiency becomes increasingly important as systems expand in complexity.
+这种扩展轨迹也引发了关于效率和可持续性的关键问题。随着计算需求指数式增长、数据要求不断提高，何时扩展成本会超过性能收益成为一个值得关注的问题。研究人员已经提出了扩展定律[^fn-scaling-laws]，用以量化模型性能与训练资源之间的关系，揭示了为何随着系统复杂度提升，效率会变得越来越重要。
 
-[^fn-scaling-laws]: **Scaling Laws**: Empirical relationships discovered by OpenAI showing that language model performance follows predictable power-law relationships with model size (N), dataset size (D), and compute budget (C). These laws enable researchers to predict performance and optimal resource allocation before expensive training runs.
+[^fn-scaling-laws]: **扩展定律**：OpenAI 发现的经验关系，表明语言模型性能会随着模型规模（N）、数据集规模（D）和计算预算（C）呈现可预测的幂律关系。这些定律使研究人员能够在昂贵的训练运行之前预测性能并进行最优资源分配。
 
-This section introduces scaling laws, examines their manifestation across different dimensions, and analyzes their implications for system design, establishing why the multi-dimensional efficiency optimization framework is a fundamental requirement.
+本节将介绍扩展定律，考察其在不同维度上的表现，并分析其对系统设计的影响，从而说明多维效率优化框架为何是一项基本要求。
 
-### Empirical Evidence for Scaling Laws {#sec-efficient-ai-empirical-evidence-scaling-laws-0105}
+### 扩展定律的经验证据 {#sec-efficient-ai-empirical-evidence-scaling-laws-0105}
 
-The rapid evolution in AI capabilities over the past decade exemplifies this scaling trajectory. GPT-1 (2018) contained 117 million parameters and demonstrated basic sentence completion capabilities. GPT-2 (2019) scaled to 1.5 billion parameters and achieved coherent paragraph generation. GPT-3 (2020) expanded to 175 billion parameters and demonstrated sophisticated text generation across diverse domains. Each increase in model size brought dramatically improved capabilities, but at exponentially increasing costs.
+过去十年中 AI 能力的快速演进，正体现了这种扩展轨迹。GPT-1（2018）包含 1.17 亿个参数，并展示了基本的句子补全能力。GPT-2（2019）扩展到 15 亿个参数，实现了连贯的段落生成。GPT-3（2020）进一步扩展到 1750 亿个参数，并在多个领域展示了复杂的文本生成能力。模型规模每一次提升，都带来了显著增强的能力，但代价也以指数级上升。
 
-This pattern extends beyond language models. In computer vision, doubling neural network size typically yields consistent accuracy gains when training data increases proportionally. AlexNet (2012) had 60 million parameters, VGG-16 (2014) scaled to 138 million, and large modern vision transformers can exceed 600 million parameters. Each generation achieved better image recognition accuracy, but required proportionally more computational resources and training data.
+这种模式并不局限于语言模型。在计算机视觉中，当训练数据按比例增加时，将神经网络规模加倍通常会带来稳定的准确率提升。AlexNet（2012）有 6000 万个参数，VGG-16（2014）扩展到 1.38 亿个参数，而现代大型视觉 Transformer 的参数量甚至可以超过 6 亿。每一代模型都取得了更好的图像识别准确率，但也需要相应更多的计算资源和训练数据。
 
-The scaling hypothesis underlies this progress: larger models possess increased capacity to capture intricate data patterns, facilitating improved accuracy and generalization. However, this scaling trajectory introduces critical resource constraints. Training GPT-3 required approximately 314 sextillion[^fn-sextillion] floating-point operations (314 followed by 21 zeros), equivalent to running a modern gaming PC continuously for over 350 years, at substantial financial and environmental costs.
+扩展假设支撑了这一进展：更大的模型具有更强的容量去捕获复杂的数据模式，从而提升准确率和泛化能力。然而，这种扩展轨迹也引入了关键的资源约束。训练 GPT-3 大约需要 314 万亿亿[^fn-sextillion] 次浮点运算（314 后面跟 21 个零），相当于让一台现代游戏电脑连续运行 350 多年，且伴随着巨大的经济和环境成本。
 
-[^fn-sextillion]: **Sextillion**: A number with 21 zeros (10²¹), representing an almost incomprehensible scale. To put this in perspective, there are estimated 10²² to 10²⁴ stars in the observable universe, making GPT-3's training computation roughly 1/22nd of counting every star in the cosmos.
+[^fn-sextillion]: **万亿亿**：一个有 21 个零的数字（10²¹），其规模几乎难以想象。作为对比，可观测宇宙中恒星数量估计为 10²² 到 10²⁴ 颗，因此 GPT-3 的训练计算量大约相当于数星星总数的 1/22。
 
-These resource demands reveal why understanding scaling laws is necessary for efficiency. @fig-compute-trends shows computational demands of training state-of-the-art models escalating at an unsustainable rate, growing faster than Moore's Law improvements in hardware.
+这些资源需求说明了为什么理解扩展定律对于效率至关重要。@fig-compute-trends 显示，训练最先进模型所需的计算需求正以不可持续的速度攀升，其增长速度甚至快于硬件层面的摩尔定律改进。
 
-![**Model Training Compute Trends**: Model training compute is growing at faster and faster rates, especially in the recent deep learning era. Source: [@Sevilla_Heim_Ho_Besiroglu_Hobbhahn_Villalobos_2022.]](images/png/compute-trends.png){#fig-compute-trends}
+![**模型训练计算趋势**：模型训练所需的计算量正以越来越快的速度增长，尤其是在近期的深度学习时代。来源：[@Sevilla_Heim_Ho_Besiroglu_Hobbhahn_Villalobos_2022.]](images/png/compute-trends.png){#fig-compute-trends}
 
-Scaling laws provide a quantitative framework for understanding these trade-offs. They reveal that model performance exhibits predictable patterns as resources increase, following power-law relationships where performance improves consistently but with diminishing returns[^fn-diminishing-returns]. These laws show that optimal resource allocation requires coordinating model size, dataset size, and computational budget rather than scaling any single dimension in isolation.
+扩展定律为理解这些权衡提供了一个定量框架。它们表明，随着资源增加，模型性能呈现可预测的模式，遵循幂律关系：性能持续改善，但边际收益递减[^fn-diminishing-returns]。这些定律说明，最优资源分配需要协调模型规模、数据集规模和计算预算，而不是孤立地扩展某一个维度。
 
-[^fn-diminishing-returns]: **Diminishing Returns**: Economic principle where each additional input yields progressively smaller output gains. In ML, doubling compute from 1 to 2 hours might improve accuracy by 5%, but doubling from 100 to 200 hours might improve it by only 0.5%.
+[^fn-diminishing-returns]: **边际收益递减**：一种经济学原则，即每增加一个输入，带来的输出增益会逐步变小。在机器学习中，将计算从 1 小时加倍到 2 小时，准确率也许能提升 5%，但从 100 小时加倍到 200 小时，可能只提升 0.5%。
 
-::: {.callout-note collapse="true" title="Refresher: Transformer Computational Characteristics"}
+::: {.callout-note collapse="true" title="Transformer 计算特性回顾"}
 
-Recall from @sec-dnn-architectures that transformers process sequences using self-attention mechanisms that compute relationships between all token pairs. This architecture's computational cost scales quadratically with sequence length, making resource allocation particularly critical for language models. The term "FLOPs" (floating-point operations) quantifies total computational work, while "tokens" represent the individual text units (typically subwords) that models process during training.
+回顾@sec-dnn-architectures，Transformer 使用自注意力机制处理序列，计算所有 token 对之间的关系。该架构的计算成本随序列长度呈二次方增长，因此资源分配对于语言模型尤其关键。“FLOPs”（floating-point operations，浮点运算）用于量化总计算工作量，而“tokens”表示模型在训练中处理的单个文本单元（通常是子词）。
+
 :::
 
-### Compute-Optimal Resource Allocation {#sec-efficient-ai-computeoptimal-resource-allocation-541a}
+### 计算最优的资源分配 {#sec-efficient-ai-computeoptimal-resource-allocation-541a}
 
-Empirical studies of large language models (LLMs) reveal a key insight: for any fixed computational budget, there exists an optimal balance between model size and dataset size (measured in tokens[^fn-tokens]) that minimizes training loss.
+大语言模型（LLM）的实证研究揭示了一个关键洞见：对于任意固定的计算预算，模型规模与数据集规模（以 token[^fn-tokens] 计）之间存在一个最优平衡，使训练损失最小化。
 
-[^fn-tokens]: **Tokens**: Individual units of text that language models process, created by breaking text into subword pieces using algorithms like Byte-Pair Encoding (BPE). GPT-3 trained on 300 billion tokens while PaLM used 780 billion tokens, requiring text corpora equivalent to millions of books from web crawls and digitized literature.
+[^fn-tokens]: **Token**：语言模型处理的文本基本单元，通过字节对编码（Byte-Pair Encoding，BPE）等算法将文本拆分为子词片段而生成。GPT-3 在 3000 亿个 token 上训练，而 PaLM 使用了 7800 亿个 token，其文本语料规模相当于从网页抓取和数字化文献中汇聚的数百万本书。@fig-compute-optimal 通过三个相关视图说明了这一原则。左侧面板展示了“IsoFLOP 曲线”，其中每条曲线对应 Transformer[^fn-transformer] 训练期间恒定的浮点运算次数（FLOPs[^fn-efficient-flops]）。这些曲线中的谷底标识出在训练自回归[^fn-autoregressive]语言模型时，对于每个计算预算而言最有效的模型规模。中间和右侧面板揭示了当计算预算增加时，最优参数量和 token 数量如何可预测地缩放，说明了必须协调扩展以最大化资源利用率。
 
-@fig-compute-optimal illustrates this principle through three related views. The left panel shows 'IsoFLOP curves,' where each curve corresponds to a constant number of floating-point operations (FLOPs[^fn-efficient-flops]) during transformer[^fn-transformer] training. The valleys in these curves identify the most efficient model size for each computational budget when training autoregressive[^fn-autoregressive] language models. The center and right panels reveal how the optimal number of parameters and tokens scales predictably as computational budgets increase, demonstrating the necessity for coordinated scaling to maximize resource utilization.
+[^fn-efficient-flops]: **FLOPs**：浮点运算，用于衡量所执行的计算工作量。现代深度学习模型训练通常需要 10²²-10²⁴ 次 FLOPs：GPT-3 使用了约 3.14 × 10²³ 次 FLOPs（314 万亿亿次运算），相当于一台高端游戏电脑连续运行 350 多年。
 
-[^fn-efficient-flops]: **FLOPs**: Floating-Point Operations, measuring computational work performed. Modern deep learning models require 10²²-10²⁴ FLOPs for training: GPT-3 used ~3.14 × 10²³ FLOPs (314 sextillion operations), equivalent to running a high-end gaming PC continuously for over 350 years.
+[^fn-transformer]: **Transformer**：Vaswani 等人提出的神经网络架构[@vaswani2017attention]，通过自注意力机制革新了自然语言处理。与顺序式 RNN 不同，Transformer 在训练期间支持并行处理，成为现代大语言模型（包括 GPT、BERT、T5 及其衍生模型）的基础。
 
-[^fn-transformer]: **Transformer**: Neural network architecture introduced by Vaswani et al. [@vaswani2017attention] that revolutionized NLP through self-attention mechanisms. Unlike sequential RNNs, transformers enable parallel processing during training, forming the foundation of modern large language models including GPT, BERT, T5, and their derivatives.
+[^fn-autoregressive]: **自回归模型**：通过根据序列中所有先前 token 来预测下一个 token 的语言模型。GPT 系列模型就是这一方法的典型代表，它们通过从左到右生成文本，并使用因果注意力掩码确保每个位置只能关注前面的位置信息。
 
-[^fn-autoregressive]: **Autoregressive Models**: Language models that generate text by predicting each token based on all preceding tokens in the sequence. GPT-family models exemplify this approach, generating text left-to-right with causal attention masks to ensure each position only attends to previous positions.
+![**最优计算分配**：在固定计算预算下，语言模型性能取决于模型规模与训练数据量之间的平衡；左侧面板映射了参数数量与训练损失的关系，并为每个 FLOP 水平识别出一个效率最佳点。中间和右侧面板量化了最优参数数量与 token 需求如何随着计算量增加而可预测地扩展，说明在大语言模型中，为了最大化资源利用率，模型与数据都需要协调扩展。来源：[@hoffmann2022training]。](images/png/compute_optimal.png){#fig-compute-optimal}
 
-![**Optimal Compute Allocation**: For fixed computational budgets, language model performance depends on balancing model size and training data volume; the left panel maps training loss across parameter counts, identifying an efficiency sweet spot for each FLOP level. The center and right panels quantify how optimal parameter counts and token requirements scale predictably with increasing compute, demonstrating the need for coordinated scaling of both model and data to maximize resource utilization in large language models. Source: [@hoffmann2022training].](images/png/compute_optimal.png){#fig-compute-optimal}
+@kaplan2020scaling 证明了基于 Transformer 的语言模型会随着三个因素呈可预测地扩展：模型参数数量、训练数据集规模（以 token 计）以及总计算预算（以浮点运算计）。当这些因素按比例增加时，模型会在无需架构修改或任务特定调优的情况下持续提升性能。
 
-@kaplan2020scaling demonstrated that transformer-based language models scale predictably with three factors: the number of model parameters, the volume of the training dataset (measured in tokens), and the total computational budget (measured in floating-point operations). When these factors are augmented proportionally, models exhibit consistent performance improvements without requiring architectural modifications or task-specific tuning.
+这些模式的实际表现清晰地体现在@fig-kaplan-scaling 中，该图展示了从$10^3$到$10^9$参数规模的模型测试损失曲线。该图揭示了两个关键洞见。第一，更大的模型表现出更高的样本效率，能以更少的训练 token 达到目标性能。第二，随着计算资源增加，最优模型规模相应增大，并且当计算分配得当时，损失会可预测地下降。
 
-The practical manifestation of these patterns appears clearly in @fig-kaplan-scaling, which presents test loss curves for models spanning from $10^3$ to $10^9$ parameters. The figure reveals two key insights. First, larger models demonstrate superior sample efficiency, achieving target performance levels with fewer training tokens. Second, as computational resources increase, the optimal model size correspondingly grows, with loss decreasing predictably when compute is allocated efficiently.
+![**扩展定律与计算最优性**：更大的模型在更多训练数据和计算资源支持下通常能获得更好性能，但边际收益递减要求训练期间必须谨慎分配资源。最优模型规模和训练时长取决于可用计算预算，这从不同参数规模和训练 token 数下损失曲线的收敛可以看出。来源：[@kaplan2020scaling]。](images/png/kaplan_scaling_data_compute.png){#fig-kaplan-scaling}
 
-![**Scaling Laws & Compute Optimality**: Larger models consistently achieve better performance with increased training data and compute, but diminishing returns necessitate careful resource allocation during training. Optimal model size and training duration depend on the available compute budget, as evidenced by the convergence of loss curves at different parameter scales and training token counts. Source: [@kaplan2020scaling].](images/png/kaplan_scaling_data_compute.png){#fig-kaplan-scaling}
+这一理论扩展关系定义了最优计算分配：对于固定预算，关系$D \propto N^{0.74}$ [@hoffmann2022training] 表明数据集规模$D$和模型规模$N$必须以协调的比例增长。这意味着随着模型规模增加，数据集应以大约四分之三的速率增长，以维持计算最优效率。
 
-This theoretical scaling relationship defines optimal compute allocation: for a fixed budget, the relationship $D \propto N^{0.74}$ [@hoffmann2022training] shows that dataset size $D$ and model size $N$ must grow in coordinated proportions. This means that as model size increases, the dataset should grow at roughly three-quarters the rate to maintain compute-optimal efficiency.
+这些理论预测假设计算利用率是完美的，而在分布式训练场景中这很难实现。现实系统会面临随系统规模不利增长的通信开销，从而形成带宽瓶颈并降低有效利用率。在超过 100 个节点后，通信开销会根据工作负载和互连方式，使预期性能提升减少 20% 到 40%，将预测中的改进转化为更温和的现实结果。
 
-These theoretical predictions assume perfect compute utilization, which becomes challenging in distributed training scenarios. Real-world implementations face communication overhead that scales unfavorably with system size, creating bandwidth bottlenecks that reduce effective utilization. Beyond 100 nodes, communication overhead can reduce expected performance gains by 20-40% depending on workload and interconnect, transforming predicted improvements into more modest real-world results.
+### 数学基础与运行区间 {#sec-efficient-ai-mathematical-foundations-operational-regimes-9afe}
 
-### Mathematical Foundations and Operational Regimes {#sec-efficient-ai-mathematical-foundations-operational-regimes-9afe}
+扩展行为中的可预测模式可以用幂律关系在数学上表达，不过对大多数实践者来说，理解这些模式背后的直觉比精确的数学形式更重要。
 
-The predictable patterns observed in scaling behavior can be expressed mathematically using power-law relationships, though understanding the intuition behind these patterns proves more important than precise mathematical formulation for most practitioners.
+::: {.callout-note collapse="true" title="形式化数学表述"}
 
-::: {.callout-note collapse="true" title="Formal Mathematical Formulation"}
-
-For readers interested in the formal mathematical framework, scaling laws can be expressed as power-law relationships. The general formulation is:
-
-$$
+对于有兴趣了解正式数学框架的读者，扩展定律可以表示为幂律关系。一般形式为：$$
 \mathcal{L}(N) = A N^{-\alpha} + B
-$$
-
-where loss $\mathcal{L}$ decreases as resource quantity $N$ increases, following a power-law decay with rate $\alpha$, plus a baseline constant $B$. Here, $\mathcal{L}(N)$ represents the loss achieved with resource quantity $N$, $A$ and $B$ are task-dependent constants, and $\alpha$ is the scaling exponent that characterizes the rate of performance improvement. A larger value of $\alpha$ signifies more efficient performance improvements with respect to scaling.
-
+$$其中，损失$\mathcal{L}$会随着资源量$N$的增加而下降，遵循速率为$\alpha$的幂律衰减，并加上一个基线常数$B$。这里，$\mathcal{L}(N)$表示在资源量为$N$时达到的损失，$A$和$B$是依赖任务的常数，而$\alpha$是表征性能提升速率的扩展指数。更大的$\alpha$值表示在扩展方面更高效的性能提升。
 :::
 
-These theoretical predictions find strong empirical support across multiple model configurations. @fig-loss-vs-n-d shows that early-stopped test loss varies predictably with both dataset size and model size, and learning curves across configurations can be aligned through appropriate parameterization.
+这些理论预测在多种模型配置上都得到了强有力的经验证据支持。@fig-loss-vs-n-d 表明，早停测试损失会随数据集规模和模型规模而可预测地变化，并且不同配置下的学习曲线可以通过适当参数化对齐。
 
-#### Resource-Constrained Scaling Regimes {#sec-efficient-ai-resourceconstrained-scaling-regimes-062d}
+#### 资源受限的扩展区间 {#sec-efficient-ai-resourceconstrained-scaling-regimes-062d}
 
-Applying scaling laws in practice requires recognizing three distinct resource allocation regimes that emerge from trade-offs between compute budget, data availability, and optimal resource allocation. These regimes provide practical guidance for system designers navigating resource constraints.
+在实践中应用扩展定律，需要识别出三种由计算预算、数据可用性与最优资源分配之间权衡所形成的不同资源分配区间。这些区间为在资源约束下进行系统设计提供了实用指导。
 
-Compute-limited regimes characterize scenarios where available computational resources restrict scaling potential despite abundant training data. Organizations with limited hardware budgets or strict training time constraints operate within this regime. The optimal strategy involves training smaller models for longer periods, maximizing utilization of available compute through extended training schedules rather than larger architectures. This approach proves particularly relevant for academic institutions, startups, or projects with constrained infrastructure access.
+计算受限区间描述的是：尽管训练数据充足，但可用计算资源限制了扩展潜力的场景。硬件预算有限或训练时间严格受限的组织通常处于这一区间。最优策略是训练更小的模型、更长的时间，通过延长训练日程而不是扩大架构来最大化现有计算资源的利用率。这种方法对于学术机构、初创公司或基础设施访问受限的项目尤其相关。
 
-Data-limited regimes emerge when computational resources exceed what can be effectively utilized given dataset constraints. High-resource organizations working with specialized domains, proprietary datasets, or privacy-constrained data often encounter this regime. The optimal strategy involves training larger models for fewer optimization steps, leveraging model capacity to extract maximum information from limited training examples. This regime commonly appears in specialized applications like medical imaging or proprietary commercial datasets.
+数据受限区间出现在计算资源超过在当前数据集约束下能够有效利用的程度时。处理专门领域、专有数据集或受隐私约束数据的高资源组织经常会遇到这一区间。最优策略是训练更大的模型、减少优化步数，利用模型容量从有限的训练样本中提取最大信息。这一区间常见于医学影像或专有商业数据集等专门应用。
 
-Optimal regimes (Chinchilla Frontier) represent the balanced allocation of compute and data resources following compute-optimal scaling laws. This regime achieves maximum performance efficiency by scaling model size and training data proportionally, as demonstrated by DeepMind's Chinchilla model, which outperformed much larger models through optimal resource allocation [@hoffmann2022training]. Operating within this regime requires sophisticated resource planning but delivers superior performance per unit of computational investment.
+最优区间（Chinchilla Frontier）代表了按照计算最优扩展定律，对计算和数据资源进行平衡分配的状态。该区间通过按比例扩展模型规模和训练数据来实现最高的性能效率，正如 DeepMind 的 Chinchilla 模型所示，它通过最优资源分配超越了规模更大的模型[@hoffmann2022training]。在这一区间内运行需要复杂的资源规划，但能以每单位计算投入获得更优性能。
 
-Recognizing these regimes enables practitioners to make informed decisions about resource allocation strategies, avoiding common inefficiencies such as over-parameterized models with insufficient training data or under-parameterized models that fail to utilize available computational resources effectively.
+识别这些区间使实践者能够就资源分配策略做出更明智的决策，避免诸如参数过多但训练数据不足，或参数不足以有效利用可用计算资源等常见低效问题。
 
 ::: {#fig-loss-vs-n-d fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 
@@ -338,16 +335,19 @@ anchor=south,above=0pt,fill=white]at(axis description cs:0.1,0.45){Params};
 \end{axis}
 \end{tikzpicture}
 ```
-: **Loss vs Model and Dataset Size**: Early-stopped test loss varies predictably with both dataset size and model size, highlighting the importance of balanced scaling for optimal performance under fixed compute budgets.
+
+: **损失与模型、数据集规模的关系**：早停测试损失会随数据集规模和模型规模可预测地变化，强调了在固定计算预算下，平衡扩展对于获得最优性能的重要性。
+
 :::
 
-Scaling laws show that performance improvements follow predictable patterns that change depending on resource availability and exhibit distinct behaviors across different dimensions. Two important types of scaling regimes emerge: **data-driven regimes** that describe how performance changes with dataset size, and **temporal regimes** that describe when in the ML lifecycle we apply additional compute.
+扩展定律表明，性能提升会遵循可预测的模式，并会根据资源可用性而变化，在不同维度上呈现出不同的行为。由此可以归纳出两类重要的扩展区间：**数据驱动区间**，描述性能如何随数据集规模变化；以及**时间维度区间**，描述我们在机器学习生命周期的哪个阶段施加额外计算。
 
-#### Data-Limited Scaling Regimes {#sec-efficient-ai-datalimited-scaling-regimes-ba1d}
+#### 数据受限的扩展区间 {#sec-efficient-ai-datalimited-scaling-regimes-ba1d}
 
-The relationship between generalization error and dataset size exhibits three distinct regimes, as shown in @fig-data-scaling-regimes. When limited examples are available, high generalization error results from inadequate statistical estimates. As data availability increases, generalization error decreases predictably as a function of dataset size, following a power-law relationship that provides the most practical benefit from data scaling. Eventually, performance reaches saturation, approaching a floor determined by inherent data limitations or model capacity, beyond which additional data yields negligible improvements.
+泛化误差与数据集规模之间的关系呈现出三种不同区间，如@fig-data-scaling-regimes 所示。当可用样本有限时，较高的泛化误差源于统计估计不足。随着数据可用性提高，泛化误差会作为数据集规模的函数而可预测地下降，遵循幂律关系，这是数据扩展带来的最实际收益。最终，性能会趋于饱和，接近由数据固有局限或模型容量决定的下界，超过这一点后，更多数据带来的提升微乎其微。
 
 ::: {#fig-data-scaling-regimes fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \scalebox{0.7}{
 \begin{tikzpicture}[line join=round,line cap=round,font=\small\usefont{T1}{phv}{m}{n}]
@@ -396,24 +396,25 @@ fill=magenta!05,fit=(LG2)(E)](BB2){};
 %
 \end{tikzpicture}}
 ```
-: **Data Scaling Regimes**: The relationship between dataset size and generalization error follows distinct scaling regimes. Increasing dataset size initially reduces generalization error following a power-law relationship, but eventually plateaus at an irreducible error floor determined by inherent data limitations or model capacity [@hestness2017deep]. This behavior exposes diminishing returns from data scaling and informs practical decisions about data collection efforts in machine learning systems.
+
+: **数据扩展区间**：数据集规模与泛化误差之间的关系遵循不同的扩展区间。增加数据集规模最初会按照幂律关系降低泛化误差，但最终会在由数据固有局限或模型容量决定的不可约误差下限处趋于平台化[@hestness2017deep]。这种行为揭示了数据扩展的边际收益递减，并为机器学习系统中的数据收集工作提供了实践决策依据。
+
 :::
 
-This three-regime pattern manifests across different resource dimensions beyond data alone. Operating within the power-law region provides the most reliable return on resource investment. Reaching this regime requires minimum resource thresholds, while maintaining operation within it demands careful allocation to avoid premature saturation.
+这种三区间模式不仅存在于数据维度，也会出现在其他资源维度上。在幂律区域内运行能带来最可靠的资源投资回报。达到这一区间需要最低资源阈值，而维持运行在该区间则需要精细分配，以避免过早饱和。
 
-#### Temporal Scaling Regimes {#sec-efficient-ai-temporal-scaling-regimes-e118}
+#### 时间维度的扩展区间 {#sec-efficient-ai-temporal-scaling-regimes-e118}
 
-While data-driven regimes characterize how performance varies with dataset size, a complementary perspective examines temporal allocation of compute resources within the ML lifecycle. Recent research has identified three distinct **temporal scaling regimes** characterizing different stages of model development and deployment.
+如果说数据驱动区间描述的是性能如何随数据集规模变化，那么一个互补视角则考察在机器学习生命周期中，计算资源在时间维度上的分配。近期研究识别出三种不同的**时间维度扩展区间**，分别刻画模型开发与部署的不同阶段。
 
-**Pre-training scaling** encompasses the traditional domain of scaling laws, characterizing how model performance improves with larger architectures, expanded datasets, and increased compute during initial training. Extensive study in foundation models has established clear power-law relationships between resources and capabilities.
+**预训练扩展**涵盖了扩展定律的传统领域，描述的是在初始训练阶段，随着架构更大、数据集更丰富、计算更多，模型性能如何提升。在基础模型方面的大量研究已经建立了资源与能力之间清晰的幂律关系。
 
-**Post-training scaling** characterizes improvements achieved after initial training through techniques including fine-tuning, prompt engineering, and task-specific adaptation. This regime has gained prominence with foundation models, where adaptation rather than retraining frequently provides the most efficient path to enhanced performance under moderate resource requirements.
+**后训练扩展**描述的是在初始训练之后，通过微调、提示工程和任务特定适配等技术实现的改进。随着基础模型的发展，这一区间变得越来越重要，因为在中等资源需求下，适配而非重新训练往往能提供最有效的性能提升路径。
 
-**Test-time scaling** characterizes how performance improvements result from additional compute allocation during inference without modifying model parameters. This encompasses methods including ensemble prediction, chain-of-thought prompting, and iterative refinement, enabling models to allocate additional processing time per input.
-
-@fig-scaling-regimes shows these temporal regimes exhibit distinct characteristics in computational resource allocation for performance improvement. Pre-training demands massive resources while providing broad capabilities, post-training offers targeted enhancements under moderate requirements, and test-time scaling enables flexible performance-compute trade-offs adjustable per inference.
+**测试时扩展**描述的是在推理过程中无需修改模型参数、仅通过增加计算分配来实现性能提升。这包括集成预测、思维链提示和迭代细化等方法，使模型能够为每个输入分配额外的处理时间。@fig-scaling-regimes 显示，这些时间维度区间在用于提升性能的计算资源分配上表现出不同特征。预训练需要大量资源，但能提供广泛能力；后训练在中等资源条件下提供针对性增强；测试时扩展则允许按每次推理灵活调整性能与计算之间的权衡。
 
 ::: {#fig-scaling-regimes fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \scalebox{0.75}{
 \begin{tikzpicture}[line join=round,line cap=round,font=\small\usefont{T1}{phv}{m}{n},yscale=0.8]
@@ -447,96 +448,96 @@ node[below right,text=black,align=center]{Test-time scaling\\ "long thinking};
 \node[below right=of Y,align=center,font=\normalsize\usefont{T1}{phv}{m}{n}]{From one to three \\ scaling laws};
 \end{tikzpicture}}
 ```
-: **Temporal Scaling Regimes**: Different temporal scaling regimes offer distinct approaches to improving model performance with varying compute investments. Pre-training establishes broad capabilities through large-scale training from scratch, post-training refines existing models through additional training phases, and test-time scaling dynamically allocates compute during inference to enhance per-sample results. Understanding these regimes clarifies the trade-offs between upfront investment and flexible, on-demand resource allocation for optimal system performance.
+
+: **时间维度扩展区间**：不同的时间维度扩展区间为以不同计算投入提升模型性能提供了不同路径。预训练通过从零开始的大规模训练建立广泛能力，后训练通过额外训练阶段对现有模型进行优化，而测试时扩展则在推理期间动态分配计算以增强单样本结果。理解这些区间有助于明确前期投入与灵活、按需资源分配之间的权衡，从而实现最优系统性能。
+
 :::
 
-Data-driven and temporal scaling regimes are crucial for system design, revealing multiple paths to performance improvement beyond scaling training resources alone. For resource-constrained deployments, post-training and test-time scaling may provide more practical approaches than complete model retraining, while data-efficient techniques enable effective system operation within the power-law regime using smaller datasets.
+数据驱动和时间维度扩展区间对系统设计至关重要，因为它们揭示了除单纯扩展训练资源之外的多条性能提升路径。对于资源受限的部署场景，后训练和测试时扩展可能比完全重新训练模型更实用；而数据高效技术则使系统能够使用更小的数据集，在幂律区域内高效运行。
 
-### Practical Applications in System Design {#sec-efficient-ai-practical-applications-system-design-5c97}
+### 系统设计中的实际应用 {#sec-efficient-ai-practical-applications-system-design-5c97}
 
-Scaling laws provide powerful insights for practical system design and resource planning. Consistent observation of power-law trends indicates that within well-defined operational regimes, model performance depends predominantly on scale rather than idiosyncratic architectural innovations. However, diminishing returns phenomena indicate that each additional improvement requires exponentially increased resources while delivering progressively smaller benefits.
+扩展定律为实际系统设计和资源规划提供了强有力的洞见。幂律趋势的持续观察表明，在明确的运行区间内，模型性能主要取决于规模，而不是某些特殊的架构创新。然而，边际收益递减现象意味着，每一次额外提升都需要指数级增加资源，却只带来越来越小的收益。
 
-OpenAI's development of GPT-3 demonstrates this principle. Rather than conducting expensive architecture searches, the authors applied scaling laws derived from earlier experiments to determine optimal training dataset size and model parameter count [@brown2020language]. They scaled an established transformer architecture along the compute-optimal frontier to 175 billion parameters and approximately 300 billion tokens, enabling advance prediction of model performance and resource requirements. This methodology demonstrated the practical application of scaling laws in large-scale system planning.
+OpenAI 对 GPT-3 的开发展示了这一原则。作者并未进行昂贵的架构搜索，而是利用从早期实验中得到的扩展定律来确定最优训练数据集规模和模型参数量[@brown2020language]。他们沿着计算最优前沿对一个成熟的 Transformer 架构进行扩展，达到 1750 亿参数和约 3000 亿 token，从而能够提前预测模型性能和资源需求。这一方法展示了扩展定律在大规模系统规划中的实际应用。
 
-Scaling laws serve multiple practical functions in system design. They enable practitioners to estimate returns on investment for different resource allocations during resource budgeting. Under fixed computational budgets, designers can utilize empirical scaling curves to determine optimal performance improvement strategies across model size, dataset expansion, or training duration.
+扩展定律在系统设计中具有多重实用功能。它们使实践者能够在资源预算阶段估计不同资源分配方案的投资回报。在固定计算预算下，设计者可以利用经验扩展曲线来决定优化性能的最优策略，无论是通过扩大模型规模、扩展数据集，还是延长训练时间。
 
-System designers can utilize scaling trends to identify when architectural changes yield significant improvements relative to gains achieved through scaling alone, thereby avoiding exhaustive architecture search. When a model family exhibits favorable scaling behavior, scaling the existing architecture may prove more effective than transitioning to more complex but unvalidated designs.
+系统设计者还可以利用扩展趋势来判断：与单纯依靠扩展相比，何时架构变更能带来显著改进，从而避免进行穷举式架构搜索。当某个模型家族展现出良好的扩展行为时，扩展现有架构往往比转向更复杂但尚未验证的设计更有效。
 
-In edge and embedded environments with constrained resource budgets, understanding performance degradation under model scaling enables designers to select smaller configurations delivering acceptable accuracy within deployment constraints. By quantifying scale-performance trade-offs, scaling laws identify when brute-force scaling becomes inefficient and indicate the necessity for alternative approaches including model compression, efficient knowledge transfer, sparsity techniques, and hardware-aware design.
+在资源预算受限的边缘和嵌入式环境中，理解模型扩展下的性能衰减有助于设计者选择更小的配置，在部署约束内提供可接受的准确率。通过量化规模与性能之间的权衡，扩展定律能够识别何时蛮力扩展已变得低效，并指出需要采用其他方法，包括模型压缩、高效知识迁移、稀疏技术以及面向硬件的设计。
 
-Scaling laws also function as diagnostic instruments. Performance plateaus despite increased resources may indicate dimensional saturation—such as inadequate data relative to model size—or inefficient computational resource utilization. This diagnostic capability renders scaling laws both predictive and prescriptive, facilitating systematic bottleneck identification and resolution.
+扩展定律还可作为诊断工具。即便资源增加，性能仍停滞不前，可能表明某个维度已饱和——例如相对于模型规模而言数据不足——或者计算资源利用低效。这样的诊断能力使扩展定律既具有预测性，又具有指导性，从而有助于系统性地识别和解决瓶颈。
 
-### Sustainability and Cost Implications {#sec-efficient-ai-sustainability-cost-implications-0473}
+### 可持续性与成本影响 {#sec-efficient-ai-sustainability-cost-implications-0473}
 
-Scaling laws illuminate pathways to performance enhancement while revealing rapidly escalating resource demands. As models expand, training and deployment resource requirements grow disproportionately, creating tension between performance gains through scaling and system efficiency.
+扩展定律既揭示了提升性能的路径，也暴露了资源需求的快速增长。随着模型规模扩大，训练和部署所需资源会不成比例地增加，在通过扩展获得性能提升与系统效率之间形成张力。
 
-Training large-scale models necessitates substantial processing power, typically requiring distributed infrastructures[^fn-distributed-infrastructure] comprising hundreds or thousands of accelerators. State-of-the-art language model training may require tens of thousands of GPU-days, consuming millions of kilowatt-hours of electricity. These distributed training systems introduce additional complexity around communication overhead, synchronization, and scaling efficiency, as detailed in @sec-ai-training. Energy demands have outpaced Moore's Law improvements, raising critical questions about long-term sustainability.
+训练大规模模型需要大量处理能力，通常要求由数百或数千个加速器组成的分布式基础设施[^fn-distributed-infrastructure]。最先进的语言模型训练可能需要数万 GPU-day，并消耗数百万千瓦时的电力。这些分布式训练系统还引入了通信开销、同步和扩展效率方面的额外复杂性，详见@sec-ai-training。能源需求的增长速度已经超过了摩尔定律的改进速度，引发了关于长期可持续性的关键问题。
 
-[^fn-distributed-infrastructure]: **Distributed Infrastructure**: Computing systems that spread ML workloads across multiple machines connected by high-speed networks. OpenAI's GPT-4 training likely used thousands of NVIDIA A100 GPUs connected via InfiniBand, requiring careful orchestration to avoid communication bottlenecks.
+[^fn-distributed-infrastructure]: **分布式基础设施**：将机器学习工作负载分散到通过高速网络连接的多台机器上的计算系统。OpenAI 的 GPT-4 训练很可能使用了通过 InfiniBand 连接的数千块 NVIDIA A100 GPU，并需要精细编排以避免通信瓶颈。
 
-Large models require extensive, high-quality, diverse datasets to achieve their full potential. Data collection, cleansing, and labeling processes consume considerable time and resources. As models approach saturation of available high-quality data, particularly in natural language processing, additional performance gains through data scaling become increasingly difficult to achieve. This reality underscores data efficiency as a necessary complement to brute-force scaling approaches.
+大型模型需要大量高质量、多样化的数据集才能发挥其全部潜力。数据收集、清洗和标注过程会消耗大量时间和资源。随着模型逐渐接近可用高质量数据的饱和，尤其是在自然语言处理领域，通过数据扩展继续获得性能提升会变得越来越困难。这一现实凸显了数据效率作为蛮力扩展方法必要补充的重要性。
 
-The financial and environmental implications compound these challenges. Training runs for large foundation models can incur millions of dollars in computational expenses, and associated carbon footprints[^fn-carbon-emissions] have garnered increasing scrutiny. These costs limit accessibility to cutting-edge research and exacerbate disparities in access to advanced AI systems. The democratization challenges introduced by efficiency barriers connect directly to accessibility goals addressed in @sec-ai-good. Comprehensive approaches to environmental sustainability in ML systems, including carbon footprint measurement and green computing practices, are explored in @sec-sustainable-ai.
+经济和环境影响进一步加剧了这些挑战。大型基础模型的训练运行可能会产生数百万美元的计算开销，而相关的碳足迹[^fn-carbon-emissions] 也日益受到关注。这些成本限制了前沿研究的可及性，并加剧了先进 AI 系统获取上的不平等。效率壁垒带来的普及难题与@sec-ai-good 中讨论的可访问性目标直接相关。有关机器学习系统中环境可持续性的综合方法，包括碳足迹测量和绿色计算实践，见@sec-sustainable-ai。
 
-[^fn-carbon-emissions]: **Carbon Emissions**: Training GPT-3 generated approximately 502 tons of CO₂ equivalent, comparable to annual emissions of 123 gasoline-powered vehicles. Modern ML practices increasingly incorporate carbon tracking using tools like CodeCarbon and the ML CO2 Impact calculator.
+[^fn-carbon-emissions]: **碳排放**：训练 GPT-3 产生了大约 502 吨二氧化碳当量，约相当于 123 辆汽油车一年的排放量。现代机器学习实践越来越多地借助 CodeCarbon 和 ML CO2 Impact 计算器等工具进行碳排追踪。
 
-These trade-offs demonstrate that scaling laws provide valuable frameworks for understanding performance growth but do not constitute unencumbered paths to improvement. Each incremental performance gain requires evaluation against corresponding resource requirements. As systems approach practical scaling limits, emphasis must transition from scaling alone to efficient scaling—a comprehensive approach balancing performance, cost, energy consumption, and environmental impact.
+这些权衡表明，扩展定律虽然为理解性能增长提供了有价值的框架，但并不意味着一条不受约束的提升路径。每一次增量性能提升都必须与相应的资源需求进行权衡。随着系统接近实际扩展极限，重点必须从单纯扩展转向高效扩展——即在性能、成本、能耗和环境影响之间取得平衡的综合方法。
 
-### Scaling Law Breakdown Conditions {#sec-efficient-ai-scaling-law-breakdown-conditions-1f8c}
+### 扩展定律失效的条件 {#sec-efficient-ai-scaling-law-breakdown-conditions-1f8c}
 
-Scaling laws exhibit remarkable consistency within specific operational regimes but possess inherent limitations. As systems expand, they inevitably encounter boundaries where underlying assumptions of smooth, predictable scaling cease to hold. These breakdown points expose critical inefficiencies and emphasize the necessity for refined system design approaches.
+扩展定律在特定运行区间内表现出惊人的一致性，但也具有内在局限。随着系统不断扩大，它们不可避免地会遇到某些边界，使得底层的平滑、可预测扩展假设不再成立。这些失效点暴露了关键的低效问题，并强调了改进系统设计方法的必要性。
 
-For scaling laws to remain valid, model size, dataset size, and computational budget must be augmented in coordinated fashion. Over-investment in one dimension while maintaining others constant often results in suboptimal outcomes. For example, increasing model size without expanding training datasets may induce overfitting, while increasing computational resources without model redesign may lead to inefficient utilization [@hoffmann2022training].
+为了使扩展定律继续有效，模型规模、数据集规模和计算预算必须协调增加。在某一维度上过度投入，而其他维度保持不变，往往会导致次优结果。例如，在不扩展训练数据集的情况下增加模型规模可能引发过拟合；而在不重新设计模型的情况下增加计算资源，则可能导致利用效率低下[@hoffmann2022training]。
 
-Large-scale models require carefully tuned training schedules and learning rates to fully utilize available resources. When compute is insufficiently allocated due to premature stopping, batch size misalignment, or ineffective parallelism, models may fail to reach performance potential despite significant infrastructure investment.
+大规模模型需要经过精心调校的训练日程和学习率，才能充分利用可用资源。当由于过早停止、批量大小不匹配或并行效率低下而导致计算分配不足时，即便投入了大量基础设施，模型也可能达不到其性能潜力。
 
-Scaling laws presuppose continued performance improvement with sufficient training data. However, in numerous domains, availability of high-quality, human-annotated data is finite. As models consume increasingly large datasets, they reach points of diminishing marginal utility where additional data contributes minimal new information. Beyond this threshold, larger models may exhibit memorization rather than generalization.
+扩展定律预设充足训练数据会持续带来性能提升。然而，在许多领域中，高质量人工标注数据的可获得性是有限的。随着模型消耗越来越大的数据集，它们会到达边际效用递减点，此时额外数据只能提供极少的新信息。超过这一阈值后，更大的模型可能表现出记忆化而非泛化。
 
-As models grow, they demand greater memory bandwidth[^fn-memory-bandwidth], interconnect capacity, and I/O throughput. These hardware limitations become increasingly challenging even with specialized accelerators. Distributing trillion-parameter models across clusters necessitates meticulous management of data parallelism, communication overhead, and fault tolerance.
+随着模型规模增长，它们对内存带宽[^fn-memory-bandwidth]、互连容量和 I/O 吞吐量的需求也会更高。即便有专用加速器，这些硬件限制也会变得越来越棘手。将万亿参数模型分布到集群中，需要精细管理数据并行、通信开销和容错机制。
 
-[^fn-memory-bandwidth]: **Memory Bandwidth**: The rate at which data can be read from or written to memory, measured in GB/s. NVIDIA H100 provides 3.35 TB/s memory bandwidth vs. typical DDR5 RAM's 51 GB/s, a 65× difference critical for handling large model parameters.
+[^fn-memory-bandwidth]: **内存带宽**：从内存读取或写入数据的速率，单位为 GB/s。NVIDIA H100 提供 3.35 TB/s 的内存带宽，而典型 DDR5 内存仅为 51 GB/s，相差 65 倍，这对于处理大型模型参数至关重要。
 
-At extreme scales, models may approach limits of what can be learned from training distributions. Performance on benchmarks may continue improving, but these improvements may no longer reflect meaningful gains in generalization or understanding. Models may become increasingly brittle, susceptible to adversarial examples, or prone to generating plausible but inaccurate outputs.
-
-@tbl-scaling-breakdown synthesizes the primary causes of scaling failure, outlining typical breakdown types, underlying causes, and representative scenarios as a reference for anticipating inefficiencies and guiding balanced system design.
+在极端规模下，模型可能接近训练分布可学习内容的极限。基准测试上的表现也许会持续提升，但这些提升可能不再反映泛化能力或理解能力的真正进步。模型可能会变得越来越脆弱，容易受到对抗样本攻击，或者倾向于生成看似合理但实际上不准确的输出。@tbl-scaling-breakdown 综合总结了扩展失败的主要原因，列出了典型失效类型、根本原因和代表性场景，可作为预测低效问题并指导平衡系统设计的参考。
 
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
-| **Dimension Scaled**   | **Type of Breakdown**   | **Underlying Cause**                           | **Example Scenario**                          |
+| **扩展维度**           | **失效类型**            | **根本原因**                                   | **示例场景**                                  |
 +:=======================+:========================+:===============================================+:==============================================+
-| **Model Size**         | Overfitting             | Model capacity exceeds available data          | Billion-parameter model on limited dataset    |
+| **模型规模**           | 过拟合                  | 模型容量超过可用数据                            | 在有限数据集上训练十亿参数模型                |
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
-| **Data Volume**        | Diminishing Returns     | Saturation of new or diverse information       | Scaling web text beyond useful threshold      |
+| **数据量**             | 边际收益递减            | 新信息或多样性饱和                             | 将网页文本扩展到超过有用阈值                  |
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
-| **Compute Budget**     | Underutilized Resources | Insufficient training steps or inefficient use | Large model with truncated training duration  |
+| **计算预算**           | 资源未充分利用          | 训练步数不足或使用低效                         | 大模型训练时长被截断                         |
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
-| **Imbalanced Scaling** | Inefficiency            | Uncoordinated increase in model/data/compute   | Doubling model size without more data or time |
+| **不平衡扩展**         | 低效                    | 模型/数据/计算增长不协调                       | 模型规模翻倍但没有更多数据或时间              |
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
-| **All Dimensions**     | Semantic Saturation     | Exhaustion of learnable patterns in the domain | No further gains despite scaling all inputs   |
+| **所有维度**           | 语义饱和                | 该领域可学习模式耗尽                           | 即便扩展所有输入也不再有进一步提升            |
 +------------------------+-------------------------+------------------------------------------------+-----------------------------------------------+
 
-: **Scaling Breakdown Types**: Unbalanced scaling across model size, data volume, and compute resources leads to specific failure modes, such as overfitting or diminishing returns, impacting system performance and efficiency. The table categorizes these breakdowns, identifies their root causes, and provides representative scenarios to guide more effective system design and resource allocation. {#tbl-scaling-breakdown}
+: **扩展失效类型**：模型规模、数据量和计算资源之间的不平衡扩展会导致特定的失效模式，如过拟合或边际收益递减，从而影响系统性能和效率。该表对这些失效进行了分类，识别其根本原因，并提供代表性场景，以指导更有效的系统设计和资源分配。 {#tbl-scaling-breakdown}
 
-These breakdown points demonstrate that scaling laws describe empirical regularities under specific conditions that become increasingly difficult to maintain at scale. As machine learning systems continue evolving, discerning where and why scaling ceases to be effective becomes necessary, driving development of strategies that enhance performance without relying solely on scale.
+这些失效点表明，扩展定律描述的是特定条件下的经验规律，而这些条件在大规模下会变得越来越难以维持。随着机器学习系统持续演进，识别扩展何时以及为何失效变得至关重要，这将推动那些不再单纯依赖规模，而是致力于提升性能的新策略发展。
 
-### Integrating Efficiency with Scaling {#sec-efficient-ai-integrating-efficiency-scaling-a513}
+### 将效率与扩展结合起来 {#sec-efficient-ai-integrating-efficiency-scaling-a513}
 
-The limitations exposed by scaling laws (data saturation, infrastructure bottlenecks, and diminishing returns) demonstrate that brute-force scaling alone cannot deliver sustainable AI systems. These constraints necessitate a shift from expanding scale to achieving greater efficiency with reduced resources.
+扩展定律暴露出的局限——数据饱和、基础设施瓶颈和边际收益递减——表明，仅依靠蛮力扩展无法构建可持续的 AI 系统。这些约束要求我们从扩展规模转向在更少资源下实现更高效率。
 
-This transition requires coordinated optimization across three interconnected dimensions: **algorithmic efficiency** addresses computational intensity through better model design, **compute efficiency** maximizes hardware utilization to translate algorithmic improvements into practical gains, and **data efficiency** extracts maximum information from limited examples as high-quality data becomes scarce. Together, these dimensions provide systematic approaches to achieving performance goals that scaling alone cannot sustainably deliver, while addressing broader concerns about equitable access to AI capabilities and environmental impact.
+这一转变需要在三个相互关联的维度上进行协调优化：**算法效率**通过更好的模型设计来降低计算强度，**计算效率**通过最大化硬件利用率把算法改进转化为实际收益，而**数据效率**则是在高质量数据稀缺时，从有限样本中提取最大信息。三者共同提供了实现性能目标的系统化路径，而仅靠扩展无法持续实现这些目标；同时它们也回应了关于 AI 能力公平获取和环境影响的更广泛关切。
 
-Having examined how scaling laws reveal fundamental constraints, we now turn to the efficiency framework that provides concrete strategies for operating effectively within these constraints. The following section details how the three efficiency dimensions work together to enable sustainable, accessible machine learning systems.
+在考察了扩展定律如何揭示基本约束之后，我们现在转向效率框架，它提供了在这些约束下有效运行的具体策略。下一节将详细说明这三个效率维度如何协同工作，以支持可持续、易获取的机器学习系统。
 
-## The Efficiency Framework {#sec-efficient-ai-efficiency-framework-c0de}
+## 效率框架 {#sec-efficient-ai-efficiency-framework-c0de}
 
-The constraint identified through scaling laws (that continued progress requires systematic efficiency optimization) motivates three complementary efficiency dimensions. Each dimension addresses a specific limitation: algorithmic efficiency tackles computational intensity, compute efficiency addresses hardware utilization gaps, and data efficiency solves the data saturation problem.
+通过缩放定律识别出的约束（即持续进步需要系统性的效率优化）激发了三种互补的效率维度。每个维度都针对一个特定的局限：算法效率解决计算强度问题，计算效率解决硬件利用率不足问题，而数据效率则解决数据饱和问题。
 
-Together, these three dimensions provide a systematic framework for addressing the constraints that scaling laws reveal. Targeted optimizations across algorithmic design, hardware utilization, and data usage can achieve what brute-force scaling cannot: sustainable, accessible, high-performance AI systems.
+这三个维度共同构成了一个系统性框架，用于应对缩放定律所揭示的约束。围绕算法设计、硬件利用和数据使用进行有针对性的优化，能够实现蛮力扩展无法达到的目标：可持续、可获得且高性能的人工智能系统。
 
-### Multi-Dimensional Efficiency Synergies {#sec-efficient-ai-multidimensional-efficiency-synergies-ea04}
+### 多维效率协同 {#sec-efficient-ai-multidimensional-efficiency-synergies-ea04}
 
-Optimal performance requires coordinated optimization across multiple dimensions. No single resource—whether model parameters, training data, or compute budget—can be scaled indefinitely to achieve efficiency. Modern techniques demonstrate the potential: 10-100x gains in algorithmic efficiency through optimized architectures, 5-50x improvements in hardware utilization through specialized processors, and 10-1000x reductions in data requirements through advanced learning methods.
+最优性能需要跨多个维度的协同优化。没有任何单一资源——无论是模型参数、训练数据还是计算预算——能够无限扩展以实现效率提升。现代技术展示了这种潜力：通过优化架构可获得 10-100 倍的算法效率提升，通过专用处理器可实现 5-50 倍的硬件利用率提升，通过先进学习方法可将数据需求降低 10-1000 倍。
 
-The power of this framework emerges from interconnections between dimensions, as depicted in @fig-evolution-efficiency. Algorithmic innovations often enable better hardware utilization, while hardware advances unlock new algorithmic possibilities. Data-efficient techniques reduce computational requirements, while compute-efficient methods enable training on larger datasets. Understanding these synergies is essential for building practical ML systems.
+这一框架的力量源于各维度之间的相互联系，如@fig-evolution-efficiency 所示。算法创新通常能够带来更好的硬件利用，而硬件进步又会释放新的算法可能性。数据高效技术减少计算需求，而计算高效方法则使在更大数据集上训练成为可能。理解这些协同作用对于构建实用的机器学习系统至关重要。
 
 ::: {#fig-evolution-efficiency fig-env="figure" fig-pos="htb"}
 
@@ -606,64 +607,67 @@ text width=85mm](GB8){Data Efficiency};
 \node[Box={col7!50},below= of BB9](BBB9){Future};
 \end{tikzpicture}
 ```
-: **Historical Efficiency Trends**: Algorithmic, computational, and data efficiency have each contributed to substantial gains in AI capabilities, though at different rates and with diminishing returns. Understanding these historical trends clarifies the interplay between these efficiency dimensions and informs strategies for scaling machine learning systems in data-limited environments.
+
+: **历史效率趋势**：算法效率、计算效率和数据效率都为人工智能能力的显著提升做出了贡献，尽管它们的提升速度不同，并且都存在边际收益递减。理解这些历史趋势有助于阐明这些效率维度之间的相互作用，并为在数据受限环境中扩展机器学习系统提供策略。
+
 :::
 
-The specific priorities vary across deployment environments. Cloud systems with abundant resources prioritize scalability and throughput, while edge devices face severe memory and power constraints. Mobile applications must balance performance with battery life, and TinyML deployments demand extreme resource efficiency. Understanding these context-specific patterns enables designers to make informed decisions about which efficiency dimensions to prioritize and how to address inevitable trade-offs between them.
+不同部署环境中的优先级各不相同。拥有充足资源的云系统优先考虑可扩展性和吞吐量，而边缘设备则面临严苛的内存和功耗约束。移动应用必须在性能与电池续航之间取得平衡，而 TinyML 部署则要求极致的资源效率。理解这些特定场景的模式，使设计者能够对优先优化哪些效率维度以及如何处理它们之间不可避免的权衡做出明智决策。
 
-### Achieving Algorithmic Efficiency {#sec-efficient-ai-achieving-algorithmic-efficiency-ef15}
+### 实现算法效率 {#sec-efficient-ai-achieving-algorithmic-efficiency-ef15}
 
-Algorithmic efficiency achieves maximum performance per unit of computation through optimized model architectures and training procedures. Modern techniques achieve 10-100x improvements in computational requirements while maintaining or improving accuracy, providing the most direct path to practical AI deployment.
+算法效率通过优化模型架构和训练流程，在单位计算量下实现最大性能。现代技术在保持甚至提升准确率的同时，将计算需求降低 10-100 倍，为实际 AI 部署提供了最直接的路径。
 
-The foundation for these improvements lies in a key observation: most neural networks are dramatically overparameterized. The lottery ticket hypothesis reveals that networks contain sparse subnetworks, typically 10-20% of original parameters (though this varies significantly by architecture and task), that achieve comparable accuracy when trained in isolation [@frankle2019lottery]. This discovery transforms compression into a principled approach: large models serve as initialization strategies for finding efficient architectures.
+这些改进的基础源于一个关键观察：大多数神经网络都存在严重的参数过度配置。彩票假设揭示，网络中包含稀疏子网络，通常只有原始参数的 10-20%（不过这一比例会因架构和任务而显著变化），但当它们单独训练时，仍能达到相近的准确率[@frankle2019lottery]。这一发现将压缩转变为一种有原则的方法：大模型可作为初始化策略，用于寻找高效架构。
 
-#### Model Compression Fundamentals {#sec-efficient-ai-model-compression-fundamentals-bcc3}
+#### 模型压缩基础 {#sec-efficient-ai-model-compression-fundamentals-bcc3}
 
-Three major approaches dominate modern algorithmic efficiency, each targeting different aspects of model inefficiency:
+现代算法效率主要由三种方法主导，它们分别针对模型低效的不同方面：
 
-**Model Compression** systematically removes redundant components from neural networks. Pruning techniques achieve 2-4x inference speedup with 1-3% accuracy loss by removing unnecessary weights and structures. Research demonstrates that ResNet-50 can be reduced to 20% of original parameters while maintaining 99% of ImageNet accuracy [@gholami2021survey]. The specific pruning algorithms—including magnitude-based selection, structured vs. unstructured approaches, and layer-wise sensitivity analysis—are covered in detail in @sec-model-optimizations.
+**模型压缩**通过系统性地移除神经网络中的冗余组件来实现。剪枝技术通过移除不必要的权重和结构，可在损失 1-3% 准确率的情况下实现 2-4 倍推理加速。研究表明，ResNet-50 可以在保持 ImageNet 99% 准确率的同时，将参数量缩减至原始的 20%[@gholami2021survey]。具体的剪枝算法——包括基于幅值的选择、结构化与非结构化方法，以及逐层敏感性分析——在@sec-model-optimizations 中有详细介绍。
 
-**Precision Optimization** reduces computational requirements through quantization, which maps high-precision floating-point values to lower-precision representations. Neural networks demonstrate inherent robustness to precision reduction, with INT8 quantization achieving 4x memory reduction and 2-4x inference speedup while typically maintaining 98-99% of FP32 accuracy [@Jacob_et_al_2018]. Modern techniques range from simple post-training quantization to sophisticated quantization-aware training. The specific quantization algorithms, calibration methods, and training procedures are detailed in @sec-model-optimizations.
+**精度优化**通过量化降低计算需求，即将高精度浮点值映射为低精度表示。神经网络对精度降低表现出固有的鲁棒性，INT8 量化通常可以在保持 FP32 准确率 98-99% 的同时，实现 4 倍内存减少和 2-4 倍推理加速[@Jacob_et_al_2018]。现代技术范围从简单的训练后量化到复杂的量化感知训练。具体的量化算法、校准方法和训练流程在@sec-model-optimizations 中有详细说明。
 
-**Knowledge Transfer** distills capabilities from large teacher models into efficient student models. Knowledge distillation[^fn-knowledge-distillation] achieves 40-60% parameter reduction while retaining 95-97% of original performance, addressing both computational efficiency and data efficiency by requiring fewer training examples. The specific distillation algorithms, loss functions, and training procedures are covered in @sec-model-optimizations.
+**知识迁移**将大型教师模型的能力提炼到高效的学生模型中。知识蒸馏[^fn-knowledge-distillation]可在保留原始性能 95-97% 的同时，将参数量减少 40-60%，并通过减少所需训练样本数，同时解决计算效率和数据效率问题。具体的蒸馏算法、损失函数和训练流程在@sec-model-optimizations 中有详细介绍。
 
-[^fn-knowledge-distillation]: **Knowledge Distillation**: Technique where a large "teacher" model transfers knowledge to a smaller "student" model by training the student to mimic the teacher's output probabilities. DistilBERT achieves ~97% of BERT's performance on GLUE benchmark with 40% fewer parameters and 60% faster inference through distillation.
+[^fn-knowledge-distillation]: **知识蒸馏**：一种技术，大型“教师”模型通过训练学生模型去模仿教师的输出概率，将知识传递给更小的“学生”模型。DistilBERT 通过蒸馏在 GLUE 基准上实现了约 97% 的 BERT 性能，同时参数减少 40%，推理速度提高 60%。
 
-#### Hardware-Algorithm Co-Design {#sec-efficient-ai-hardwarealgorithm-codesign-67e8}
+#### 硬件-算法协同设计 {#sec-efficient-ai-hardwarealgorithm-codesign-67e8}
 
-Algorithmic optimizations alone are insufficient; their practical benefits depend on hardware-software co-design. Optimization techniques must be tailored to target hardware characteristics (memory bandwidth, compute capabilities, and precision support) to achieve real-world speedups. For example, INT8 quantization achieves 2.3x speedup on NVIDIA V100 GPUs with tensor core support but may provide minimal benefit on hardware lacking specialized integer instructions.
+仅有算法优化是不够的；其实际收益取决于软硬件协同设计。优化技术必须针对目标硬件特性（内存带宽、计算能力和精度支持）进行定制，才能实现真实世界的加速效果。例如，INT8 量化在支持 tensor core 的 NVIDIA V100 GPU 上可实现 2.3 倍加速，但在缺乏专用整数指令的硬件上可能收益甚微。
 
-Successful co-design requires understanding whether workloads are memory-bound (limited by data movement) or compute-bound (limited by processing capacity), then applying optimizations that address the actual bottleneck. Techniques like operator fusion reduce memory traffic by combining operations, while precision reduction exploits specialized hardware units. While @sec-model-optimizations covers the algorithmic aspects of hardware-aware optimization, @sec-ai-acceleration details how systematic co-design approaches leverage specific hardware architectures for maximum efficiency.
+成功的协同设计要求理解工作负载究竟是内存受限（受数据搬运限制）还是计算受限（受处理能力限制），然后应用能解决实际瓶颈的优化方法。像算子融合这样的技术通过合并操作减少内存流量，而精度降低则利用专用硬件单元。@sec-model-optimizations 介绍了面向硬件感知优化的算法层面内容，而@sec-ai-acceleration 则详细说明了系统化协同设计方法如何利用特定硬件架构实现最大效率。
 
-#### Architectural Innovation for Efficiency {#sec-efficient-ai-architectural-innovation-efficiency-7dd9}
+#### 面向效率的架构创新 {#sec-efficient-ai-architectural-innovation-efficiency-7dd9}
 
-Modern efficiency requires architectures designed for resource constraints. Models like MobileNet[^fn-mobilenet], EfficientNet[^fn-efficientnet], and SqueezeNet[^fn-squeezenet] demonstrate that compact designs can deliver high performance through architectural innovations rather than scaling up existing designs.
+现代效率要求架构专为资源约束而设计。像 MobileNet[^fn-mobilenet]、EfficientNet[^fn-efficientnet] 和 SqueezeNet[^fn-squeezenet] 这样的模型表明，紧凑设计可以通过架构创新而非扩展现有设计来实现高性能。
 
-[^fn-mobilenet]: **MobileNet**: Efficient neural network architecture using depthwise separable convolutions, achieving ~50× fewer parameters than traditional models. MobileNet-v1 has only 4.2M parameters vs. VGG-16's ~138M, enabling deployment on smartphones with <100MB memory.
+[^fn-mobilenet]: **MobileNet**：一种高效的神经网络架构，采用深度可分离卷积，与传统模型相比参数量约少 50 倍。MobileNet-v1 只有 420 万参数，而 VGG-16 约有 1.38 亿参数，使其能够部署在内存小于 100MB 的智能手机上。
 
-[^fn-efficientnet]: **EfficientNet**: Architecture achieving state-of-the-art accuracy with superior parameter efficiency. EfficientNet-B7 achieves 84.3% ImageNet top-1 accuracy (84.4% in some reports) with 66M parameters, compared to ResNet-152's 77.0% accuracy with approximately 60M parameters.
+[^fn-efficientnet]: **EfficientNet**：一种以更优参数效率实现最先进准确率的架构。EfficientNet-B7 在拥有 6600 万参数的情况下实现了 84.3% 的 ImageNet top-1 准确率（某些报告中为 84.4%），而 ResNet-152 约有 6000 万参数，准确率为 77.0%。
 
-[^fn-squeezenet]: **SqueezeNet**: Compact CNN architecture achieving AlexNet-level accuracy with 50× fewer parameters (1.25M vs. 60M). Demonstrated that clever architecture design can dramatically reduce model size without sacrificing performance.
+[^fn-squeezenet]: **SqueezeNet**：一种紧凑的 CNN 架构，以 50 倍更少的参数（125 万 vs. 6000 万）实现了与 AlexNet 相当的准确率。它证明了巧妙的架构设计可以在不牺牲性能的情况下大幅缩小模型大小。
 
-Different deployment contexts require different efficiency trade-offs. Cloud inference prioritizes throughput and can tolerate higher memory usage, favoring parallel-friendly operations. Edge deployment prioritizes latency and memory efficiency, requiring architectures that minimize memory access. Mobile deployment constrains energy usage, demanding architectures optimized for energy-efficient operations.
+不同的部署场景需要不同的效率权衡。云端推理优先考虑吞吐量，并且可以容忍更高的内存使用，因此更青睐适合并行的操作。边缘部署优先考虑延迟和内存效率，需要尽量减少内存访问的架构。移动端部署受限于能量使用，因此需要针对能效操作进行优化的架构。
 
-#### Parameter-Efficient Adaptation {#sec-efficient-ai-parameterefficient-adaptation-1bce}
+#### 参数高效适配 {#sec-efficient-ai-parameterefficient-adaptation-1bce}
 
-Parameter-efficient fine-tuning[^fn-param-efficient] techniques demonstrate how the three efficiency dimensions work together. These methods update less than 1% of model parameters while achieving full fine-tuning performance, addressing all three efficiency pillars: algorithmic efficiency through reduced parameter updates, compute efficiency through lower memory requirements and faster training, and data efficiency by leveraging pre-trained representations that require fewer task-specific examples.
+参数高效微调[^fn-param-efficient]技术展示了三种效率维度如何协同工作。这些方法仅更新不到 1% 的模型参数，却能达到完整微调的性能，同时解决了所有三大效率支柱：通过减少参数更新实现算法效率，通过降低内存需求和加快训练实现计算效率，以及通过利用预训练表示、减少任务特定样本需求来实现数据效率。
 
-[^fn-param-efficient]: **Parameter-Efficient Fine-tuning**: Methods like LoRA and Adapters that update <1% of model parameters while achieving full fine-tuning performance. Reduces memory requirements from gigabytes to megabytes for large model adaptation.
+[^fn-param-efficient]: **参数高效微调**：如 LoRA 和 Adapters 之类的方法，仅更新 <1% 的模型参数，却能达到完整微调的性能。对于大模型适配，可将内存需求从 GB 级降至 MB 级。
 
-The practical impact is transformative: fine-tuning GPT-3 traditionally requires storing gradients for 175 billion parameters, consuming over 700GB of GPU memory. LoRA reduces this to under 10GB by learning low-rank decompositions of weight updates, enabling efficient adaptation on single consumer GPUs while requiring only hundreds of examples rather than thousands for effective adaptation.
+其实际影响是变革性的：传统上，对 GPT-3 进行微调需要为 1750 亿个参数存储梯度，消耗超过 700GB 的 GPU 内存。LoRA 通过学习权重更新的低秩分解，将这一需求降低到 10GB 以下，从而使在单张消费级 GPU 上高效适配成为可能，并且有效适配所需的样本量只需数百个，而不是数千个。
 
-As @fig-algo-efficiency shows, the computational resources needed to train a neural network to achieve AlexNet[^fn-efficient-alexnet]-level performance on ImageNet[^fn-efficient-imagenet] classification decreased by approximately $44\times$ between 2012 and 2019. This improvement, which halved every 16 months, outpaced hardware efficiency gains of Moore's Law[^fn-efficient-moores-law], demonstrating the role of algorithmic advancements in driving efficiency [@Hernandez_et_al_2020].
+如@fig-algo-efficiency 所示，从 2012 年到 2019 年，训练一个神经网络达到 ImageNet[^fn-efficient-imagenet] 分类中 AlexNet[^fn-efficient-alexnet] 级别性能所需的计算资源大约减少了$44\times$。这一改进每 16 个月减半一次，超过了摩尔定律[^fn-efficient-moores-law]带来的硬件效率提升，证明了算法进步在推动效率提升中的作用[@Hernandez_et_al_2020]。
 
-[^fn-efficient-alexnet]: **AlexNet**: Groundbreaking CNN by Krizhevsky, Sutskever, and Hinton (2012) that won ImageNet with 15.3% error rate, nearly halving the previous best of 26.2%. Used 60M parameters, two GPUs, and launched the deep learning revolution.
+[^fn-efficient-alexnet]: **AlexNet**：Krizhevsky、Sutskever 和 Hinton 在 2012 年提出的开创性 CNN，在 ImageNet 上以 15.3% 的错误率获胜，几乎将此前最佳 26.2% 的错误率减半。它使用了 6000 万参数、两块 GPU，并引发了深度学习革命。
 
-[^fn-efficient-imagenet]: **ImageNet**: Large-scale visual recognition dataset with 14+ million images across 20,000+ categories. The annual ImageNet Large Scale Visual Recognition Challenge (ILSVRC) drove computer vision breakthroughs from 2010-2017.
+[^fn-efficient-imagenet]: **ImageNet**：一个大规模视觉识别数据集，包含超过 1400 万张图像，涵盖 2 万多个类别。年度 ImageNet Large Scale Visual Recognition Challenge（ILSVRC）推动了 2010-2017 年间计算机视觉的突破。
 
-[^fn-efficient-moores-law]: **Moore's Law**: Intel co-founder Gordon Moore's 1965 observation that transistor density doubles every ~2 years. Traditional Moore's Law predicted ~2x transistor density every 18-24 months, though this rate has slowed significantly since ~2015, while AI algorithmic efficiency improved 44x in 7 years (2012-2019).
+[^fn-efficient-moores-law]: **摩尔定律**：英特尔联合创始人 Gordon Moore 在 1965 年提出的观察，即晶体管密度大约每 2 年翻一番。传统摩尔定律预测晶体管密度每 18-24 个月约提升 2 倍，但自 2015 年左右以来这一速度已显著放缓，而 AI 算法效率在 7 年（2012-2019）内提升了 44 倍。
 
 ::: {#fig-algo-efficiency fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \begin{axis}[
@@ -768,24 +772,27 @@ ShuffleNet\_v2\_1\_5x,17.4,2018-06-29
 \end{axis}
 \end{tikzpicture}
 ```
-: **Algorithmic Efficiency Progress**: Neural network training compute requirements decreased 44× between 2012 and 2019, outpacing hardware improvements and demonstrating the significant impact of algorithmic advancements on model efficiency. Innovations in model architecture and optimization techniques can drive substantial gains in AI system sustainability via this halving of compute every 16 months. Source: [@Hernandez_et_al_2020].
+
+: **算法效率进展**：2012 年到 2019 年间，神经网络训练所需计算量下降了 44 倍，超过了硬件改进速度，表明算法进步对模型效率具有显著影响。模型架构和优化技术的创新，可通过计算每 16 个月减半这一过程，显著提升 AI 系统的可持续性。来源：[@Hernandez_et_al_2020]。
+
 :::
 
-The evolution of algorithmic efficiency, from basic compression to hardware-aware optimization and parameter-efficient adaptation, demonstrates the centrality of these techniques to machine learning progress. As the field advances, algorithmic efficiency will remain central to designing systems that are high-performing, scalable, and sustainable.
+算法效率从基础压缩、硬件感知优化到参数高效适配的发展，表明这些技术是机器学习进步的核心。随着该领域不断发展，算法效率仍将是构建高性能、可扩展且可持续系统的核心。
 
-### Compute Efficiency {#sec-efficient-ai-compute-efficiency-745c}
+### 计算效率 {#sec-efficient-ai-compute-efficiency-745c}
 
-Compute efficiency focuses on the effective use of hardware and computational resources to train and deploy machine learning models. It encompasses strategies for reducing energy consumption, optimizing processing speed, and leveraging hardware capabilities to achieve scalable and sustainable system performance. While this chapter focuses on efficiency principles and trade-offs, the detailed technical implementation of hardware acceleration—including GPU architectures, TPU design, memory systems, and custom accelerators—is covered in @sec-ai-acceleration.
+计算效率关注对硬件和计算资源的有效利用，以训练和部署机器学习模型。它涵盖减少能耗、优化处理速度以及利用硬件能力实现可扩展且可持续系统性能的策略。本章重点讨论效率原则和权衡，而包括 GPU 架构、TPU 设计、内存系统和定制加速器在内的硬件加速详细技术实现，则在@sec-ai-acceleration 中介绍。
 
-#### From CPUs to AI Accelerators {#sec-efficient-ai-cpus-ai-accelerators-a8d7}
+#### 从 CPU 到 AI 加速器 {#sec-efficient-ai-cpus-ai-accelerators-a8d7}
 
-Compute efficiency's evolution reveals why specialized hardware became essential. In the early days of machine learning, Central Processing Units (CPUs) shaped what was possible. CPUs excel at sequential processing and complex decision-making but have limited parallelism, typically 4-16 cores optimized for diverse tasks rather than the repetitive matrix operations that dominate machine learning. Training times for models were measured in days or weeks, as even relatively small datasets pushed hardware boundaries.
+计算效率的演进揭示了为何专用硬件变得至关重要。机器学习早期，中央处理器（CPU）决定了可行的事物边界。CPU 擅长顺序处理和复杂决策，但并行性有限，通常只有 4-16 个核心，且更适合多样化任务，而非机器学习中占主导地位的重复矩阵运算。那时，模型训练时间以天或周计，即使是相对较小的数据集也会逼近硬件极限。
 
-This CPU-constrained era ended as deep learning models like AlexNet and ResNet[^fn-efficient-resnet] demonstrated the potential of neural networks, quickly surpassing traditional CPU capabilities. As shown in @fig-comp_efficiency, this marked the beginning of exponential growth in compute usage. OpenAI's analysis reveals that compute used in AI training increased approximately 300,000 times from 2012 to 2019, doubling approximately every 3.4 months during this period—a rate far exceeding Moore's Law [@Amodei_et_al_2018].
+随着 AlexNet 和 ResNet[^fn-efficient-resnet] 等深度学习模型展示出神经网络的潜力，并迅速超越传统 CPU 的能力，这一受 CPU 约束的时代结束了。如@fig-comp_efficiency 所示，这标志着计算使用量指数级增长的开始。OpenAI 的分析显示，2012 年至 2019 年间，AI 训练所使用的计算量增加了约 30 万倍，在此期间大约每 3.4 个月翻一番——这一速度远超摩尔定律[@Amodei_et_al_2018]。
 
-[^fn-efficient-resnet]: **ResNet**: Residual Network architecture by He et al. [@he2016deep] enabling training of very deep networks (152+ layers) through skip connections. Won ImageNet 2015 with 3.6% error rate, surpassing human-level performance for the first time.
+[^fn-efficient-resnet]: **ResNet**：He 等人提出的残差网络架构[@he2016deep]，通过跳跃连接实现了非常深网络（152 层以上）的训练。它在 ImageNet 2015 上以 3.6% 的错误率获胜，首次超越人类水平表现。
 
 ::: {#fig-comp_efficiency fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \begin{axis}[
@@ -927,18 +934,21 @@ Date,Y,Model
 \end{tikzpicture}
 
 ```
-: **AI Training Compute Growth**: AI training experienced a 300,000-fold increase in computational requirements from 2012 to 2019, exceeding the growth rate predicted by Moore's Law and driving demand for specialized hardware [@Amodei_et_al_2018]. This exponential growth underscores the increasing complexity of AI models and the need for efficient computing infrastructure to support continued progress.
+
+: **AI 训练计算增长**：2012 年到 2019 年间，AI 训练的计算需求增长了 30 万倍，超过了摩尔定律预测的增长速度，并推动了对专用硬件的需求[@Amodei_et_al_2018]。这一指数级增长凸显了 AI 模型日益复杂，以及需要高效计算基础设施来支持持续进步。
+
 :::
 
-This rapid growth was driven by adoption of Graphics Processing Units (GPUs), which offered unparalleled parallel processing capabilities. While CPUs might have 16 cores, modern high-end GPUs like the NVIDIA H100 contain over 16,000 CUDA cores[^fn-cuda-cores]. Specialized hardware accelerators such as Google's Tensor Processing Units (TPUs) further revolutionized compute efficiency by designing chips specifically for machine learning workloads, optimizing for specific data types and operations most common in neural networks.
+这一快速增长由图形处理器（GPU）的采用所推动，GPU 提供了无与伦比的并行处理能力。CPU 可能只有 16 个核心，而像 NVIDIA H100 这样的现代高端 GPU 拥有超过 16,000 个 CUDA 核心[^fn-cuda-cores]。Google 的 Tensor Processing Units（TPU）等专用硬件加速器通过专门为机器学习工作负载设计芯片、针对神经网络中最常见的特定数据类型和操作进行优化，进一步革新了计算效率。
 
-[^fn-cuda-cores]: **CUDA Cores**: NVIDIA's parallel processing units optimized for floating-point operations. Unlike CPU cores (designed for complex sequential tasks), CUDA cores are simpler and work together, enabling a single H100 GPU to perform 16,896 parallel operations simultaneously for massive speedup in matrix computations.
+[^fn-cuda-cores]: **CUDA 核心**：NVIDIA 为浮点运算优化的并行处理单元。与 CPU 核心（为复杂顺序任务设计）不同，CUDA 核心更简单并协同工作，使单个 H100 GPU 能够同时执行 16,896 个并行操作，从而在矩阵计算中获得巨大的加速。
 
-#### Sustainable Computing and Energy Awareness {#sec-efficient-ai-sustainable-computing-energy-awareness-d77a}
+#### 可持续计算与能耗意识 {#sec-efficient-ai-sustainable-computing-energy-awareness-d77a}
 
-As systems scale further, compute efficiency has become closely tied to sustainability. Training state-of-the-art large language models requires massive computational resources, leading to increased attention on environmental impact. The projected electricity usage of data centers, shown in @fig-datacenter-energy-usage, highlights this concern. Between 2010 and 2030, electricity consumption is expected to rise sharply, particularly under worst-case scenarios where it could exceed 8,000 TWh by 2030 [@jones2018much].
+随着系统进一步扩展，计算效率与可持续性之间的联系愈发紧密。训练最先进的大语言模型需要巨大的计算资源，这使得人们越来越关注其环境影响。如@fig-datacenter-energy-usage 所示，数据中心的电力使用预测凸显了这一担忧。2010 年到 2030 年间，电力消耗预计将急剧上升，特别是在最坏情况下，到 2030 年可能超过 8000 TWh[@jones2018much]。
 
 ::: {#fig-datacenter-energy-usage fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
 \begin{axis}[
@@ -1022,115 +1032,118 @@ Y,Date
 \node[fill=white,above=2pt of legend,anchor=center]{\small\bfseries Scenario};
 \end{tikzpicture}
 ```
-: **Data Center Energy Projections**: Between 2010 and 2030, data center electricity usage is projected to increase sharply, particularly under worst-case scenarios where consumption could exceed 8,000 TWh by 2030 [@jones2018much]. This projection underscores the critical need for improved energy efficiency in AI systems.
+
+: **数据中心能耗预测**：2010 年到 2030 年间，数据中心的电力使用预计将急剧增加，特别是在最坏情况下，到 2030 年消耗可能超过 8000 TWh[@jones2018much]。这一预测凸显了提升 AI 系统能源效率的迫切需求。
+
 :::
 
-This dramatic growth underscores urgency for compute efficiency, as even large data centers face energy constraints due to limitations in electrical grid capacity. Efficiency improvements alone may not guarantee environmental benefits due to a phenomenon known as Jevons Paradox.
+这一戏剧性的增长凸显了计算效率的紧迫性，因为即便是大型数据中心，也会受到电网容量限制带来的能源约束。仅靠效率提升未必能保证环境效益，因为存在一种称为杰文斯悖论的现象。
 
-Consider the invention of the fuel-efficient car. While each car uses less gas per mile, the lower cost of driving encourages people to drive more often and live further from work. The result can be an *increase* in total gasoline consumption. This is Jevons Paradox: efficiency gains can be offset by increased consumption. In AI, this means making models 10x more efficient might lead to a 100x increase in their use, resulting in a net negative environmental impact if not managed carefully.
+想想燃油效率更高的汽车。虽然每辆车每英里耗油更少，但更低的驾驶成本会鼓励人们更频繁地开车，并住得离工作地点更远。结果可能是总汽油消耗量的*增加*。这就是杰文斯悖论：效率提升可能被消费增加所抵消。在 AI 中，这意味着让模型效率提高 10 倍，最终可能导致其使用量增加 100 倍；如果不加以谨慎管理，可能产生净负面的环境影响。
 
-Addressing these challenges requires optimizing hardware utilization and minimizing energy consumption in both cloud and edge contexts while being mindful of potential rebound effects from increased deployment.
+应对这些挑战，需要在云端和边缘场景中优化硬件利用并最小化能耗，同时警惕部署增加带来的潜在反弹效应。
 
-Key trends include adoption of energy-aware scheduling and resource allocation techniques that distribute workloads efficiently across available hardware [@Patterson_et_al_2021]. Researchers are also developing methods to dynamically adjust precision levels during training and inference, using lower precision operations (e.g., mixed-precision training) to reduce power consumption without sacrificing accuracy.
+关键趋势包括采用能耗感知的调度和资源分配技术，以便在可用硬件之间高效分配工作负载[@Patterson_et_al_2021]。研究人员还在开发在训练和推理过程中动态调整精度水平的方法，使用更低精度的操作（例如混合精度训练）来降低功耗而不牺牲准确率。
 
-Distributed systems achieve compute efficiency by splitting workloads across multiple machines. Techniques such as model parallelism[^fn-efficient-model-parallelism] and data parallelism[^fn-efficient-data-parallelism] allow large-scale models to be trained more efficiently, leveraging clusters of GPUs or TPUs to maximize throughput while minimizing idle time.
+分布式系统通过将工作负载拆分到多台机器上来实现计算效率。模型并行[^fn-efficient-model-parallelism]和数据并行[^fn-efficient-data-parallelism]等技术使大规模模型能够更高效地训练，利用 GPU 或 TPU 集群在最小化空闲时间的同时最大化吞吐量。
 
-[^fn-efficient-model-parallelism]: **Model Parallelism**: Distributing model components across multiple processors due to memory constraints. GPT-3 (175B parameters) requires 350GB memory, exceeding A100's 40GB capacity by 9×, necessitating tensor parallelism where each transformer layer splits across 8-16 GPUs with all-gather communication for activation synchronization.
+[^fn-efficient-model-parallelism]: **模型并行**：由于内存限制，将模型组件分布到多个处理器上。GPT-3（1750 亿参数）需要 350GB 内存，超过了 A100 40GB 容量的 9 倍，因此需要张量并行，其中每个 transformer 层分布在 8-16 个 GPU 上，并通过 all-gather 通信同步激活值。
 
-[^fn-efficient-data-parallelism]: **Data Parallelism**: Training method where the same model runs on multiple processors with different data batches. GPT-3 training used data parallelism across thousands of GPUs, processing multiple text sequences simultaneously.
+[^fn-efficient-data-parallelism]: **数据并行**：一种训练方法，即在多个处理器上运行同一个模型，但使用不同的数据批次。GPT-3 的训练在数千个 GPU 上使用了数据并行，同时处理多个文本序列。
 
-At the edge, compute efficiency addresses growing demand for real-time processing in energy-constrained environments. Innovations such as hardware-aware model optimization, lightweight inference engines, and adaptive computing architectures enable highly efficient edge systems critical for applications like autonomous vehicles and smart home devices.
+在边缘端，计算效率解决了资源受限环境中对实时处理日益增长的需求。硬件感知的模型优化、轻量级推理引擎和自适应计算架构等创新，使得高度高效的边缘系统成为可能，这对于自动驾驶汽车和智能家居设备等应用至关重要。
 
-#### Production Deployment Patterns {#sec-efficient-ai-production-deployment-patterns-208a}
+#### 生产部署模式 {#sec-efficient-ai-production-deployment-patterns-208a}
 
-Real-world efficiency optimization demonstrates practical impact across deployment contexts. Production systems routinely achieve 5-10x efficiency gains through coordinated application of optimization techniques while maintaining 95%+ of original model performance.
+现实世界中的效率优化展示了其跨部署场景的实际影响。生产系统通常通过协调应用多种优化技术，在保持原始模型性能 95% 以上的同时，实现 5-10 倍的效率提升。
 
-Mobile applications achieve 4-7x model size reduction and 3-5x latency improvements through combined quantization, pruning, and distillation, enabling real-time inference on mid-range devices. Modern mobile AI systems distribute workloads across specialized processors (NPU for ultra-low power inference, GPU for parallel compute, CPU for control logic) based on power, performance, and real-time constraints.
+移动应用通过将量化、剪枝和蒸馏结合起来，实现 4-7 倍的模型大小缩减和 3-5 倍的延迟改善，从而使中端设备上的实时推理成为可能。现代移动 AI 系统会根据功耗、性能和实时约束，将工作负载分配给专用处理器（用于超低功耗推理的 NPU、用于并行计算的 GPU、用于控制逻辑的 CPU）。
 
-Autonomous vehicle systems optimize for safety-critical <10ms latency requirements through hardware-aware architectural design and mixed-precision quantization, processing multiple high-bandwidth sensor streams within strict power and thermal constraints.
+自动驾驶系统通过硬件感知的架构设计和混合精度量化，优化满足安全关键型 <10ms 的延迟要求，在严格的功耗和散热约束下处理多个高带宽传感器流。
 
-Cloud serving infrastructure reduces costs by 70-80% through systematic optimization combining dynamic batching, quantization, and knowledge distillation, serving 4-5x more requests at comparable quality levels.
+云端服务基础设施通过系统性优化，将动态批处理、量化和知识蒸馏结合起来，将成本降低 70-80%，并以相当的质量水平提供 4-5 倍更多的请求。
 
-Edge IoT deployments achieve month-long battery life through extreme model compression and duty-cycle optimization, operating on milliwatt power budgets while maintaining acceptable accuracy for practical applications.
+边缘 IoT 部署通过极致模型压缩和占空比优化，实现了长达数月的电池续航，在毫瓦级功耗预算下运行，同时为实际应用保持可接受的准确率。
 
-These efficiency gains emerge from systematic optimization strategies that coordinate multiple techniques rather than applying individual optimizations in isolation. The specific optimization sequences, technique combinations, and engineering practices that enable these production results are detailed in @sec-model-optimizations.
+这些效率提升来自系统性的优化策略，它们协调多种技术，而不是孤立地应用单一优化。实现这些生产结果的具体优化顺序、技术组合和工程实践在@sec-model-optimizations 中有详细介绍。
 
-Compute efficiency complements algorithmic and data efficiency. Compact models reduce computational requirements, while efficient data pipelines streamline hardware usage. The evolution of compute efficiency (from early reliance on CPUs through specialized accelerators to sustainable computing practices) remains central to building scalable, accessible, and environmentally responsible machine learning systems.
+计算效率与算法效率和数据效率相辅相成。紧凑模型降低计算需求，而高效的数据管道则简化硬件使用。计算效率的演变（从早期依赖 CPU，到专用加速器，再到可持续计算实践）始终是构建可扩展、可获得且对环境负责的机器学习系统的核心。
 
-### Data Efficiency {#sec-efficient-ai-data-efficiency-a3ad}
+### 数据效率 {#sec-efficient-ai-data-efficiency-a3ad}
 
-Data efficiency focuses on optimizing the amount and quality of data required to train machine learning models effectively. Data efficiency has emerged as a pivotal dimension, driven by rising costs of data collection, storage, and processing, as well as the limits of available high-quality data.
+数据效率关注优化有效训练机器学习模型所需的数据量和数据质量。随着数据收集、存储和处理成本上升，以及可用高质量数据的限制，数据效率已成为一个关键维度。
 
-#### Maximizing Learning from Limited Data {#sec-efficient-ai-maximizing-learning-limited-data-2885}
+#### 从有限数据中最大化学习 {#sec-efficient-ai-maximizing-learning-limited-data-2885}
 
-In early machine learning, data efficiency was not a primary focus, as datasets were relatively small and manageable. The challenge was often acquiring enough labeled data to train models effectively. Researchers relied on curated datasets such as [UCI's Machine Learning Repository](https://archive.ics.uci.edu/)[^fn-uci], using feature selection and dimensionality reduction techniques like principal component analysis (PCA)[^fn-pca] to extract maximum value from limited data.
+在早期机器学习中，数据效率并不是主要关注点，因为数据集相对较小且易于管理。挑战往往是获取足够的标注数据来有效训练模型。研究人员依赖于诸如 [UCI 机器学习仓库](https://archive.ics.uci.edu/)[^fn-uci] 这样的整理型数据集，并使用特征选择和主成分分析（PCA）[^fn-pca] 等降维技术，从有限数据中提取最大价值。
 
-[^fn-uci]: **UCI Machine Learning Repository**: Established in 1987 by the University of California, Irvine, one of the most widely-used resources for machine learning datasets. Contains over 600 datasets and has been cited in thousands of research papers.
+[^fn-uci]: **UCI 机器学习仓库**：由加州大学欧文分校于 1987 年建立，是机器学习数据集最广泛使用的资源之一。包含 600 多个数据集，并已被数千篇研究论文引用。
 
-[^fn-pca]: **Principal Component Analysis (PCA)**: Dimensionality reduction technique invented by Karl Pearson in 1901, identifies the most important directions of variation in data. Reduces computational complexity while preserving 90%+ of data variance in many applications.
+[^fn-pca]: **主成分分析（PCA）**：由 Karl Pearson 于 1901 年发明的降维技术，用于识别数据中最重要的变化方向。在许多应用中，它能在保留 90% 以上数据方差的同时降低计算复杂度。
 
-The advent of deep learning in the 2010s transformed data's role. Models like AlexNet and GPT-3 demonstrated that larger datasets often led to better performance, marking the beginning of the "big data" era. However, this reliance introduced inefficiencies. Data collection became costly and time-consuming, requiring vast amounts of labeled data for supervised learning.
+2010 年代深度学习的兴起改变了数据的角色。像 AlexNet 和 GPT-3 这样的模型表明，更大的数据集往往带来更好的性能，这标志着“大数据”时代的开始。然而，这种依赖也引入了低效问题。数据收集变得昂贵且耗时，监督学习需要海量的标注数据。
 
-Researchers developed techniques enhancing data efficiency even as datasets grew. Transfer learning[^fn-efficient-transfer-learning] allowed pre-trained models to be fine-tuned on smaller datasets, reducing task-specific data needs [@yosinski2014transferable]. Data augmentation[^fn-data-augmentation] artificially expanded datasets by creating new variations of existing samples. Active learning[^fn-active-learning] prioritized labeling only the most informative data points [@Settles_2009].
+即使数据集不断扩大，研究人员仍开发了增强数据效率的技术。迁移学习[^fn-efficient-transfer-learning] 使得预训练模型可以在较小数据集上进行微调，从而减少任务特定的数据需求[@yosinski2014transferable]。数据增强[^fn-data-augmentation] 通过创建现有样本的新变体来人为扩展数据集。主动学习[^fn-active-learning] 则优先标注最具信息量的数据点[@Settles_2009]。
 
-[^fn-efficient-transfer-learning]: **Transfer Learning**: Technique where models pre-trained on large datasets are fine-tuned for specific tasks. ImageNet pre-trained models can achieve high accuracy on new vision tasks with <1000 labeled examples vs. millions needed from scratch.
+[^fn-efficient-transfer-learning]: **迁移学习**：在大数据集上预训练的模型被用于特定任务的微调。基于 ImageNet 预训练的模型，只需少于 1000 个标注样本，就能在新的视觉任务上达到很高的准确率，而从零训练通常需要数百万样本。
 
-[^fn-data-augmentation]: **Data Augmentation**: Artificially expanding datasets through transformations like rotations, crops, or noise. Can improve model performance by 5-15% and reduce overfitting, especially when labeled data is scarce.
+[^fn-data-augmentation]: **数据增强**：通过旋转、裁剪或加噪等变换人为扩展数据集。它可以提升 5-15% 的模型性能并减少过拟合，尤其是在标注数据稀缺时。
 
-[^fn-active-learning]: **Active Learning**: Iteratively selecting the most informative samples for labeling to maximize learning efficiency. Can achieve target performance with 50-90% less labeled data compared to random sampling.
+[^fn-active-learning]: **主动学习**：迭代选择最具信息量的样本进行标注，以最大化学习效率。与随机采样相比，它可以用少 50-90% 的标注数据达到目标性能。
 
-As systems continue growing in scale, inefficiencies of large datasets have become apparent. Data-centric AI[^fn-data-centric-ai] has emerged as a key paradigm, emphasizing data quality over quantity. This approach focuses on enhancing preprocessing, removing redundancy, and improving labeling efficiency. Research shows that careful curation and filtering can achieve comparable or superior performance while using only a fraction of original data volume [@penedo2024fineweb].
+随着系统规模持续增长，大型数据集的低效问题变得愈发明显。数据中心 AI[^fn-data-centric-ai] 已成为一个关键范式，强调数据质量而非数量。该方法专注于增强数据预处理、消除冗余和提高标注效率。研究表明，精心整理和过滤可以在仅使用原始数据量一小部分的情况下，获得相当甚至更好的性能[@penedo2024fineweb]。
 
-[^fn-data-centric-ai]: **Data-Centric AI**: Paradigm shift from model-centric to data-centric development, popularized by Andrew Ng in 2021. Focuses on systematically improving data quality rather than just model architecture, often yielding greater performance gains.
+[^fn-data-centric-ai]: **数据中心 AI**：从以模型为中心转向以数据为中心的开发范式，由 Andrew Ng 在 2021 年推广。它关注系统性提升数据质量，而不仅是模型架构，通常能带来更大的性能提升。
 
-Several techniques support this transition. Self-supervised learning[^fn-self-supervised] enables models to learn meaningful representations from unlabeled data, reducing dependency on expensive human-labeled datasets. Active learning strategies selectively identify the most informative examples for labeling, while curriculum learning[^fn-curriculum-learning] structures training to progress from simple to complex examples, improving learning efficiency.
+有几种技术支持这一转变。自监督学习[^fn-self-supervised] 使模型能够从无标注数据中学习有意义的表示，减少对昂贵的人类标注数据集的依赖。主动学习策略会选择性地识别最具信息量的样本进行标注，而课程学习[^fn-curriculum-learning] 则将训练组织为从简单样本逐步过渡到复杂样本，从而提高学习效率。
 
-[^fn-self-supervised]: **Self-Supervised Learning**: Training method where models create their own labels from input data structure, like predicting masked words in BERT. Enables learning from billions of unlabeled examples.
+[^fn-self-supervised]: **自监督学习**：一种训练方法，模型从输入数据结构中自行创建标签，例如 BERT 中预测被遮盖的词。它使模型能够从数十亿个无标注样本中学习。
 
-[^fn-curriculum-learning]: **Curriculum Learning**: Training strategy where models learn from easy examples before progressing to harder ones, mimicking human education. Can improve convergence speed by 25-50% and final model performance.
+[^fn-curriculum-learning]: **课程学习**：一种训练策略，模型先从简单样本学习，再逐步过渡到更难样本，模拟人类教育过程。它可以将收敛速度提高 25-50%，并改善最终模型性能。
 
-Data efficiency is particularly important in foundation models[^fn-efficient-foundation-models]. As these models grow in scale and capability, they approach limits of available high-quality training data, especially for language tasks, as shown in @fig-running-out-of-human-data. This scarcity drives innovation in data processing and curation techniques.
+数据效率在基础模型[^fn-efficient-foundation-models] 中尤为重要。随着这些模型在规模和能力上不断增长，它们逐渐逼近可用高质量训练数据的上限，尤其是在语言任务中，如@fig-running-out-of-human-data 所示。这种稀缺性推动了数据处理和整理技术的创新。
 
-[^fn-efficient-foundation-models]: **Foundation Models**: Large-scale, general-purpose AI models trained on broad data that can be adapted for many tasks. Term coined by Stanford HAI in 2021, includes models like GPT-3, BERT, and DALL-E.
+[^fn-efficient-foundation-models]: **基础模型**：在广泛数据上训练的大规模通用 AI 模型，可适配多种任务。该术语由 Stanford HAI 于 2021 年提出，包括 GPT-3、BERT 和 DALL-E 等模型。
 
-![**Dataset Growth**: Foundation models are increasingly trained on vast datasets, reflecting the growing stock of human-generated text. This trend underscores the challenge of data scarcity in maintaining model performance as scale increases. Source: @villalobos_ho_sevilla_besiroglu_heim_hobbhahn_2024.](images/png/running_out_of_data.png){#fig-running-out-of-human-data}
+![**数据增长**：基础模型越来越多地在海量数据集上训练，这反映了人类生成文本存量的增长。随着规模扩大，这一趋势凸显了在维持模型性能方面数据稀缺所带来的挑战。来源：@villalobos_ho_sevilla_besiroglu_heim_hobbhahn_2024。](images/png/running_out_of_data.png){#fig-running-out-of-human-data}
 
-Evidence for data quality's impact appears across different deployment scales. In Tiny ML[^fn-tinyml] applications, datasets like Wake Vision demonstrate how performance critically depends on careful data curation [@banbury2024wakevisiontailoreddataset]. At larger scales, research on language models trained on web-scale datasets shows that intelligent filtering and selection strategies significantly improve performance on downstream tasks [@penedo2024fineweb]. @sec-benchmarking-ai establishes rigorous methodologies for measuring these data quality improvements.
+数据质量影响的证据在不同部署规模中均可见。在 TinyML[^fn-tinyml] 应用中，Wake Vision 等数据集表明，性能在很大程度上取决于精心的数据整理[@banbury2024wakevisiontailoreddataset]。在更大规模下，对基于网络规模数据集训练的语言模型的研究表明，智能过滤和选择策略能显著提升下游任务表现[@penedo2024fineweb]。@sec-benchmarking-ai 则建立了衡量这些数据质量改进的严格方法论。
 
-[^fn-tinyml]: **TinyML**: Machine learning on microcontrollers and edge devices with <1KB-1MB memory and <1mW power consumption. Enables AI in IoT devices, wearables, and sensors where traditional ML deployment is impossible.
+[^fn-tinyml]: **TinyML**：在微控制器和边缘设备上进行的机器学习，内存 <1KB-1MB、功耗 <1mW。它使物联网设备、可穿戴设备和传感器中能够部署 AI，而传统机器学习在这些场景下无法实现。
 
-This modern era of data efficiency represents a shift in how systems approach data utilization. By focusing on quality over quantity and developing sophisticated techniques for data selection and processing, the field is moving toward more sustainable and effective approaches to model training and deployment. Data efficiency is integral to scalable systems, impacting both model and compute efficiency. Smaller, higher-quality datasets reduce training times and computational demands while enabling better generalization. These principles complement the privacy-preserving techniques explored in @sec-security-privacy, where minimizing data requirements enhances both efficiency and user privacy protection.
+这一现代数据效率时代，代表了系统对数据利用方式的转变。通过专注于质量而非数量，并开发复杂的数据选择和处理技术，该领域正朝着更可持续、更有效的模型训练与部署方式迈进。数据效率是可扩展系统的关键组成部分，同时影响模型效率和计算效率。更小但质量更高的数据集能够缩短训练时间、降低计算需求，并提升泛化能力。这些原则与@sec-security-privacy 中探讨的隐私保护技术相互补充，在减少数据需求的同时增强了效率和用户隐私保护。
 
-## Real-World Efficiency Strategies {#sec-efficient-ai-realworld-efficiency-strategies-8387}
+## 真实世界中的效率策略 {#sec-efficient-ai-realworld-efficiency-strategies-8387}
 
-Having explored each efficiency dimension individually and their interconnections, we examine how these dimensions manifest across different deployment contexts. The efficiency of machine learning systems emerges from understanding relationships between algorithmic, compute, and data efficiency in specific operational environments.
+在分别探讨了各个效率维度及其相互联系之后，我们进一步考察这些维度在不同部署场景中的体现。机器学习系统的效率，源于在特定运行环境中理解算法效率、算力效率和数据效率之间的关系。
 
-### Context-Specific Efficiency Requirements {#sec-efficient-ai-contextspecific-efficiency-requirements-47e6}
+### 特定场景下的效率需求 {#sec-efficient-ai-contextspecific-efficiency-requirements-47e6}
 
-The specific priorities and trade-offs vary dramatically across deployment environments. As our opening examples illustrated, these range from cloud systems with abundant resources to edge devices with severe memory and power constraints. @tbl-deployment-efficiency-priorities maps how these constraints translate into efficiency optimization priorities.
+不同部署环境中的具体优先级和权衡差异极大。正如我们开篇的示例所示，这些场景从资源充裕的云端系统到内存和功耗受限严重的边缘设备不等。@tbl-deployment-efficiency-priorities 展示了这些约束如何转化为效率优化优先级。
 
 +------------------------+--------------------------------------+-------------------------------------------------+---------------------------------------------------------------------+
-| **Deployment Context** | **Primary Constraints**              | **Efficiency Priorities**                       | **Representative Applications**                                     |
+| **部署场景**           | **主要约束**                         | **效率优先级**                                  | **代表性应用**                                                      |
 +:=======================+:=====================================+:================================================+:====================================================================+
-| **Cloud**              | Cost at scale, energy consumption    | Throughput, scalability, operational efficiency | Large language model APIs, recommendation engines, video processing |
+| **云端**               | 大规模成本、能耗                     | 吞吐量、可扩展性、运营效率                      | 大语言模型 API、推荐引擎、视频处理                                   |
 +------------------------+--------------------------------------+-------------------------------------------------+---------------------------------------------------------------------+
-| **Edge**               | Latency, local compute capacity,     | Real-time performance, power efficiency         | Autonomous vehicles, industrial automation, smart cameras           |
-|                        | connectivity                         |                                                 |                                                                     |
+| **边缘**               | 延迟、本地算力容量、                 | 实时性能、能效                                  | 自动驾驶车辆、工业自动化、智能摄像头                                 |
+|                        | 连接性                               |                                                 |                                                                     |
 +------------------------+--------------------------------------+-------------------------------------------------+---------------------------------------------------------------------+
-| **Mobile**             | Battery life, memory, thermal limits | Energy efficiency, model size, responsiveness   | Voice assistants, photo enhancement, augmented reality              |
+| **移动端**             | 电池续航、内存、热限制               | 能效、模型大小、响应性                          | 语音助手、照片增强、增强现实                                         |
 +------------------------+--------------------------------------+-------------------------------------------------+---------------------------------------------------------------------+
-| **TinyML**             | Extreme power/memory constraints     | Ultra-low power, minimal model size             | IoT sensors, wearables, environmental monitoring                    |
+| **TinyML**             | 极端功耗/内存约束                   | 超低功耗、最小模型尺寸                          | IoT 传感器、可穿戴设备、环境监测                                     |
 +------------------------+--------------------------------------+-------------------------------------------------+---------------------------------------------------------------------+
 
-: **Efficiency Optimization Priorities by Deployment Context**: Each environment demands different trade-offs between algorithmic, compute, and data optimization strategies based on unique constraints. Cloud systems prioritize scalability, edge deployments focus on real-time performance, mobile applications balance performance with battery life, and TinyML demands extreme resource efficiency. {#tbl-deployment-efficiency-priorities}
+: **按部署场景划分的效率优化优先级**：每种环境都基于其独特约束，在算法优化、算力优化和数据优化策略之间提出不同的权衡。云端系统优先考虑可扩展性，边缘部署关注实时性能，移动应用在性能与电池续航之间寻求平衡，而 TinyML 则要求极端的资源效率。 {#tbl-deployment-efficiency-priorities}
 
-Understanding these context-specific patterns enables designers to make informed decisions about which efficiency dimensions to prioritize and how to navigate inevitable trade-offs.
+理解这些特定场景模式，使设计人员能够就应优先关注哪些效率维度以及如何应对不可避免的权衡做出明智决策。
 
-### Scalability and Sustainability {#sec-efficient-ai-scalability-sustainability-4d30}
+### 可扩展性与可持续性 {#sec-efficient-ai-scalability-sustainability-4d30}
 
-System efficiency serves as a driver of environmental sustainability. When systems are optimized for efficiency, they can be deployed at scale while minimizing environmental footprint. This relationship creates a positive feedback loop, as shown in @fig-virtuous-efficiency-cycle.
+系统效率是环境可持续性的驱动力。当系统针对效率进行优化后，它们可以在尽量减少环境足迹的同时实现大规模部署。这种关系形成了一个正反馈循环，如@fig-virtuous-efficiency-cycle 所示。
 
 ::: {#fig-virtuous-efficiency-cycle fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \scalebox{0.7}{%
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
@@ -1150,28 +1163,31 @@ arc[radius=0.5*\ra, start angle=113, end angle= 200];
 arc[radius=0.5*\ra, start angle=220, end angle= 320];
 \end{tikzpicture}}
 ```
-: **Efficiency and Sustainability Feedback Loop**: Optimized machine learning systems achieve greater scalability, which in turn incentivizes sustainable design practices and further efficiency improvements, creating a reinforcing feedback loop for long-term impact.
+
+: **效率与可持续性反馈循环**：经过优化的机器学习系统能够实现更高的可扩展性，进而激励可持续设计实践和进一步的效率提升，形成一个相互强化的反馈循环，产生长期影响。
+
 :::
 
-Efficient systems are inherently scalable. Reducing resource demands through lightweight models, targeted datasets, and optimized compute utilization allows systems to deploy broadly. When efficient systems scale, they amplify their contribution to sustainability by reducing overall energy consumption and computational waste. Sustainability reinforces the need for efficiency, creating a feedback loop that strengthens the entire system.
+高效系统天然具备可扩展性。通过轻量化模型、定向数据集和优化的算力利用来降低资源需求，系统就能够更广泛地部署。当高效系统实现规模化时，它们会通过降低总体能耗和计算浪费来放大其对可持续性的贡献。可持续性进一步强化了对效率的需求，从而形成一个反馈循环，增强整个系统的能力。
 
-## Efficiency Trade-offs and Challenges {#sec-efficient-ai-efficiency-tradeoffs-challenges-946d}
+## 效率权衡与挑战 {#sec-efficient-ai-efficiency-tradeoffs-challenges-946d}
 
-The three efficiency dimensions can work synergistically under favorable conditions, but real-world systems often face scenarios where improving one dimension degrades another. The same resource constraints that make efficiency necessary force difficult choices: reducing model size may sacrifice accuracy, optimizing for real-time performance may increase energy consumption, and curating smaller datasets may limit generalization.
+在条件有利时，这三种效率维度可以协同发挥作用，但现实世界中的系统往往会遇到这样一些场景：提升某一维度会削弱另一维度。使效率成为必要条件的那些资源约束，也迫使人们做出艰难取舍：减小模型规模可能牺牲准确率，针对实时性能进行优化可能增加能耗，而筛选更小的数据集可能限制泛化能力。
 
-### Fundamental Sources of Efficiency Trade-offs {#sec-efficient-ai-fundamental-sources-efficiency-tradeoffs-d16f}
+### 效率权衡的根本来源 {#sec-efficient-ai-fundamental-sources-efficiency-tradeoffs-d16f}
 
-These tensions manifest in various ways across machine learning systems. Understanding their root causes is essential for addressing design challenges. Each efficiency dimension influences the others, creating a dynamic interplay that shapes system performance.
+这些张力在机器学习系统中会以多种方式显现出来。理解其根本原因对于应对设计挑战至关重要。每一种效率维度都会影响其他维度，形成一种动态交互关系，从而塑造系统性能。
 
-#### Algorithmic Efficiency vs. Compute Requirements {#sec-efficient-ai-algorithmic-efficiency-vs-compute-requirements-83a7}
+#### 算法效率与计算需求的权衡 {#sec-efficient-ai-algorithmic-efficiency-vs-compute-requirements-83a7}
 
-Algorithmic efficiency focuses on designing compact models that minimize computational and memory demands. By reducing model size or complexity, deployment on resource-limited devices becomes feasible. Overly simplifying a model can reduce accuracy, especially for complex tasks. To compensate for this loss, additional computational resources may be required during training or deployment, placing strain on compute efficiency.
+算法效率侧重于设计紧凑的模型，以尽量减少计算和内存需求。通过减小模型规模或复杂度，就可以在资源受限的设备上进行部署。过度简化模型会降低准确率，尤其是在复杂任务中。为了弥补这种损失，在训练或部署期间可能需要额外的计算资源，从而给计算效率带来压力。
 
-#### Compute Efficiency vs. Real-Time Needs {#sec-efficient-ai-compute-efficiency-vs-realtime-needs-a269}
+#### 计算效率与实时需求的权衡 {#sec-efficient-ai-compute-efficiency-vs-realtime-needs-a269}
 
-Compute efficiency aims to minimize resources required for training and inference, reducing energy consumption, processing time, and memory use. In scenarios requiring real-time responsiveness (autonomous vehicles, augmented reality), compute efficiency becomes harder to maintain. @fig-efficiency-vs-latency illustrates this challenge: real-time systems often require high-performance hardware to process data instantly, conflicting with energy efficiency goals or increasing system costs.
+计算效率旨在尽量减少训练和推理所需的资源，从而降低能耗、处理时间和内存使用。在需要实时响应的场景中（如自动驾驶汽车、增强现实），维持计算效率就变得更加困难。@fig-efficiency-vs-latency 展示了这一挑战：实时系统通常需要高性能硬件来即时处理数据，这与能效目标相冲突，或者会提高系统成本。
 
 ::: {#fig-efficiency-vs-latency fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \begin{tikzpicture}[line join=round,font=\usefont{T1}{phv}{m}{n}\small]
 \tikzset{%
@@ -1335,150 +1351,151 @@ minimum width=55mm,minimum height=64mm,
  \node[above=13pt of $(BB2.north east)!0.5!(BB1.north west)$]{\large Why latency matters?};
 \end{tikzpicture}
 ```
-: **Real-Time System Constraints**: Autonomous vehicles demand careful balance between computational efficiency and low latency. Increasing processing power to reduce delay can conflict with energy and cost limitations, yet sacrificing latency compromises safety by increasing reaction time and braking distance.
+
+: **实时系统约束**：自动驾驶汽车需要在计算效率和低延迟之间仔细权衡。增加处理能力以减少延迟可能与能耗和成本限制相冲突，但牺牲延迟会通过增加反应时间和制动距离而影响安全性。
+
 :::
 
-#### Data Efficiency vs. Model Generalization {#sec-efficient-ai-data-efficiency-vs-model-generalization-044a}
+#### 数据效率与模型泛化的权衡 {#sec-efficient-ai-data-efficiency-vs-model-generalization-044a}
 
-Data efficiency seeks to minimize the amount of data required to train a model without sacrificing performance. By curating smaller, high-quality datasets, training becomes faster and less resource-intensive. Ideally, this reinforces both algorithmic and compute efficiency. However, reducing dataset size can limit diversity, making it harder for models to generalize to unseen scenarios. To address this, additional compute resources or model complexity may be required, creating tension between data efficiency and broader system goals.
+数据效率旨在尽量减少训练模型所需的数据量，同时不牺牲性能。通过筛选更小但高质量的数据集，训练会更快且资源消耗更低。理想情况下，这会同时增强算法效率和计算效率。然而，缩小数据集规模可能限制多样性，使模型更难泛化到未见过的场景。为了解决这一问题，可能需要更多计算资源或更复杂的模型，从而在数据效率与更广泛的系统目标之间产生张力。
 
-### Recurring Trade-off Patterns in Practice {#sec-efficient-ai-recurring-tradeoff-patterns-practice-c205}
+### 实践中的反复出现的权衡模式 {#sec-efficient-ai-recurring-tradeoff-patterns-practice-c205}
 
-The trade-offs between efficiency dimensions become particularly evident when examining specific scenarios. Complex models with millions or billions of parameters can achieve higher accuracy by capturing intricate patterns, but require significant computational power and memory. A recommendation system in a cloud data center might use a highly complex model for better recommendations, but at the cost of higher energy consumption and operating costs. On resource-constrained devices like smartphones or autonomous vehicles, compact models may operate efficiently but require more sophisticated data preprocessing or training procedures to compensate for reduced capacity.
+当考察具体场景时，不同效率维度之间的权衡会尤为明显。拥有数百万甚至数十亿参数的复杂模型能够通过捕捉精细模式而获得更高准确率，但也需要大量计算能力和内存。云数据中心中的推荐系统可能使用一个高度复杂的模型来提供更好的推荐，但代价是更高的能耗和运营成本。在智能手机或自动驾驶汽车等资源受限的设备上，紧凑模型可能运行高效，但为了弥补容量下降，往往需要更复杂的数据预处理或训练流程。
 
-Energy efficiency and real-time performance often pull systems in opposite directions. Real-time systems like autonomous vehicles or augmented reality applications rely on high-performance hardware to process large volumes of data quickly, but this typically increases energy consumption. An autonomous vehicle must process sensor data from cameras, LiDAR, and radar in real time to make navigation decisions, requiring specialized accelerators that consume significant energy. In edge deployments with battery power or limited energy sources, this trade-off becomes even more critical.
+能效与实时性能通常会把系统拉向相反的方向。自动驾驶汽车或增强现实应用等实时系统依赖高性能硬件来快速处理大量数据，但这通常会增加能耗。自动驾驶汽车必须实时处理来自摄像头、LiDAR 和雷达的传感器数据，以做出导航决策，这就需要消耗大量能源的专用加速器。在依赖电池供电或能源来源有限的边缘部署中，这种权衡就变得更加关键。
 
-Larger datasets generally provide greater diversity and coverage, enabling models to capture subtle patterns and reduce overfitting risk. However, computational and memory demands of training on large datasets can be substantial. In resource-constrained environments like TinyML deployments, an IoT device monitoring environmental conditions might need a model that generalizes well across varying conditions, but collecting extensive datasets may be impractical due to storage and computational limitations. Smaller, carefully curated datasets or synthetic data may be used to reduce computational strain, but this risks missing key edge cases.
+更大的数据集通常能提供更高的多样性和覆盖范围，使模型能够捕捉细微模式并降低过拟合风险。然而，在大数据集上训练所需的计算和内存需求可能非常可观。在 TinyML 部署等资源受限环境中，一个监测环境条件的 IoT 设备可能需要一个在不同条件下都能良好泛化的模型，但由于存储和计算限制，收集大量数据集可能不切实际。可以使用更小、经过精心筛选的数据集或合成数据来减轻计算压力，但这会有遗漏关键边缘情况的风险。
 
-These trade-offs are not merely academic concerns but practical realities that shape system design decisions across all deployment contexts.
+这些权衡并不仅仅是学术问题，而是塑造所有部署场景中系统设计决策的现实约束。
 
-## Strategic Trade-off Management {#sec-efficient-ai-strategic-tradeoff-management-0ac8}
+## 战略权衡管理 {#sec-efficient-ai-strategic-tradeoff-management-0ac8}
 
-The trade-offs inherent in machine learning system design require thoughtful strategies to navigate effectively. Achieving the right balance involves difficult decisions heavily influenced by specific goals and constraints of the deployment environment. Designers can adopt a range of strategies that address unique requirements of different contexts.
+机器学习系统设计中固有的各种权衡，需要经过深思熟虑的策略才能有效应对。实现恰当的平衡涉及艰难的决策，而这些决策又会受到部署环境的具体目标和约束条件的强烈影响。设计者可以采用一系列策略，以满足不同场景的独特需求。
 
-### Environment-Driven Efficiency Priorities {#sec-efficient-ai-environmentdriven-efficiency-priorities-4057}
+### 环境驱动的效率优先级 {#sec-efficient-ai-environmentdriven-efficiency-priorities-4057}
 
-Efficiency goals are rarely universal. The specific demands of an application or deployment scenario heavily influence which dimension—algorithmic, compute, or data—takes precedence. Prioritizing the right dimensions based on context is the first step in effectively managing trade-offs.
+效率目标很少是普适的。应用或部署场景的具体需求，会强烈影响算法、算力或数据这几个维度中哪一个应当优先。根据上下文优先考虑正确的维度，是有效管理权衡的第一步。
 
-In Mobile ML deployments, battery life is often the primary constraint, placing a premium on compute efficiency. Energy consumption must be minimized to preserve operational time, so lightweight models are prioritized even if it means sacrificing some accuracy or requiring additional data preprocessing.
+在移动端 ML 部署中，电池续航通常是首要约束，因此算力效率格外重要。为了尽量延长运行时间，必须将能耗降到最低，所以即使这意味着要牺牲部分准确率或需要额外的数据预处理，也会优先选择轻量级模型。
 
-In Cloud ML systems, scalability and throughput are paramount. These systems must process large volumes of data and serve millions of users simultaneously. While compute resources are more abundant, energy efficiency and operational costs remain important. Algorithmic efficiency plays a critical role in ensuring systems can scale without overwhelming infrastructure.
+在云端 ML 系统中，可扩展性和吞吐量至关重要。这些系统必须处理海量数据，并同时为数百万用户提供服务。尽管算力资源更充足，但能效和运营成本仍然非常重要。算法效率在确保系统能够扩展而不压垮基础设施方面发挥着关键作用。
 
-Edge ML systems present different priorities. Autonomous vehicles or real-time monitoring systems require low-latency processing for safe and reliable operation, making real-time performance and compute efficiency paramount, often at the expense of energy consumption. However, hardware constraints mean these systems must still carefully manage energy and computational resources.
+边缘端 ML 系统则有不同的优先级。自动驾驶汽车或实时监控系统为了安全可靠地运行，需要低延迟处理，因此实时性能和算力效率尤为关键，而这往往要以能源消耗为代价。然而，硬件限制意味着这些系统仍必须谨慎管理能量和计算资源。
 
-**TinyML** deployments demand extreme efficiency due to severe hardware and energy limitations. Algorithmic and data efficiency are top priorities, with models highly compact and capable of operating on microcontrollers with minimal memory and compute power, while training relies on small, carefully curated datasets.
+**TinyML** 部署由于硬件和能源限制极为严苛，因此对效率提出了极致要求。算法效率和数据效率是首要任务：模型必须高度紧凑，能够在微控制器上以极少的内存和算力运行，而训练则依赖规模较小、经过精心筛选的数据集。
 
-### Dynamic Resource Allocation at Inference {#sec-efficient-ai-dynamic-resource-allocation-inference-d6bc}
+### 推理时的动态资源分配 {#sec-efficient-ai-dynamic-resource-allocation-inference-d6bc}
 
-System adaptability can be enhanced through dynamic resource allocation during inference. This approach recognizes that resource needs may fluctuate even within specific deployment contexts. By adjusting computational effort at inference time, systems can fine-tune performance to meet immediate demands.
+可以通过在推理阶段进行动态资源分配来增强系统的适应性。这种方法认识到，即使在特定部署场景中，资源需求也可能发生波动。通过在推理时调整计算投入，系统可以微调性能以满足即时需求。
 
-For example, a cloud-based video analysis system might process standard streams with a streamlined model to maintain high throughput, but when a critical event is detected, dynamically allocate more resources to a complex model for higher precision. Similarly, mobile voice assistants might use lightweight models for routine commands to conserve battery, but temporarily activate resource-intensive models for complex queries.
+例如，基于云的视频分析系统可能会使用精简模型处理标准视频流以维持高吞吐量；但当检测到关键事件时，则会动态分配更多资源给更复杂的模型，以获得更高精度。同样，移动语音助手可能会在处理日常命令时使用轻量级模型以节省电量，但在面对复杂查询时临时启用更耗资源的模型。
 
-Implementing test-time compute introduces new challenges. Dynamic resource allocation requires sophisticated monitoring and control mechanisms. There are diminishing returns—increasing compute beyond certain thresholds may not yield significant performance improvements. The ability to dynamically increase compute can also create disparities in access to high-performance AI, raising equity concerns. Despite these challenges, test-time compute offers a valuable strategy for enhancing system adaptability.
+实现测试时计算会带来新的挑战。动态资源分配需要复杂的监控和控制机制。还存在收益递减问题——当计算量增加到某些阈值之后，性能提升可能并不明显。动态增加计算资源的能力也可能造成高性能 AI 的获取差异，引发公平性担忧。尽管存在这些挑战，测试时计算仍为增强系统适应性提供了一种有价值的策略。
 
-### End-to-End Co-Design and Automated Optimization {#sec-efficient-ai-endtoend-codesign-automated-optimization-1220}
+### 端到端协同设计与自动化优化 {#sec-efficient-ai-endtoend-codesign-automated-optimization-1220}
 
-Efficient machine learning systems are rarely the product of isolated optimizations. Achieving balance across efficiency dimensions requires an end-to-end co-design perspective, where each system component is designed in tandem with others. This holistic approach aligns model architectures, hardware platforms, and data pipelines to work seamlessly together.
+高效的机器学习系统很少是孤立优化的产物。要在各个效率维度之间取得平衡，需要采用端到端的协同设计视角，即各个系统组件都要与其他组件协同设计。这种整体性方法让模型架构、硬件平台和数据流水线能够无缝协作。
 
-Co-design becomes essential in resource-constrained environments. Models must align precisely with hardware capabilities—8-bit models require hardware support for efficient integer operations, while pruned models benefit from sparse tensor operations. Edge accelerators often optimize specific operations like convolutions, influencing model architecture choices. Detailed hardware architecture considerations are covered comprehensively in @sec-ai-acceleration.
+在资源受限环境中，协同设计变得尤为重要。模型必须与硬件能力精确匹配——8 位模型需要硬件支持高效的整数运算，而剪枝后的模型则受益于稀疏张量运算。边缘加速器通常会针对卷积等特定操作进行优化，这会影响模型架构选择。关于硬件体系结构的详细考虑，@sec-ai-acceleration 中有全面讨论。
 
-**Automation and optimization tools** help manage the complexity of navigating trade-offs. Automated machine learning (AutoML)[^fn-automl] enables exploration of different model architectures and hyperparameter configurations. Building on the systematic approach to ML workflows introduced in @sec-ai-workflow, AutoML tools automate many efficiency optimization decisions that traditionally required extensive manual tuning.
+**自动化与优化工具** 有助于管理在权衡之间导航的复杂性。自动化机器学习（AutoML）[^fn-automl] 可以探索不同的模型架构和超参数配置。在@sec-ai-workflow 中介绍的 ML 工作流系统化方法基础上，AutoML 工具自动完成了许多传统上需要大量人工调优的效率优化决策。
 
-[^fn-automl]: **AutoML**: Automated machine learning that systematically searches through model architectures, hyperparameters, and data preprocessing options. Google's AutoML achieved 84.3% ImageNet accuracy vs. human experts' 78.5%, while reducing development time from months to hours.
+[^fn-automl]: **AutoML**：一种自动化机器学习方法，它会系统性地搜索模型架构、超参数和数据预处理选项。Google 的 AutoML 在将开发时间从数月缩短到数小时的同时，达到了 84.3% 的 ImageNet 准确率，而人工专家为 78.5%。
 
-Neural architecture search (NAS)[^fn-nas] takes automation further by designing model architectures tailored to specific hardware or deployment scenarios, evaluating a wide range of architectural possibilities to maximize performance while minimizing computational demands.
+神经架构搜索（NAS）[^fn-nas] 将自动化进一步推进，它会针对特定硬件或部署场景设计模型架构，评估广泛的架构可能性，以在最小化计算需求的同时最大化性能。
 
-[^fn-nas]: **Neural Architecture Search (NAS)**: Automated method for discovering optimal neural network architectures. EfficientNet-B7, discovered via NAS, achieved 84.3% ImageNet accuracy with 37M parameters vs. hand-designed ResNeXt-101's 80.9% with 84M parameters.
+[^fn-nas]: **神经架构搜索（NAS）**：一种用于发现最优神经网络架构的自动化方法。由 NAS 发现的 EfficientNet-B7 在参数量为 3700 万的情况下达到了 84.3% 的 ImageNet 准确率；而手工设计的 ResNeXt-101 仅为 80.9%，参数量却有 8400 万。
 
-Data efficiency also benefits from automation. Tools that automate dataset curation, augmentation, and active learning reduce training dataset size without sacrificing performance, prioritizing high-value data points to speed up training and reduce computational overhead [@settles2009active]. @sec-ai-frameworks explores how modern ML frameworks incorporate these automation capabilities.
+数据效率同样受益于自动化。自动化数据集筛选、增强和主动学习的工具，能够在不牺牲性能的前提下减少训练数据集规模，优先保留高价值数据点，从而加快训练并降低计算开销[@settles2009active]。@sec-ai-frameworks 探讨了现代 ML 框架如何整合这些自动化能力。
 
-### Measuring and Monitoring Efficiency Trade-offs {#sec-efficient-ai-measuring-monitoring-efficiency-tradeoffs-fd5b}
+### 效率权衡的度量与监控 {#sec-efficient-ai-measuring-monitoring-efficiency-tradeoffs-fd5b}
 
-Beyond technical automation lies the broader challenge of systematic evaluation. Efficiency optimization necessitates a structured approach assessing trade-offs that extends beyond purely technical considerations. As systems transition from research to production, success criteria must encompass algorithmic performance, economic viability, and operational sustainability.
+除了技术自动化之外，还存在系统化评估这一更广泛的挑战。效率优化需要一种结构化的权衡评估方法，其范围超出了纯技术层面的考量。随着系统从研究阶段走向生产阶段，成功标准必须同时涵盖算法性能、经济可行性和运营可持续性。
 
-Costs associated with efficiency improvements manifest across engineering effort (research, experimentation, integration), balanced against ongoing operational expenses of running less efficient systems. Benefits span multiple domains—beyond direct cost reductions, efficient systems often enable qualitatively new capabilities like real-time processing in resource-constrained environments or deployment to edge devices.
+与效率改进相关的成本体现在工程投入（研究、实验、集成）上，同时还要与运行低效率系统所带来的持续运营开销相平衡。收益则涵盖多个领域——除了直接降低成本之外，高效系统往往还能带来全新的定性能力，例如在资源受限环境中的实时处理，或部署到边缘设备上。
 
-This evaluation framework must be complemented by ongoing assessment mechanisms. The dynamic nature of ML systems in production necessitates continuous monitoring of efficiency characteristics. As models evolve, data distributions shift, and infrastructure changes, efficiency properties can degrade. Real-time monitoring enables rapid detection of efficiency regressions, while historical analysis provides insight into longer-term trends, revealing whether efficiency improvements are sustainable under changing conditions.
+这一评估框架还必须辅以持续的评估机制。生产环境中 ML 系统的动态特性要求持续监控其效率特征。随着模型演进、数据分布变化以及基础设施变更，效率属性可能会退化。实时监控能够快速检测效率回归，而历史分析则能提供对长期趋势的洞察，揭示在不断变化的条件下效率改进是否能够持续。
 
-## Engineering Principles for Efficient AI {#sec-efficient-ai-engineering-principles-efficient-ai-1206}
+## 高效人工智能的工程原则 {#sec-efficient-ai-engineering-principles-efficient-ai-1206}
 
-Designing an efficient machine learning system requires a holistic approach. True efficiency emerges when the entire system is considered as a whole, ensuring trade-offs are balanced across all stages of the ML pipeline from data collection to deployment. This end-to-end perspective transforms system design.
+设计高效的机器学习系统需要采用整体性方法。只有将整个系统作为一个整体来考虑，并确保从数据收集到部署的 ML 管道各个阶段之间的权衡得到平衡，真正的效率才会显现。这种端到端的视角会改变系统设计方式。
 
-### Holistic Pipeline Optimization {#sec-efficient-ai-holistic-pipeline-optimization-5bcc}
+### 整体管道优化 {#sec-efficient-ai-holistic-pipeline-optimization-5bcc}
 
-Efficiency is achieved not through isolated optimizations but by considering the entire pipeline as a unified whole. Each stage—data collection, model training, hardware deployment, and inference—contributes to overall system efficiency. Decisions at one stage ripple through the rest, influencing performance, resource use, and scalability.
+效率的实现并非依赖孤立的优化，而是通过将整个管道视为一个统一整体来达成。每个阶段——数据收集、模型训练、硬件部署和推理——都会对系统整体效率产生影响。某一阶段的决策会向其余部分传递影响，进而作用于性能、资源使用和可扩展性。
 
-Data collection and preprocessing are starting points. @sec-data-engineering provides comprehensive coverage of how data pipeline design decisions cascade through the entire system. Curating smaller, high-quality datasets can reduce computational costs during training while simplifying model design. However, insufficient data diversity may affect generalization, necessitating compensatory measures.
+数据收集和预处理是起点。@sec-data-engineering 全面涵盖了数据管道设计决策如何在整个系统中产生连锁影响。整理规模更小但质量更高的数据集，可以降低训练期间的计算成本，同时简化模型设计。然而，数据多样性不足可能会影响泛化能力，因此需要采取补偿措施。
 
-Model training is another critical stage. Architecture choice, optimization techniques, and hyperparameters must consider deployment hardware constraints. A model designed for high-performance cloud systems may emphasize accuracy and scalability, while models for edge devices must balance accuracy with size and energy efficiency.
+模型训练是另一个关键阶段。架构选择、优化技术和超参数都必须考虑部署硬件的约束。为高性能云系统设计的模型可能更强调准确性和可扩展性，而面向边缘设备的模型则必须在准确性、模型大小和能效之间取得平衡。
 
-Deployment and inference demand precise hardware alignment. Each platform offers distinct capabilities—GPUs excel at parallel matrix operations, TPUs optimize specific neural network computations, and microcontrollers provide energy-efficient processing. A smartphone speech recognition system might leverage an NPU's dedicated convolution units for millisecond-level inference at low power, while an autonomous vehicle's FPGA processes multiple sensor streams with microsecond-level latency.
+部署和推理要求与硬件进行精确匹配。不同平台各有优势：GPU 擅长并行矩阵运算，TPU 针对特定的神经网络计算进行了优化，而微控制器则提供节能高效的处理能力。智能手机上的语音识别系统可能会利用 NPU 的专用卷积单元，以低功耗实现毫秒级推理；而自动驾驶车辆的 FPGA 则以微秒级延迟处理多个传感器数据流。
 
-An end-to-end perspective ensures trade-offs are addressed holistically rather than shifting inefficiencies between pipeline stages. This systems thinking approach becomes particularly critical when deploying to resource-constrained environments, as explored in @sec-ondevice-learning.
+端到端视角能够确保权衡以整体方式处理，而不是将低效从一个管道阶段转移到另一个阶段。当部署到资源受限环境时，这种系统思维方法尤为关键，如@sec-ondevice-learning 所述。
 
-### Lifecycle and Environment Considerations {#sec-efficient-ai-lifecycle-environment-considerations-3abc}
+### 生命周期与环境考量 {#sec-efficient-ai-lifecycle-environment-considerations-3abc}
 
-Efficiency needs differ significantly depending on lifecycle stage and deployment environment—from research prototypes to production systems, from high-performance cloud to resource-constrained edge.
+效率需求会因生命周期阶段和部署环境的不同而显著变化——从研究原型到生产系统，从高性能云到资源受限的边缘设备皆是如此。
 
-In research, the primary focus is often model performance, with efficiency taking a secondary role. Prototypes are trained using abundant compute resources, enabling exploration of large architectures and extensive hyperparameter tuning. Production systems must prioritize efficiency to operate within practical constraints, often involving significant optimization like model pruning, quantization, or retraining. Production also requires continuous monitoring of efficiency metrics and operational frameworks for managing trade-offs at scale—comprehensive production efficiency management strategies are detailed in @sec-ml-operations.
+在研究阶段，主要关注点通常是模型性能，效率则处于次要位置。原型会在充足的计算资源支持下进行训练，从而能够探索大型架构并开展广泛的超参数调优。生产系统必须优先考虑效率，以便在实际约束下运行，通常需要进行诸如模型剪枝、量化或重新训练等大量优化。生产环境还要求持续监控效率指标，并建立用于规模化管理权衡的运维框架——关于全面的生产效率管理策略，详见@sec-ml-operations。
 
-Cloud-based systems handle massive workloads with relatively abundant resources, though energy efficiency and operational costs remain critical. The ML systems design principles covered in @sec-ml-systems provide architectural foundations for building scalable, efficiency-optimized cloud deployments. In contrast, edge and mobile systems operate under strict constraints detailed in our efficiency framework, demanding solutions prioritizing efficiency over raw performance.
+基于云的系统处理海量工作负载，资源相对充足，不过能效和运营成本仍然至关重要。@sec-ml-systems 中介绍的 ML 系统设计原则为构建可扩展、经过效率优化的云部署提供了架构基础。相比之下，边缘和移动系统则在严格约束下运行，我们的效率框架对此有详细说明，这类系统要求优先考虑效率而非原始性能。
 
-Some systems like recommendation engines require frequent retraining to remain effective, depending heavily on data efficiency with actively labeled datasets and sampling strategies. Other systems like embedded models in medical devices require long-term stability with minimal updates. @sec-robust-ai examines how reliability requirements in critical applications influence efficiency optimization strategies.
+某些系统，如推荐引擎，需要频繁重新训练才能保持有效，它们高度依赖数据效率，使用主动标注的数据集和采样策略。另一些系统，如医疗设备中的嵌入式模型，则需要长期稳定运行，且更新频率极低。@sec-robust-ai 探讨了关键应用中的可靠性要求如何影响效率优化策略。
 
-## Societal and Ethical Implications {#sec-efficient-ai-societal-ethical-implications-d0e5}
+## 社会和伦理影响 {#sec-efficient-ai-societal-ethical-implications-d0e5}
 
-While efficiency in machine learning is often framed as a technical challenge, it is also deeply tied to broader questions about AI systems' purpose and impact. Designing efficient systems involves navigating not only practical trade-offs but also complex ethical and philosophical considerations. @sec-responsible-ai provides a comprehensive framework for addressing these ethical considerations.
+尽管机器学习中的效率通常被视为一项技术挑战，但它也与人工智能系统（AI systems）的目的和影响等更广泛的问题密切相关。设计高效系统不仅涉及权衡实际因素，还需要应对复杂的伦理和哲学考量。@sec-responsible-ai 提供了一个全面的框架来解决这些伦理考量。
 
-### Equity and Access {#sec-efficient-ai-equity-access-c38d}
+### 公平与可及性 {#sec-efficient-ai-equity-access-c38d}
 
-Efficiency has the potential to reduce costs, improve scalability, and expand accessibility. However, resources needed to achieve efficiency—advanced hardware, curated datasets, state-of-the-art optimization techniques—are often concentrated in well-funded organizations, creating inequities in who can leverage efficiency gains.
+效率有潜力降低成本、提高可扩展性并扩大可及性。然而，实现效率所需的资源——先进的硬件、精心策划的数据集、最先进的优化技术——通常集中在资金充足的组织中，这在谁能利用效率提升方面造成了不公平。
 
-Training costs for state-of-the-art models like GPT-4 and Gemini Ultra require tens to hundreds of millions of dollars worth of compute [@perrault2024artificial]. Research by [OECD.AI](https://oecd.ai/en/) indicates that 90% of global AI computing capacity is centralized in only five countries [@oecd_ai_2021]. Academic institutions often lack hardware needed to replicate state-of-the-art results, stifling innovation in underfunded sectors. Energy-efficient compute technologies like accelerators for TinyML or Mobile ML present promising avenues for democratization. By enabling powerful processing on low-cost, low-power devices, these technologies allow organizations without high-end infrastructure access to build impactful systems.
+训练 GPT-4 和 Gemini Ultra 等最先进模型所需的计算成本高达数千万至数亿美元[@perrault2024artificial]。[OECD.AI](https://oecd.ai/en/) 的研究表明，全球 90% 的人工智能计算能力集中在仅五个国家[@oecd_ai_2021]。学术机构通常缺乏复制最先进成果所需的硬件，从而扼杀了资金不足领域的创新。TinyML 或 Mobile ML 的加速器等节能计算技术为民主化提供了有前景的途径。通过在低成本、低功耗设备上实现强大的处理能力，这些技术使缺乏高端基础设施的组织能够构建有影响力的系统。
 
-Data efficiency is essential where high-quality datasets are scarce, but achieving it is unequally distributed. NLP for low-resource languages suffers from lack of sufficient training data, leading to significant performance gaps. Efforts like the Masakhane project building open-source datasets for African languages show how collaborative initiatives can address this, though scaling globally requires greater investment. Democratizing data efficiency requires more open sharing of pre-trained models and datasets. Initiatives like Hugging Face's open access to transformers or Meta's No Language Left Behind aim to make state-of-the-art NLP models available worldwide, reducing barriers for data-scarce regions.
+在高质量数据集稀缺的情况下，数据效率至关重要，但其实现却分布不均。低资源语言的自然语言处理（NLP）因缺乏足够的训练数据而面临显著的性能差距。像 Masakhane 项目（为非洲语言构建开源数据集）这样的努力表明了协作倡议如何解决这一问题，尽管在全球范围内推广需要更大的投入。实现数据效率的民主化需要更开放地共享预训练模型和数据集。像 Hugging Face 开放访问 transformers 或 Meta 的 No Language Left Behind 这样的倡议旨在使最先进的 NLP 模型在全球范围内可用，从而减少数据稀缺地区的障碍。
 
-Algorithmic efficiency plays a crucial role in democratizing ML by enabling advanced capabilities on low-cost, resource-constrained devices. AI-powered diagnostic tools on smartphones are transforming healthcare in remote areas, while low-power TinyML models enable environmental monitoring in regions without reliable electricity.
+算法效率在机器学习（ML）民主化中发挥着关键作用，它使得在低成本、资源受限的设备上实现高级功能成为可能。智能手机上的人工智能驱动诊断工具正在改变偏远地区的医疗保健，而低功耗的 TinyML 模型则使得在没有可靠电力供应的地区进行环境监测成为可能。
 
-Technologies like [TensorFlow Lite](https://ai.google.dev/edge/litert) and [PyTorch Mobile](https://pytorch.org/mobile/home/) allow developers to deploy lightweight models on everyday devices, expanding access in resource-constrained settings. Open-source efforts to share pre-optimized models like MobileNet or EfficientNet play a critical role by allowing under-resourced organizations to deploy state-of-the-art solutions.
+[TensorFlow Lite](https://ai.google.dev/edge/litert) 和 [PyTorch Mobile](https://pytorch.org/mobile/home/) 等技术允许开发者在日常设备上部署轻量级模型，从而在资源受限的环境中扩大了可及性。共享 MobileNet 或 EfficientNet 等预优化模型的开源工作发挥着关键作用，使资源不足的组织能够部署最先进的解决方案。
 
-### Balancing Innovation with Efficiency Demands {#sec-efficient-ai-balancing-innovation-efficiency-demands-7a44}
+### 平衡创新与效率需求 {#sec-efficient-ai-balancing-innovation-efficiency-demands-7a44}
 
-The pursuit of efficiency often brings tension between optimizing for what is known and exploring what is new. Equity concerns are intensified by this tension: resource concentration in well-funded organizations enables expensive exploratory research, while resource-constrained institutions must focus on incremental improvements.
+对效率的追求常常在优化已知事物和探索新事物之间带来张力。这种张力加剧了公平性问题：资金充足的组织能够集中资源进行昂贵的探索性研究，而资源受限的机构则必须专注于渐进式改进。
 
-Efficiency often favors established techniques proven to work well. Optimizing neural networks through pruning, quantization, or distillation typically refines existing architectures rather than developing entirely new ones. Consider the shift from traditional ML to deep learning: early neural network research in the 1990s-2000s required significant resources and often failed to outperform simpler methods, yet researchers persisted, eventually leading to breakthroughs defining modern AI.
+效率通常倾向于已证明行之有效的既定技术。通过剪枝（pruning）、量化（quantization）或知识蒸馏（distillation）来优化神经网络，通常是改进现有架构，而不是开发全新的架构。考虑从传统机器学习（ML）到深度学习的转变：1990年代至2000年代早期的神经网络研究需要大量资源，并且常常未能超越更简单的方法，但研究人员坚持不懈，最终取得了定义现代人工智能的突破。
 
-Pioneering research often requires significant resources. Large language models like GPT-4 or PaLM are not inherently efficient—their training consumes enormous compute and energy. Yet these models have opened entirely new possibilities, prompting advancements that eventually lead to more efficient systems like smaller fine-tuned versions.
+开创性研究通常需要大量资源。像 GPT-4 或 PaLM 这样的大语言模型（Large Language Model）并非天生高效——它们的训练消耗了巨大的计算和能源。然而，这些模型开辟了全新的可能性，推动了最终能带来更高效系统（如更小的微调版本）的进步。
 
-This reliance on resource-intensive innovation raises questions about who gets to participate. Well-funded organizations can afford to explore new frontiers, while smaller institutions may be constrained to incremental improvements prioritizing efficiency over novelty.
+这种对资源密集型创新的依赖引发了关于谁能参与的问题。资金充足的组织能够承担探索新领域，而小型机构可能受限于渐进式改进，将效率置于新颖性之上。
 
-Efficiency-focused design often requires adhering to strict constraints like reducing model size or latency. While constraints can drive ingenuity, they can also limit exploration scope. However, the drive for efficiency can positively impact innovation—constraints force creative thinking, leading to new methods maximizing performance within tight resource budgets. Techniques like NAS and attention mechanisms arose partly from the need to balance performance and efficiency.
+注重效率的设计通常需要遵守严格的限制，例如减小模型尺寸或降低延迟。虽然限制可以激发创造力，但它们也可能限制探索范围。然而，对效率的追求可以对创新产生积极影响——限制迫使人们进行创造性思考，从而产生在严格资源预算内最大化性能的新方法。像神经架构搜索（NAS）和注意力机制（attention mechanisms）这样的技术，部分是由于需要在性能和效率之间取得平衡而产生的。
 
-Organizations and researchers must recognize when to prioritize efficiency and when to embrace experimentation risks. Applied systems for real-world deployment may demand strict efficiency, while exploratory research labs can focus on pushing boundaries. The relationship between innovation and efficiency is not adversarial but complementary—efficient systems create foundations for scalable applications, while resource-intensive experimentation drives breakthroughs redefining what's possible.
+组织和研究人员必须认识到何时优先考虑效率，何时承担实验风险。用于实际部署的应用系统可能要求严格的效率，而探索性研究实验室则可以专注于突破界限。创新与效率之间的关系并非对立，而是互补的——高效系统为可扩展应用奠定了基础，而资源密集型实验则推动了突破，重新定义了可能性。
 
-### Optimization Limits {#sec-efficient-ai-optimization-limits-20f0}
+### 优化极限 {#sec-efficient-ai-optimization-limits-20f0}
 
-The tensions between equity, innovation, and efficiency ultimately stem from a fundamental characteristic of optimization: diminishing returns. Optimization is central to building efficient ML systems, but it is not infinite. As systems become more refined, each additional improvement requires exponentially more effort, time, or resources while delivering increasingly smaller benefits.
+公平、创新和效率之间的张力最终源于优化的一个基本特征：收益递减。优化是构建高效机器学习（ML）系统的核心，但它并非无限。随着系统变得更加完善，每一次额外的改进都需要成倍增加的努力、时间或资源，同时带来的收益却越来越小。
 
-The No Free Lunch (NFL) theorems[^fn-nfl-theorems] for optimization illustrate inherent limitations. According to NFL theorems, no single optimization algorithm can outperform all others across every possible problem, implying optimization technique effectiveness is highly problem-specific [@wolpert1997no].
+优化领域的“免费午餐”（No Free Lunch, NFL）定理[^fn-nfl-theorems]阐明了其固有的局限性。根据 NFL 定理，没有哪一个优化算法能够在所有可能的问题上都优于其他所有算法，这意味着优化技术的有效性高度依赖于具体问题[@wolpert1997no]。
 
-[^fn-nfl-theorems]: **No Free Lunch (NFL) Theorems**: Mathematical proof by Wolpert and Macready (1997) showing that averaged over all possible optimization problems, every algorithm performs equally well. In ML context, no universal optimization technique exists—methods must be tailored to specific problem domains.
+[^fn-nfl-theorems]: **“免费午餐”（NFL）定理**：由 Wolpert 和 Macready（1997）提出的数学证明，表明在所有可能的优化问题上平均来看，每个算法的表现都一样好。在机器学习（ML）语境中，不存在通用的优化技术——方法必须根据特定的问题领域进行定制。
 
-For example, compressing an ML model can initially reduce memory and compute requirements significantly with minimal accuracy loss. However, as compression progresses, maintaining performance becomes increasingly challenging. Achieving additional gains may necessitate sophisticated techniques like hardware-specific optimizations or extensive retraining, increasing complexity and cost. These costs extend beyond financial investment to include time, expertise, iterative testing, and potential trade-offs in robustness and generalizability.
+例如，压缩机器学习（ML）模型最初可以显著减少内存和计算需求，而准确性损失极小。然而，随着压缩的进展，保持性能变得越来越困难。要获得额外的收益，可能需要更复杂的技术，如硬件特定优化或大量的再训练，这会增加复杂性和成本。这些成本不仅限于财务投资，还包括时间、专业知识、迭代测试以及在鲁棒性和泛化能力方面的潜在权衡。
 
-The NFL theorems highlight that no universal optimization solution exists, emphasizing need to balance efficiency pursuits with practical considerations. Over-optimization risks wasted resources and reduced adaptability, complicating future updates. Identifying when a system is "good enough" ensures resources are allocated effectively.
+NFL 定理强调不存在通用的优化解决方案，这突出了在追求效率时需要平衡实际考量。过度优化可能会导致资源浪费和适应性降低，使未来的更新复杂化。确定系统何时“足够好”可以确保资源得到有效分配。
 
-Similarly, optimizing datasets for training efficiency may initially save resources, but excessively reducing dataset size risks compromising diversity and weakening generalization. Pushing hardware to performance limits may improve metrics like latency, yet associated reliability concerns and engineering costs can outweigh gains.
+同样，为提高训练效率而优化数据集最初可能会节省资源，但过度减小数据集大小可能会损害多样性并削弱泛化能力。将硬件推向性能极限可能会改善延迟等指标，但相关的可靠性问题和工程成本可能会超过收益。
 
-Understanding optimization limits is essential for creating systems balancing efficiency with practicality and sustainability. This perspective helps avoid over-optimization and ensures resources are invested in areas with meaningful returns.
+理解优化极限对于创建平衡效率、实用性和可持续性的系统至关重要。这种视角有助于避免过度优化，并确保资源投入到具有有意义回报的领域。
 
-#### Moore's Law Case Study {#sec-efficient-ai-moores-law-case-study-5767}
+#### 摩尔定律案例研究 {#sec-efficient-ai-moores-law-case-study-5767}
 
-One of the most insightful examples of optimization limits appears in Moore's Law and the economic curve underlying it. While Moore's Law is celebrated as a predictor of exponential computational power growth, its success relied on intricate economic balance. The relationship between integration and cost provides a compelling analogy for diminishing returns in ML optimization.
-
-@fig-moores-law-plot shows relative manufacturing cost per component as the number of components in an integrated circuit increases. Initially, as more components are packed onto a chip, cost per component decreases due to economies of scale—higher integration reduces need for packaging and interconnects. Moving from hundreds to thousands of components drastically reduced costs and improved performance [@moore2021cramming].
+摩尔定律及其背后的经济曲线是优化极限最富有洞察力的例子之一。虽然摩尔定律被誉为计算能力指数级增长的预测器，但其成功依赖于复杂的经济平衡。集成度与成本之间的关系为机器学习（ML）优化中的收益递减提供了一个引人入胜的类比。@fig-moores-law-plot 展示了随着集成电路中元件数量的增加，每个元件的相对制造成本。最初，随着芯片上封装的元件越多，由于规模经济效应，每个元件的成本会降低——更高的集成度减少了对封装和互连的需求。从数百个元件增加到数千个元件显著降低了成本并提高了性能[@moore2021cramming]。
 
 ::: {#fig-moores-law-plot fig-env="figure" fig-pos="htb"}
+
 ```{.tikz}
 \scalebox{0.8}{
 \begin{tikzpicture}[font=\small\usefont{T1}{phv}{m}{n}]
@@ -1509,54 +1526,56 @@ to [out=320,in=250,distance=85]node[above=5pt,pos=0.45]{1970}(axis cs:24800.4, 1
 \end{loglogaxis}
 \end{tikzpicture}}
 ```
-: **Moore's Law Economics**: Declining per-component manufacturing costs initially drove exponential growth in integrated circuit complexity, but diminishing returns eventually limited further cost reductions. This relationship mirrors optimization challenges in machine learning, where increasing model complexity yields diminishing gains in performance relative to computational expense. Source: [@moore2021cramming].
+
+: **摩尔定律经济学**：最初，单位元件制造成本的下降推动了集成电路复杂度的指数级增长，但收益递减最终限制了进一步的成本降低。这种关系反映了机器学习中的优化挑战，即模型复杂度的增加所带来的性能提升相对于计算开销而言收益递减。来源：[@moore2021cramming]。
+
 :::
 
-However, as integration continues, the curve begins to rise. Components packed closer together face reliability issues like increased heat dissipation and signal interference. Addressing these requires more sophisticated manufacturing techniques—advanced lithography, error correction, improved materials—increasing complexity and cost. This U-shaped curve captures the fundamental trade-off: early improvements yield substantial benefits, but beyond a certain point, each additional gain comes at greater cost.
+然而，随着集成度的持续提高，曲线开始上升。元件封装得越紧密，就越会面临可靠性问题，例如散热增加和信号干扰。解决这些问题需要更复杂的制造技术——先进的光刻（lithography）、错误校正、改进的材料——这增加了复杂性和成本。这种 U 形曲线捕捉了根本性的权衡：早期的改进会带来显著的收益，但超过某个点后，每增加一点收益都会付出更高的成本。
 
-The dynamics mirror ML optimization challenges. Compressing a deep learning model to reduce size and energy consumption follows a similar trajectory. Initial optimizations like pruning redundant parameters or reducing precision often lead to significant savings with minimal accuracy impact. However, as compression progresses, performance losses become harder to recover. Techniques like quantization or hardware-specific tuning can restore some performance, but these add complexity and cost.
+这种动态反映了机器学习（ML）的优化挑战。压缩深度学习模型以减小尺寸和能耗遵循类似的轨迹。最初的优化，例如剪枝冗余参数或降低精度，通常会带来显著的节省，同时对准确性的影响最小。然而，随着压缩的进展，性能损失变得越来越难以恢复。量化（quantization）或硬件特定调优等技术可以恢复部分性能，但这会增加复杂性和成本。
 
-Similarly, in data efficiency, reducing training dataset size often improves computational efficiency initially. Yet as datasets shrink further, they may lose diversity, compromising generalization. Addressing this often involves synthetic data or sophisticated augmentation, demanding additional engineering effort.
+同样，在数据效率方面，减少训练数据集大小最初通常会提高计算效率。然而，随着数据集进一步缩小，它们可能会失去多样性，从而损害泛化能力。解决这个问题通常涉及合成数据或复杂的增强技术，这需要额外的工程投入。
 
-The Moore's Law plot serves as a visual reminder that optimization is not infinite. The cost-benefit balance is always context-dependent, and the point of diminishing returns varies based on system goals and constraints. ML practitioners, like semiconductor engineers, must identify when further optimization ceases to provide meaningful benefits. Over-optimization can lead to wasted resources, reduced adaptability, and systems overly specialized to initial conditions.
+摩尔定律图表直观地提醒我们，优化并非无限。成本效益平衡总是依赖于具体情境，收益递减点也因系统目标和约束而异。机器学习（ML）从业者，就像半导体工程师一样，必须识别何时进一步优化不再能带来有意义的收益。过度优化可能导致资源浪费、适应性降低，以及系统过度专业化以适应初始条件。
 
-## Fallacies and Pitfalls {#sec-efficient-ai-fallacies-pitfalls-f804}
+## 常见谬误与陷阱 {#sec-efficient-ai-fallacies-pitfalls-f804}
 
-Efficiency in AI systems involves complex trade-offs between multiple competing objectives that often pull in different directions. The mathematical elegance of scaling laws can create false confidence about predictable optimization paths, while diverse deployment context requirements create misconceptions about universal efficiency strategies.
+人工智能系统中的效率涉及多个相互竞争目标之间复杂的权衡，这些目标往往朝着不同方向拉扯。扩展定律在数学上的优雅性可能会让人对可预测的优化路径产生错误的信心，而多样化的部署场景需求则会引发对通用效率策略的误解。
 
-**Fallacy:** _Efficiency optimizations always improve system performance across all metrics._
+**谬误：** _效率优化总是会在所有指标上提升系统性能。_
 
-This misconception leads teams to apply efficiency techniques without understanding trade-offs and side effects. Optimizing for computational efficiency might degrade accuracy, improving memory efficiency could increase latency, and reducing model size often requires more complex training procedures. Efficiency gains in one dimension frequently create costs in others that may be unacceptable for specific scenarios. Effective efficiency optimization requires careful analysis of which metrics matter most and acceptance that some performance aspects will necessarily be sacrificed.
+这种误解会导致团队在不理解权衡和副作用的情况下应用效率技术。针对计算效率的优化可能会降低准确率，提高内存效率却可能增加延迟，而减小模型大小通常又需要更复杂的训练流程。在一个维度上的效率提升，往往会在其他维度上带来代价，而这些代价在特定场景中可能是不可接受的。有效的效率优化要求仔细分析哪些指标最重要，并接受某些性能方面必然会被牺牲。
 
-**Pitfall:** _Assuming scaling laws predict efficiency requirements linearly across all model sizes._
+**陷阱：** _假设扩展定律会在所有模型规模上以线性方式预测效率需求。_
 
-Teams often extrapolate efficiency requirements based on scaling law relationships without considering breakdown points where these laws no longer apply. Scaling laws provide useful guidance for moderate increases, but fail to account for emergent behaviors, architectural constraints, and infrastructure limitations appearing at extreme scales. Applying scaling law predictions beyond validated ranges can lead to wildly inaccurate resource estimates and deployment failures. Successful efficiency planning requires understanding both utility and limits of scaling law frameworks.
+团队常常基于扩展定律的关系外推效率需求，却没有考虑这些定律失效的临界点。扩展定律在适度增长时能提供有用的指导，但无法解释在极端规模下出现的新兴行为、架构约束和基础设施限制。将扩展定律的预测应用到未经验证的范围之外，可能会导致极其不准确的资源估算和部署失败。成功的效率规划需要同时理解扩展定律框架的价值和局限。
 
-**Fallacy:** _Edge deployment efficiency requirements are simply scaled-down versions of cloud requirements._
+**谬误：** _边缘部署的效率需求只是云端需求的缩小版。_
 
-This belief assumes edge deployment is merely cloud deployment with smaller models and less computation. Edge environments introduce qualitatively different constraints including real-time processing requirements, power consumption limits, thermal management needs, and connectivity variability. Optimization strategies working in cloud environments often fail catastrophically in edge contexts. Edge efficiency requires different approaches prioritizing predictable performance, energy efficiency, and robust operation under varying conditions.
+这种看法假设边缘部署只是使用更小的模型和更少的计算量来实现的云端部署。边缘环境引入了本质上不同的约束，包括实时处理要求、功耗限制、散热管理需求以及连接性的波动。那些在云环境中有效的优化策略，在边缘场景中往往会彻底失效。边缘效率要求采用不同的方法，重点关注可预测的性能、能源效率以及在变化条件下的稳健运行。
 
-**Pitfall:** _Focusing on algorithmic efficiency while ignoring system-level efficiency factors._
+**陷阱：** _只关注算法效率，而忽视系统级效率因素。_
 
-Many practitioners optimize algorithmic complexity metrics like FLOPs or parameter counts without considering how improvements translate to actual system performance. Real system efficiency depends on memory access patterns, data movement costs, hardware utilization characteristics, and software stack overhead that may not correlate with theoretical complexity metrics. A model with fewer parameters might still perform worse due to irregular memory access patterns or poor hardware mapping. Comprehensive efficiency optimization requires measuring and optimizing actual system performance rather than relying solely on algorithmic complexity indicators.
+许多从业者只优化 FLOPs 或参数数量等算法复杂度指标，却没有考虑这些改进如何转化为实际的系统性能。真实的系统效率取决于内存访问模式、数据移动成本、硬件利用特性以及软件栈开销，而这些因素未必与理论复杂度指标相关。即使模型参数更少，如果存在不规则的内存访问模式或较差的硬件映射，性能仍可能更差。全面的效率优化要求测量并优化真实的系统性能，而不是仅仅依赖算法复杂度指标。
 
-## Summary {#sec-efficient-ai-summary-66bb}
+## 总结 {#sec-efficient-ai-summary-66bb}
 
-Efficiency has emerged as a design principle that transforms how we approach machine learning systems, moving beyond simple performance optimization toward comprehensive resource stewardship. This chapter revealed how scaling laws provide empirical insights into relationships between model performance and computational resources, establishing efficiency as a strategic advantage enabling broader accessibility, sustainability, and innovation. The interdependencies between algorithmic, compute, and data efficiency create a complex landscape where decisions in one dimension cascade throughout the entire system, requiring a holistic perspective balancing trade-offs across the complete ML pipeline.
+效率已成为一种设计原则，正在改变我们构建机器学习系统的方式；它不再只是简单的性能优化，而是转向对资源的全面管理。本章展示了缩放定律如何为模型性能与计算资源之间的关系提供经验性的洞见，并将效率确立为一种战略优势，使更广泛的可访问性、可持续性和创新成为可能。算法效率、计算效率与数据效率之间的相互依赖，形成了一个复杂的局面：某一维度上的决策会层层传导至整个系统，因此需要一种整体视角，在完整的 ML 流水线中平衡各种权衡。
 
-The practical challenges of designing efficient systems highlight the importance of context-aware decision making, where deployment environments shape efficiency priorities. Cloud systems leverage abundant resources for scalability and throughput, while edge deployments optimize for real-time performance within strict power constraints, and TinyML applications push the boundaries of what's achievable with minimal resources. These diverse requirements demand sophisticated strategies including end-to-end co-design, automated optimization tools, and careful prioritization based on operational constraints. The emergence of scaling law breakdowns and tension between innovation and efficiency underscore that optimal system design requires addressing not just technical trade-offs but broader considerations of equity, sustainability, and long-term impact.
+设计高效系统的实际挑战凸显了情境感知决策的重要性，因为部署环境会塑造效率优先级。云系统利用充足的资源实现可扩展性和吞吐量；边缘部署则在严格的功耗约束下优化实时性能；而 TinyML 应用则在极少资源条件下不断逼近可实现能力的边界。这些多样化的需求要求采用复杂的策略，包括端到端协同设计、自动化优化工具，以及基于运行约束进行审慎排序。缩放定律失效现象以及创新与效率之间的张力表明，最优系统设计不仅需要处理技术权衡，还需要考虑公平性、可持续性和长期影响等更广泛的因素。
 
-::: {.callout-important title="Key Takeaways"}
-* Efficiency is a strategic enabler that democratizes access to AI capabilities across diverse deployment contexts
-* Scaling laws provide predictive frameworks for resource allocation, but their limits reveal opportunities for architectural innovation
-* Trade-offs between algorithmic, compute, and data efficiency are interconnected and context-dependent, requiring holistic optimization strategies
-* Automation tools and end-to-end co-design approaches can transform efficiency constraints into opportunities for system synergy
+::: {.callout-important title="关键要点"}
+
+* 效率是一种战略性赋能因素，能够让不同部署环境中的用户都能获取 AI 能力
+* 缩放定律为资源分配提供了预测框架，但其局限性也揭示了架构创新的机会
+* 算法效率、计算效率与数据效率之间的权衡彼此关联且依赖于具体情境，因此需要整体性的优化策略
+* 自动化工具和端到端协同设计方法可以将效率约束转化为系统协同的机会
+
 :::
 
-Having established the three-pillar efficiency framework and explored scaling laws as the quantitative foundation for resource allocation, the following chapters provide the specific engineering techniques to achieve efficiency in each dimension. @sec-model-optimizations focuses on algorithmic efficiency through systematic approaches to reducing model complexity while preserving performance. The chapter covers quantization techniques that reduce numerical precision, pruning methods that eliminate redundant parameters, and knowledge distillation approaches that transfer capabilities from large models to smaller ones.
+在建立了三支柱效率框架并将缩放定律作为资源分配的定量基础之后，后续章节将提供在各个维度上实现效率的具体工程技术。@sec-model-optimizations 侧重于算法效率，通过系统化方法降低模型复杂度，同时尽量保持性能。该章涵盖量化技术，这些技术通过降低数值精度来减少开销；剪枝方法，这些方法通过删除冗余参数来精简模型；以及知识蒸馏方法，这些方法将大型模型的能力迁移到较小模型中。@sec-ai-acceleration 通过探讨专用硬件和优化的软件实现如何最大化每单位计算资源的性能，来讨论计算效率。主题包括 GPU 优化、AI 加速器架构，以及提升吞吐量和降低延迟的系统级优化。@sec-benchmarking-ai 提供了量化三种效率提升所必需的测量方法，涵盖性能评估框架、能耗测量技术以及比较分析方法。
 
-@sec-ai-acceleration addresses compute efficiency by exploring how specialized hardware and optimized software implementations maximize performance per unit of computational resource. Topics include GPU optimization, AI accelerator architectures, and system-level optimizations that improve throughput and reduce latency. @sec-benchmarking-ai provides the measurement methodologies essential for quantifying efficiency gains across all three dimensions, covering performance evaluation frameworks, energy measurement techniques, and comparative analysis methods.
+从原则到具体技术再到测量方法的这一推进过程，体现了在机器学习系统中实现真实世界效率所必需的系统化工程方法。后续每一章都建立在这里奠定的基础理解之上，形成一个全面的性能工程工具箱，用于应对定义高效 AI 系统设计的那些复杂且相互关联的权衡。
 
-This progression from principles to specific techniques to measurement methodologies reflects the systematic engineering approach necessary for achieving real-world efficiency in machine learning systems. Each subsequent chapter builds upon the foundational understanding established here, creating a comprehensive toolkit for performance engineering that addresses the complex, interconnected trade-offs that define efficient AI system design.
-
-These efficiency principles establish the foundation for the specific optimization techniques explored in @sec-model-optimizations, where detailed algorithms for quantization, pruning, and knowledge distillation provide concrete tools for achieving the efficiency goals outlined here. As machine learning systems continue scaling in complexity and reach, the principles of efficient design will remain essential for creating systems that are not only performant but also sustainable, accessible, and aligned with broader societal goals of responsible AI development.
+这些效率原则为@sec-model-optimizations 中探讨的具体优化技术奠定了基础；在那里，量化、剪枝和知识蒸馏的详细算法提供了实现此处所概述效率目标的具体工具。随着机器学习系统在复杂度和应用范围上持续扩展，高效设计原则将继续成为构建不仅性能优异，而且可持续、易获取，并与负责任 AI 发展这一更广泛社会目标相一致的系统的关键。
