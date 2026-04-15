@@ -561,7 +561,9 @@ for batch in range(32):            # Process 32 samples at once
         output[batch, out_neuron] = activation(sum +
                                     bias[out_neuron])
 ```
-:::#### 顺序标量执行 {#sec-ai-acceleration-sequential-scalar-execution-d063}
+:::
+
+#### 顺序标量执行 {#sec-ai-acceleration-sequential-scalar-execution-d063}
 
 传统的标量处理器顺序执行这些操作，一次处理一个数值。对于上述包含 32 个样本批次的线性层示例，计算输出需要超过 400 万次乘累加操作。每项操作都涉及加载一个输入值和一个权重值，将它们相乘，并累加结果。当处理神经网络所需的海量相同操作时，这种顺序方法变得非常低效。
 
@@ -621,8 +623,6 @@ loop_batch:
 这些概念在机器学习领域再次兴起，因为神经网络展现出非常适合向量化执行的结构。曾经加速数值模拟的相同操作（如向量加法、乘法和归约），现在正驱动着机器学习工作负载的执行。虽然现代人工智能加速器的规模和专业化程度与历史前辈有所不同，但底层的架构原理保持不变。向量处理在神经网络加速中的复兴突显了其在实现高计算效率方面的实用性。
 
 向量操作通过实现独立数据元素的高效并行处理，为神经网络加速奠定了基础。虽然向量操作擅长逐元素转换（如激活函数），但神经网络还需要结构化计算，将多个输入特征组合以产生输出特征，这些转换自然地表现为矩阵运算。这种跨多个维度同时进行协调计算的需求引出了下一个架构原语：矩阵运算。
-
-:::
 
 ### 矩阵运算 {#sec-ai-acceleration-matrix-operations-508d}
 
@@ -760,7 +760,9 @@ output = gamma * (H - mean) / sqrt(var + eps) + beta
 # Normalization
 ```
 
-:::#### 非线性函数的硬件实现 {#sec-ai-acceleration-hardware-implementation-nonlinear-functions-004d}
+:::
+
+#### 非线性函数的硬件实现 {#sec-ai-acceleration-hardware-implementation-nonlinear-functions-004d}
 
 当检查这些操作在传统处理器上的实现时，其计算复杂性变得显而易见。这些看似简单的数学运算会转化为复杂的指令序列。以批归一化的计算为例：计算平方根需要多次数值逼近迭代，而 softmax 等操作中的指数函数则需要级数展开或查找表[@Ioffe2015]。即使是简单的 ReLU 激活也会引入分支逻辑，从而可能中断指令流水线（参见@lst-traditional_overhead 中的示例）。
 
@@ -847,8 +849,6 @@ vrsqrt.v v5, v1          # Fast reciprocal square root
 机器学习工作负载重新引入了对专用功能单元的强烈需求，因为激活函数、归一化层和指数变换是神经网络计算的基础。现代人工智能加速器不再依赖迭代软件逼近，而是为这些操作实现快速、固定延迟的 SFU，这反映了科学计算的历史趋势。专用特殊功能单元的再次出现强调了硬件演进中的持续循环，即特定领域的需求驱动了在新计算范式中对经典架构概念的重塑。
 
 向量、矩阵和特殊功能单元的结合为现代人工智能加速器提供了计算基础。然而，这些处理原语的有效利用在很大程度上取决于数据移动和访问模式。这引导我们去研究那些在神经网络执行中实现高效数据流的架构、层级和策略。
-
-:::
 
 ### 计算单元与执行模型 {#sec-ai-acceleration-compute-units-execution-models-f406}
 
