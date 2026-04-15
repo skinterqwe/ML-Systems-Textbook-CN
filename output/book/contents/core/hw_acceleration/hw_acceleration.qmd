@@ -630,11 +630,11 @@ loop_batch:
 
 :::
 
-### Matrix Operations {#sec-ai-acceleration-matrix-operations-508d}
+### 矩阵运算 {#sec-ai-acceleration-matrix-operations-508d}
 
 矩阵运算构成了神经网络的计算支柱，通过权重、激活值和梯度的结构化模式转换高维数据[@Goodfellow-et-al-2016]。虽然向量运算独立地处理元素，但矩阵运算同时协调跨多个维度的计算。这些运算揭示了驱动硬件加速策略的模式。
 
-#### Matrix Operations in Neural Networks {#sec-ai-acceleration-matrix-operations-neural-networks-527a}
+#### 神经网络中的矩阵运算 {#sec-ai-acceleration-matrix-operations-neural-networks-527a}
 
 神经网络计算分解为分层矩阵运算。如@lst-linear_matrix_hierarchy 所示，线性层通过在一个批次中将输入特征转换为输出神经元来展示这种层次结构。
 
@@ -661,7 +661,7 @@ output = relu(Z)  # Vector: applies activation to
 
 除了简单的线性层，神经网络在各种架构模式中都采用了矩阵运算。
 
-#### Types of Matrix Computations in Neural Networks {#sec-ai-acceleration-types-matrix-computations-neural-networks-b497}
+#### 神经网络中的矩阵计算类型 {#sec-ai-acceleration-types-matrix-computations-neural-networks-b497}
 
 如@lst-matrix_patterns 所示，矩阵运算在现代神经架构中始终存在。卷积运算通过 im2col 技术 [^fn-im2col] 转换为矩阵乘法，从而能够在针对矩阵运算优化的硬件上高效执行。
 
@@ -692,7 +692,7 @@ output = matmul(kernel, patches)
 
 这种普遍存在的矩阵乘法模式对硬件设计有着直接的影响。对高效矩阵运算的需求驱动了专用硬件架构的发展，这些架构可以大规模处理这些计算。接下来的章节将探讨现代 AI 加速器如何实现矩阵运算，重点关注它们的架构特性和性能优化。
 
-#### Matrix Operations Hardware Acceleration {#sec-ai-acceleration-matrix-operations-hardware-acceleration-514a}
+#### 矩阵运算的硬件加速 {#sec-ai-acceleration-matrix-operations-hardware-acceleration-514a}
 
 矩阵运算的计算需求驱动了专门的硬件优化。现代处理器实现了超越向量处理能力的专用矩阵单元。这种矩阵加速的一个例子如@lst-matrix_unit 所示。
 
@@ -728,7 +728,7 @@ mstore (output_ptr), mr3    # Store computed output block
 
 : **运算特性**：矩阵运算擅长神经网络层中常见的多对多转换，而向量运算则能高效处理激活函数和归一化等一对一转换。了解这些区别有助于为不同的机器学习任务选择合适的计算原语，并影响系统性能。 {#tbl-matrix}
 
-#### Historical Foundations of Matrix Computation {#sec-ai-acceleration-historical-foundations-matrix-computation-402e}
+#### 矩阵计算的历史基础 {#sec-ai-acceleration-historical-foundations-matrix-computation-402e}
 
 矩阵运算长期以来一直是计算数学的基石，其应用范围从数值模拟扩展到图形处理[@Golub1996Matrix]。矩阵乘法和转换的结构化特性使其成为早期计算架构中加速的自然目标。在 20 世纪 80 年代和 90 年代，针对矩阵计算优化的专用数字信号处理器 (DSP) 和图形处理器 (GPU) 在加速图像处理、科学计算和 3D 渲染等工作负载方面发挥了关键作用[@owens2008gpu]。
 
