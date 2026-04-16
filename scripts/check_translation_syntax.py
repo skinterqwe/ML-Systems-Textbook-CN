@@ -52,10 +52,13 @@ _XREF_CJK_PATTERN = re.compile(
 _CITATION_CJK_PATTERN = re.compile(
     r"(\[[\]@][^\]]*\])([\u4e00-\u9fff])"
 )
+_FOOTNOTE_CJK_PATTERN = re.compile(
+    r"(\[\^[a-zA-Z0-9_-]+\])[\u4e00-\u9fff]"
+)
 
 
 def check_xref_glued(lines: List[str]) -> List[Tuple[int, str, str]]:
-    """Detect @fig-xxx中文, [@cite]中文 patterns."""
+    """Detect @fig-xxx中文, [@cite]中文, [^fn-xxx]中文 patterns."""
     issues = []
     in_code = False
     for i, line in enumerate(lines, 1):
@@ -69,6 +72,7 @@ def check_xref_glued(lines: List[str]) -> List[Tuple[int, str, str]]:
         for pat, desc in [
             (_XREF_CJK_PATTERN, "cross-reference"),
             (_CITATION_CJK_PATTERN, "citation"),
+            (_FOOTNOTE_CJK_PATTERN, "footnote"),
         ]:
             m = pat.search(stripped)
             if m:
@@ -253,7 +257,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Checks:
-  [xref-glued]     Cross-reference @fig-xxx glued to CJK characters
+  [xref-glued]     Cross-reference/footnote/citation glued to CJK characters
   [fence-div]      Fence div ::: unclosed or unmatched
   [shortcode]      Shortcode {{< >}} incorrectly wrapped in :::
   [closing-glued]  ::: closing marker glued to content lines
