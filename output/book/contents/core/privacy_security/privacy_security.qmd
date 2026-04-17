@@ -1810,86 +1810,64 @@ $$这一特性支持在不可信环境中的隐私保护计算，例如对敏感
 
 最后，组织应建立事后复盘机制。这包括记录根本原因、识别检测或响应中的缺口，以及更新策略和操作手册。事件复盘有助于将运行失效转化为在设计-部署-监控生命周期中的可操作改进。
 
-### Hardware Security Foundations {#sec-security-privacy-hardware-security-foundations-f5e8}
+### 硬件安全基础 {#sec-security-privacy-hardware-security-foundations-f5e8}
 
-The software-layer defenses we've explored—input validation, output monitoring, and integrity checks—establish important protections, but they ultimately depend on the underlying hardware and firmware being trustworthy. If an attacker compromises the operating system, gains physical access to the device, or exploits vulnerabilities in the processor itself, these software defenses can be bypassed or disabled entirely. This limitation motivates hardware-based security mechanisms that operate below the software layer, creating a hardware root of trust that remains secure even when higher-level systems are compromised.
+我们前面探讨的软件层防御——输入验证、输出监控和完整性检查——建立了重要的保护，但它们最终依赖于底层硬件和固件的可信性。如果攻击者攻破了操作系统、获得了对设备的物理访问权限，或者利用了处理器本身的漏洞，这些软件防御就可能被完全绕过或禁用。这一局限性催生了硬件安全机制，它在软件层之下运行，构建了即使高层系统被攻破也能保持安全的硬件信任根。
 
-At the foundational level of our defensive framework, hardware-based security mechanisms provide the trust anchor for all higher-layer protections. Machine learning systems deployed in edge devices, embedded systems, and untrusted cloud infrastructure increasingly rely on hardware-based security features to establish this foundation. The hardware acceleration platforms discussed in @sec-ai-acceleration—including GPUs, TPUs, and specialized ML accelerators—often incorporate these security features (secure enclaves, trusted execution environments, hardware cryptographic units), while edge deployment scenarios from @sec-ondevice-learning present unique security challenges.
+在我们防御框架的基础层，硬件安全机制为所有高层保护提供了信任锚点。部署在边缘设备、嵌入式系统和不可信云基础设施中的机器学习系统越来越依赖硬件安全特性来建立这一基础。@sec-ai-acceleration 中讨论的硬件加速平台——包括 GPU、TPU 和专用 ML 加速器——通常集成了这些安全特性（安全飞地、可信执行环境、硬件加密单元），而来自 @sec-ondevice-learning 的边缘部署场景则带来了独特的安全挑战。
 
-These hardware security mechanisms become particularly crucial when systems must meet regulatory compliance requirements. Healthcare ML systems handling protected health information under HIPAA must implement "appropriate technical safeguards" including access controls and encryption. Systems processing EU citizens' data under GDPR must demonstrate "appropriate technical and organizational measures" with privacy by design principles embedded at the hardware level.
+当系统必须满足合规性要求时，这些硬件安全机制变得尤为关键。依据 HIPAA 处理受保护健康信息的医疗 ML 系统必须实施"适当的技术保障措施"，包括访问控制和加密。依据 GDPR 处理欧盟公民数据的系统必须证明其采取了"适当的技术和组织措施"，并在硬件层面嵌入隐私设计原则。
 
-To understand how hardware security protects ML systems, imagine building a secure fortress for your most valuable assets. Each hardware security primitive serves a distinct defensive role:
+为了理解硬件安全如何保护 ML 系统，可以想象为你最珍贵的资产建造一座安全堡垒。每个硬件安全原语各司其职：
 
-+-----------------------+----------------------------------------------------------------------+
-| **Mechanism**         | **Fortress Analogy and Function**                                    |
-+:======================+:=====================================================================+
-| **Secure Boot**       | Functions like a trusted gatekeeper checking credentials of everyone |
-|                       | entering the fortress at dawn. Before your system runs any code,     |
-|                       | Secure Boot cryptographically verifies that the firmware and         |
-|                       | operating system haven't been tampered with.                         |
-+-----------------------+----------------------------------------------------------------------+
-| **Trusted Execution** | Create secure, windowless rooms deep inside the fortress where you   |
-+-----------------------+----------------------------------------------------------------------+
-| **Environments**      | handle your most sensitive operations. When your ML model processes  |
-+-----------------------+----------------------------------------------------------------------+
-| **(TEEs)**            | private medical data or proprietary algorithms, the TEE isolates     |
-|                       | these computations from the rest of the system.                      |
-+-----------------------+----------------------------------------------------------------------+
-| **Hardware Security** | Serve as specialized, impenetrable vaults designed specifically for  |
-+-----------------------+----------------------------------------------------------------------+
-| **Modules (HSMs)**    | storing and using your most valuable cryptographic keys. Rather than |
-|                       | keeping encryption keys in regular computer memory where they might  |
-|                       | be stolen, HSMs provide tamper-resistant storage.                    |
-+-----------------------+----------------------------------------------------------------------+
-| **Physical**          | Give each device a unique biometric fingerprint at the silicon       |
-+-----------------------+----------------------------------------------------------------------+
-| **Unclonable**        | level. Just as human fingerprints cannot be perfectly replicated,    |
-+-----------------------+----------------------------------------------------------------------+
-| **Functions (PUFs)**  | PUFs exploit tiny manufacturing variations in each chip to create    |
-|                       | device-unique identifiers that cannot be cloned.                     |
-+-----------------------+----------------------------------------------------------------------+
+| **机制** | **堡垒类比与功能** |
+|:---|:---|
+| **安全启动（Secure Boot）** | 如同黎明时分在堡垒入口检查每位进入者证件的可信门卫。在系统运行任何代码之前，安全启动会以密码学方式验证固件和操作系统未被篡改。 |
+| **可信执行环境（TEEs）** | 在堡垒深处建造安全的无窗密室来处理最敏感的操作。当 ML 模型处理私密医疗数据或专有算法时，TEE 将这些计算与系统其余部分隔离。 |
+| **硬件安全模块（HSMs）** | 充当专门设计的、坚不可摧的保险库，用于存储和使用最有价值的密码学密钥。HSM 提供防篡改存储，而非将加密密钥保存在可能被盗取的普通计算机内存中。 |
+| **物理不可克隆函数（PUFs）** | 在硅片层面为每台设备赋予独特的生物特征指纹。正如人类指纹无法被完美复制，PUFs 利用每颗芯片的微小制造差异来创建不可克隆的设备唯一标识符。 |
 
-: **Hardware Security Mechanisms**: Each primitive provides distinct defensive capabilities that work together to create comprehensive protection from hardware-level threats. {#tbl-hardware-security-mechanisms}
+: **硬件安全机制**：每个原语提供不同的防御能力，协同工作以创建针对硬件级威胁的全面保护。 {#tbl-hardware-security-mechanisms}
 
-These mechanisms work together to create comprehensive protection that begins in hardware and extends through all software layers.
+这些机制协同工作，形成始于硬件并延伸至所有软件层的全面保护。
 
-This section explores how these four complementary hardware primitives work together to create comprehensive protection (@tbl-hardware-security-mechanisms). Each mechanism addresses different security challenges but works most effectively when combined: secure boot establishes initial trust, TEEs provide runtime isolation, HSMs handle cryptographic operations, and PUFs enable device-unique authentication. We begin with Trusted Execution Environments (TEEs), which provide isolated runtime environments for sensitive computations. Secure Boot ensures system integrity from power-on, creating the trusted foundation that TEEs depend upon. Hardware Security Modules (HSMs) offer specialized cryptographic processing and tamper-resistant key storage, often required for regulatory compliance. Finally, Physical Unclonable Functions (PUFs) provide device-unique identities that enable lightweight authentication and cannot be cloned or extracted.
+本节探讨这四种互补的硬件原语如何协同工作以创建全面保护（@tbl-hardware-security-mechanisms）。每种机制应对不同的安全挑战，但组合使用时效果最佳：安全启动建立初始信任，TEE 提供运行时隔离，HSM 处理密码学操作，PUF 实现设备唯一认证。我们首先介绍可信执行环境（TEEs），它为敏感计算提供隔离的运行时环境。安全启动确保从上电开始的系统完整性，为 TEEs 奠定可信基础。硬件安全模块（HSMs）提供专用密码学处理和防篡改密钥存储，通常是合规性所必需的。最后，物理不可克隆函数（PUFs）提供设备唯一身份，实现轻量级认证且不可克隆或提取。
 
-Each mechanism addresses different aspects of the security challenge, working most effectively when deployed together across hardware, firmware, and software boundaries.
+每种机制应对安全挑战的不同方面，在跨越硬件、固件和软件边界的组合部署时效果最佳。
 
-#### Hardware-Software Co-Design {#sec-security-privacy-hardwaresoftware-codesign-bed2}
+#### 硬件-软件协同设计 {#sec-security-privacy-hardwaresoftware-codesign-bed2}
 
-Modern ML systems require holistic analysis of security trade-offs across the entire hardware-software stack, similar to how we analyze compute-memory-energy trade-offs in performance optimization. The interdependence between hardware security features and software defenses creates both opportunities and constraints that must be understood quantitatively.
+现代 ML 系统需要对整个硬件-软件栈的安全权衡进行整体分析，类似于我们在性能优化中分析计算-内存-能源的权衡。硬件安全特性与软件防御之间的相互依赖既创造了机遇也带来了约束，必须进行定量理解。
 
-Hardware security mechanisms introduce measurable overhead that must be factored into system design. ARM TrustZone world-switching adds approximately 300-1000 cycles depending on processor generation and cache state (0.6-2.0μs at 500MHz) of latency per transition between secure and non-secure worlds. Cryptographic operations in secure mode typically consume 15-30% additional power compared to normal execution, impacting battery life in mobile ML applications. Intel SGX context switching imposes 15-30μs overhead per inference, representing 2% energy overhead for typical edge ML workloads.
+硬件安全机制引入了必须纳入系统设计的可度量开销。ARM TrustZone 世界切换每次在安全世界和非安全世界之间转换大约增加 300-1000 个时钟周期的延迟（取决于处理器代次和缓存状态，500MHz 下约 0.6-2.0μs）。安全模式下的密码学操作通常比正常执行多消耗 15-30% 的额外功耗，影响移动 ML 应用的电池续航。Intel SGX 上下文切换每次推理引入 15-30μs 开销，对典型的边缘 ML 工作负载约占 2% 的能量开销。
 
-Security features scale differently than computational resources. TEE memory limitations constrain model size regardless of available system memory. A quantized ResNet-18 model (47MB) can operate within ARM TrustZone constraints, while ResNet-50 (176MB) requires careful memory management or model partitioning. These constraints create architectural decisions that must be made early in system design.
+安全特性的扩展方式不同于计算资源。TEE 内存限制制约了模型大小，与可用系统内存无关。量化后的 ResNet-18 模型（47MB）可以在 ARM TrustZone 约束内运行，而 ResNet-50（176MB）则需要精心的内存管理或模型分区。这些约束创造了必须在系统设计早期做出的架构决策。
 
-Different threat models and protection levels require quantitative trade-off analysis. For ML workloads requiring cryptographic verification, AES-256 operations add 0.1-0.5ms per inference depending on model size and hardware acceleration availability. Homomorphic encryption operations impose 100-100,000x computational overhead, with fully homomorphic encryption (FHE) at the higher end and somewhat homomorphic encryption (SHE) at the lower end, making them viable only for small models or offline scenarios where strong privacy guarantees justify the performance cost.
+不同的威胁模型和保护级别需要定量权衡分析。对于需要密码学验证的 ML 工作负载，AES-256 操作每次推理增加 0.1-0.5ms，具体取决于模型大小和硬件加速可用性。同态加密操作带来 100-100,000 倍的计算开销——全同态加密（FHE）处于高端，部分同态加密（SHE）处于低端——使其仅适用于小模型或离线场景，即强大的隐私保障值得付出性能代价的情况。
 
-#### Trusted Execution Environments {#sec-security-privacy-trusted-execution-environments-80ed}
+#### 可信执行环境 {#sec-security-privacy-trusted-execution-environments-80ed}
 
-A Trusted Execution Environment (TEE)[^fn-tee] is a hardware-isolated region within a processor designed to protect sensitive computations and data from potentially compromised software. TEEs enforce confidentiality, integrity, and runtime isolation, ensuring that even if the host operating system or application layer is attacked, sensitive operations within the TEE remain secure.
+可信执行环境（TEE）[^fn-tee] 是处理器内的一个硬件隔离区域，旨在保护敏感计算和数据免受可能被攻破的软件的侵害。TEEs 强制执行机密性、完整性和运行时隔离，确保即使主机操作系统或应用层受到攻击，TEE 内的敏感操作仍然安全。
 
-[^fn-tee]: **TEE Concept Origins**: The idea emerged from ARM's TrustZone development in the early 2000s, inspired by the military concept of "compartmentalized information." ARM realized that mobile devices needed secure and non-secure "worlds" running on the same processor—leading to hardware-enforced isolation that became the template for all modern TEEs.]
+[^fn-tee]: **TEE 概念起源**：这一理念源于 ARM 在 2000 年代初期的 TrustZone 开发，受到军事"信息分隔"概念的启发。ARM 意识到移动设备需要在同一处理器上运行安全和非安全"世界"——由此产生了硬件强制隔离，成为所有现代 TEEs 的模板。
 
-In the context of machine learning, TEEs are increasingly important for preserving the confidentiality of models, securing sensitive user data during inference, and ensuring that model outputs remain trustworthy. For example, a TEE can protect model parameters from being extracted by malicious software running on the same device, or ensure that computations involving biometric inputs, including facial data or fingerprint data, are performed securely. This capability is essential in applications where model integrity, user privacy, or regulatory compliance are non-negotiable.
+在机器学习的语境下，TEEs 对于保护模型机密性、在推理过程中保护敏感用户数据以及确保模型输出的可信性越来越重要。例如，TEE 可以防止运行在同一设备上的恶意软件提取模型参数，或者确保涉及生物特征输入（包括面部数据或指纹数据）的计算安全执行。这一能力在模型完整性、用户隐私或合规性不容妥协的应用中至关重要。
 
-One widely deployed example is [Apple's Secure Enclave](https://support.apple.com/guide/security/secure-enclave-sec59b0b31ff/web), which provides isolated execution and secure key storage for iOS devices. By separating cryptographic operations and biometric data from the main processor, the Secure Enclave ensures that user credentials and Face ID features remain protected, even in the event of a broader system compromise.
+一个广泛部署的实例是 [Apple 的 Secure Enclave](https://support.apple.com/guide/security/secure-enclave-sec59b0b31ff/web)，它为 iOS 设备提供隔离执行和安全密钥存储。通过将密码学操作和生物特征数据与主处理器分离，Secure Enclave 确保用户凭证和 Face ID 功能即使在更广泛的系统被攻破时也能受到保护。
 
-Trusted Execution Environments are important across a range of industries with high security requirements. In telecommunications, TEEs are used to safeguard encryption keys and secure important 5G control-plane operations. In finance, they allow secure mobile payments and protect PIN-based authentication workflows. In healthcare, TEEs help enforce patient data confidentiality during edge-based ML inference on wearable or diagnostic devices. In the automotive industry, they are deployed in advanced driver-assistance systems (ADAS) to ensure that safety-important perception and decision-making modules operate on verified software.
+可信执行环境在一系列高安全需求的行业中发挥着重要作用。在电信领域，TEEs 用于保护加密密钥和保障关键的 5G 控制面操作。在金融领域，它们支持安全的移动支付并保护基于 PIN 的认证流程。在医疗领域，TEEs 有助于在可穿戴或诊断设备上进行边缘 ML 推理时保护患者数据机密性。在汽车行业中，它们被部署在高级驾驶辅助系统（ADAS）中，以确保安全关键的感知和决策模块在经过验证的软件上运行。
 
-In machine learning systems, TEEs can provide several important protections. They secure the execution of model inference or training, shielding intermediate computations and final predictions from system-level observation. They protect the confidentiality of sensitive inputs, including biometric or clinical signals, used in personal identification or risk scoring tasks. TEEs also serve to prevent reverse engineering of deployed models by restricting access to weights and architecture internals. When models are updated, TEEs ensure the authenticity of new parameters and block unauthorized tampering. In distributed ML settings, TEEs can protect data exchanged between components by enabling encrypted and attested communication channels.
+在机器学习系统中，TEEs 可以提供多项重要保护。它们保护模型推理或训练的执行，使中间计算和最终预测免受系统级观测。它们保护用于身份识别或风险评分任务的敏感输入（包括生物特征或临床信号）的机密性。TEEs 还通过限制对权重和架构内部信息的访问来防止已部署模型的逆向工程。当模型更新时，TEEs 确保新参数的真实性并阻止未授权篡改。在分布式 ML 场景中，TEEs 可以通过启用加密和认证的通信通道来保护组件之间交换的数据。
 
-The core security properties of a TEE are achieved through four mechanisms: isolated execution, secure storage, integrity protection, and in-TEE data encryption. Code that runs inside the TEE is executed in a separate processor mode, inaccessible to the normal-world operating system. Sensitive assets such as cryptographic keys or authentication tokens are stored in memory that only the TEE can access. Code and data can be verified for integrity before execution using hardware-anchored hashes or signatures. Finally, data processed inside the TEE can be encrypted, ensuring that even intermediate results are inaccessible without appropriate keys, which are also managed internally by the TEE.
+TEE 的核心安全属性通过四种机制实现：隔离执行、安全存储、完整性保护和 TEE 内数据加密。在 TEE 内运行的代码以独立的处理器模式执行，普通世界的操作系统无法访问。密码学密钥或认证令牌等敏感资产存储在只有 TEE 可以访问的内存中。代码和数据可以在执行前使用硬件锚定的哈希或签名进行完整性验证。最后，在 TEE 内处理的数据可以被加密，确保即使中间结果在没有适当密钥的情况下也无法访问，而这些密钥也由 TEE 内部管理。
 
-Several commercial platforms provide TEE functionality tailored for different deployment contexts. [ARM TrustZone](https://www.arm.com/technologies/trustzone-for-cortex-m)[^fn-trustzone-adoption] offers secure and normal world execution on ARM-based systems and is widely used in mobile and IoT applications. [Intel SGX](https://www.intel.com/content/www/us/en/architecture-and-technology/software-guard-extensions.html)[^fn-intel-sgx-limits] implements enclave-based security for cloud and desktop systems, enabling secure computation even on untrusted infrastructure. [Qualcomm's Secure Execution Environment](https://www.qualcomm.com/products/features/mobile-security-solutions) supports secure mobile transactions and user authentication. Apple's Secure Enclave remains a canonical example of a hardware-isolated security coprocessor for consumer devices.
+多个商业平台提供针对不同部署场景的 TEE 功能。[ARM TrustZone](https://www.arm.com/technologies/trustzone-for-cortex-m)[^fn-trustzone-adoption] 在 ARM 系统上提供安全世界和普通世界执行，广泛用于移动和 IoT 应用。[Intel SGX](https://www.intel.com/content/www/us/en/architecture-and-technology/software-guard-extensions.html)[^fn-intel-sgx-limits] 为云和桌面系统实现基于飞地的安全性，即使在不可信基础设施上也能进行安全计算。[Qualcomm 的安全执行环境](https://www.qualcomm.com/products/features/mobile-security-solutions)支持安全的移动交易和用户认证。Apple 的 Secure Enclave 仍然是消费级设备硬件隔离安全协处理器的典范。
 
-[^fn-trustzone-adoption]: **ARM TrustZone**: Introduced in 2004, TrustZone now ships in 95% of ARM processors, protecting over 5 billion mobile devices. Despite its ubiquity, many devices underutilize TrustZone—studies show only 20-30% of Android devices implement meaningful secure world applications beyond basic key storage.
+[^fn-trustzone-adoption]: **ARM TrustZone**：自 2004 年推出以来，TrustZone 现已搭载于 95% 的 ARM 处理器中，保护超过 50 亿台移动设备。尽管如此广泛，许多设备并未充分利用 TrustZone——研究表明只有 20-30% 的 Android 设备在基本密钥存储之外实施了有意义的安全世界应用。
 
-[^fn-intel-sgx-limits]: **Intel SGX Constraints**: SGX enclaves are limited to approximately 128MB of protected memory (EPC) on most consumer processors, though enterprise variants support up to 512MB or 1GB, with cache misses causing 100x performance penalties. For ML workloads, a ResNet-50 requires approximately 98MB for weights alone in FP32 format (25.6M parameters × 4 bytes), consuming 77% of SGX EPC before any intermediate activations. Inference latency increases from 5ms to 150ms when model exceeds EPC capacity. This makes SGX unsuitable for large ML models but effective for protecting cryptographic keys and small inference models under 10MB.
+[^fn-intel-sgx-limits]: **Intel SGX 限制**：SGX 飞地在大多数消费级处理器上被限制在约 128MB 的受保护内存（EPC），企业版支持高达 512MB 或 1GB，缓存缺失导致 100 倍的性能惩罚。对于 ML 工作负载，ResNet-50 仅权重在 FP32 格式下就需要约 98MB（2560 万参数 × 4 字节），在任何中间激活之前就已消耗 77% 的 SGX EPC。当模型超出 EPC 容量时，推理延迟从 5ms 增加到 150ms。这使得 SGX 不适用于大型 ML 模型，但对于保护密码学密钥和 10MB 以下的小型推理模型非常有效。
 
-@fig-enclave illustrates a secure enclave integrated into a system-on-chip (SoC) architecture. The enclave includes a dedicated processor, an AES engine, a true random number generator (TRNG), a public key accelerator (PKA), and a secure I²C interface to nonvolatile storage. These components operate in isolation from the main application processor and memory subsystem. A memory protection engine enforces access control, while cryptographic operations such as NAND flash encryption are handled internally using enclave-managed keys. By physically separating secure execution and key management from the main system, this architecture limits the impact of system-level compromises and establishes hardware-enforced trust.
+@fig-enclave 展示了集成在片上系统（SoC）架构中的安全飞地。该飞地包含专用处理器、AES 引擎、真随机数发生器（TRNG）、公钥加速器（PKA）和通往非易失性存储的 I²C 安全接口。这些组件与主应用处理器和内存子系统隔离运行。内存保护引擎强制执行访问控制，而 NAND 闪存加密等密码学操作使用飞地管理的密钥在内部处理。通过将安全执行和密钥管理从主系统中物理分离，该架构限制了系统级攻破的影响并建立了硬件强制的信任。
 
 ::: {#fig-enclave fig-env="figure" fig-pos="htb"}
 ```{.tikz}
@@ -2000,31 +1978,29 @@ channelcolor=red!79!black!90, Linewidth=1.0pt}};
 \end{tikzpicture}
 ```
 
-**Secure Enclave Architecture**: Hardware-isolated enclaves enhance system security by encapsulating sensitive data and cryptographic operations within a dedicated processor and memory. This design minimizes the attack surface and protects important keys even if the main application processor is compromised, providing a trusted execution environment for security-important tasks. Source: Apple.
+**安全飞地架构**：硬件隔离飞地通过将敏感数据和密码学操作封装在专用处理器和内存中来增强系统安全性。这种设计最大限度地减少了攻击面，即使主应用处理器被攻破也能保护关键密钥，为安全关键任务提供可信执行环境。来源：Apple。
 
 :::
 
-This architecture underpins the secure deployment of machine learning applications on consumer devices. For example, Apple's Face ID system uses a secure enclave to perform facial recognition entirely within a hardware-isolated environment. The face embedding model is executed inside the enclave, and biometric templates are stored in secure nonvolatile memory accessible only via the enclave's I²C interface. During authentication, input data from the infrared camera is processed locally, and no facial features or predictions ever leave the secure region. Even if the application processor or operating system is compromised, the enclave prevents access to sensitive model inputs, parameters, and outputs—ensuring that biometric identity remains protected end to end.
+该架构支撑了消费级设备上机器学习应用的安全部署。例如，Apple 的 Face ID 系统使用安全飞地在完全硬件隔离的环境中执行人脸识别。面部嵌入模型在飞地内执行，生物特征模板存储在只能通过飞地的 I²C 接口访问的安全非易失性内存中。认证过程中，红外摄像头的输入数据在本地处理，面部特征或预测结果永远不会离开安全区域。即使应用处理器或操作系统被攻破，飞地也会阻止对敏感模型输入、参数和输出的访问——确保生物特征身份得到端到端的保护。
 
-Despite their strengths, Trusted Execution Environments come with notable trade-offs. Implementing a TEE increases both direct hardware costs and indirect costs associated with developing and maintaining secure software. Integrating TEEs into existing systems may require architectural redesigns, especially for legacy infrastructure. Developers must adhere to strict protocols for isolation, attestation, and secure update management, which can extend development cycles and complicate testing workflows. TEEs can also introduce performance overhead, particularly when cryptographic operations are involved, or when context switching between trusted and untrusted modes is frequent.
+尽管具有这些优势，可信执行环境也存在显著的权衡。实施 TEE 会增加直接硬件成本以及与开发和维护安全软件相关的间接成本。将 TEEs 集成到现有系统中可能需要架构重新设计，特别是对于遗留基础设施。开发人员必须遵守严格的隔离、认证和安全更新管理协议，这可能延长开发周期并使测试工作流复杂化。TEEs 还会引入性能开销，特别是在涉及密码学操作或在可信和不可信模式之间频繁进行上下文切换时。
 
-Energy efficiency is another consideration, particularly in battery-constrained devices. TEEs typically consume additional power due to secure memory accesses, cryptographic computation, and hardware protection logic. In resource-limited embedded systems, these costs may limit their use. In terms of scalability and flexibility, the secure boundaries enforced by TEEs may complicate distributed training or federated inference workloads, where secure coordination between enclaves is required.
+能效是另一个考虑因素，特别是在电池受限的设备中。TEEs 通常因安全内存访问、密码学计算和硬件保护逻辑而消耗额外功率。在资源受限的嵌入式系统中，这些成本可能限制其使用。在可扩展性和灵活性方面，TEEs 强制的安全边界可能使分布式训练或联邦推理工作负载复杂化，因为需要飞地之间的安全协调。
 
-Market demand also varies. In some consumer applications, perceived threat levels may be too low to justify the integration of TEEs. Systems with TEEs may be subject to formal security certifications, such as [Common Criteria](https://www.commoncriteriaportal.org/ccra/index.cfm) or evaluation under [ENISA](https://www.enisa.europa.eu/), which can introduce additional time and expense. For this reason, TEEs are typically adopted only when the expected threat model, including adversarial users, cloud tenants, and malicious insiders, justifies the investment.
+市场需求也各不相同。在某些消费级应用中，感知的威胁水平可能不足以证明集成 TEEs 的合理性。带有 TEEs 的系统可能需要通过正式的安全认证，如 [Common Criteria](https://www.commoncriteriaportal.org/ccra/index.cfm) 或 [ENISA](https://www.enisa.europa.eu/) 评估，这会增加额外的时间和费用。因此，TEEs 通常仅在预期的威胁模型（包括对抗性用户、云租户和恶意内部人员）证明投资合理时才被采用。
 
-Nonetheless, TEEs remain a powerful hardware primitive in the machine learning security landscape. When paired with software- and system-level defenses, they provide a trusted foundation for executing ML models securely, privately, and verifiably, especially in scenarios where adversarial compromise of the host environment is a serious concern.
+尽管如此，TEEs 仍然是机器学习安全领域中强大的硬件原语。当与软件和系统级防御配合使用时，它们为安全、私密和可验证地执行 ML 模型提供了可信基础，特别是在主机环境面临严重对抗性攻破风险的场景中。
 
-Here is the revised 7.5.2 Secure Boot section, rewritten in formal textbook tone with all original technical content, hyperlinks, and figures preserved. The structure emphasizes narrative clarity, avoids bullet lists, and integrates the Apple Face ID case study naturally.
+#### 安全启动 {#sec-security-privacy-secure-boot-5242}
 
-#### Secure Boot {#sec-security-privacy-secure-boot-5242}
+安全启动是一种确保设备仅引导经过密码学验证且明确由制造商授权的软件组件的机制。在启动时，引导过程的每个阶段——包括引导加载程序、内核和基础操作系统——都会对照已知良好的数字签名进行检查。如果任何签名验证失败，引导序列就会中止，阻止未授权或恶意代码执行。这种信任链模型从执行的第一条指令开始就建立了系统完整性。
 
-Secure Boot is a mechanism that ensures a device only boots software components that are cryptographically verified and explicitly authorized by the manufacturer. At startup, each stage of the boot process, comprising the bootloader, kernel, and base operating system, is checked against a known-good digital signature. If any signature fails verification, the boot sequence is halted, preventing unauthorized or malicious code from executing. This chain-of-trust model establishes system integrity from the very first instruction executed.
+在 ML 系统中，特别是部署在嵌入式或边缘硬件上的系统，安全启动发挥着重要作用。被攻破的引导过程可能导致恶意软件在 ML 运行时启动之前加载，使攻击者能够截获模型权重、篡改训练数据或重定向推理结果。此类入侵可能导致错误或被操纵的预测、未授权的数据访问，或将设备重新用于僵尸网络或加密货币挖矿。
 
-In ML systems, especially those deployed on embedded or edge hardware, Secure Boot plays an important role. A compromised boot process may result in malicious software loading before the ML runtime begins, enabling attackers to intercept model weights, tamper with training data, or reroute inference results. Such breaches can lead to incorrect or manipulated predictions, unauthorized data access, or device repurposing for botnets or crypto-mining.
+对于机器学习系统，安全启动提供多项保障。首先，它在引导序列期间保护模型相关数据（如训练数据、推理输入和输出），防止运行前篡改。其次，它确保只有经过认证的模型二进制文件和支持软件被加载，有助于防范部署时的模型替换。第三，安全启动通过验证固件或模型变更是经过签名且在传输过程中未被篡改来允许安全的模型更新。
 
-For machine learning systems, Secure Boot offers several guarantees. First, it protects model-related data, such as training data, inference inputs, and outputs, during the boot sequence, preventing pre-runtime tampering. Second, it ensures that only authenticated model binaries and supporting software are loaded, which helps guard against deployment-time model substitution. Third, Secure Boot allows secure model updates by verifying that firmware or model changes are signed and have not been altered in transit.
-
-Secure Boot frequently works in tandem with hardware-based Trusted Execution Environments (TEEs) to create a fully trusted execution stack. As shown in @fig-secure-boot, this layered boot process verifies firmware, operating system components, and TEE integrity before permitting execution of cryptographic operations or ML workloads. In embedded systems, this architecture provides resilience even under severe adversarial conditions or physical device compromise.
+安全启动通常与硬件级可信执行环境（TEEs）协同工作，创建完全可信的执行栈。如 @fig-secure-boot 所示，这种分层引导过程在允许密码学操作或 ML 工作负载执行之前验证固件、操作系统组件和 TEE 完整性。在嵌入式系统中，该架构即使在严重的对抗条件或设备物理被攻破的情况下也能提供弹性。
 
 ::: {#fig-secure-boot fig-env="figure" fig-pos="htb"}
 ```{.tikz}
@@ -2078,126 +2054,114 @@ Box6/.style={Box,draw=OrangeLine,fill=OrangeL!50},
 \end{tikzpicture}
 ```
 
-**Secure Boot Sequence**: Embedded systems employ a layered boot process to verify firmware and software integrity, establishing a root of trust before executing machine learning workloads and protecting against pre-runtime attacks. This architecture ensures only authenticated code runs, safeguarding model data and preventing unauthorized model substitution or modification during deployment. Source: [@rashmi2018secure].
+**安全启动序列**：嵌入式系统采用分层引导过程来验证固件和软件完整性，在执行机器学习工作负载之前建立信任根，并防范运行前攻击。该架构确保只有经过认证的代码运行，保护模型数据并防止部署期间未授权的模型替换或修改。来源：[@rashmi2018secure]。
 
 :::
 
-A well-known real-world implementation of Secure Boot appears in Apple's Face ID system, which uses advanced machine learning for facial recognition. For Face ID to operate securely, the entire device stack, from the initial power-on to the execution of the model, must be verifiably trusted.
+安全启动的一个著名实际实现是 Apple 的 Face ID 系统，它使用先进的机器学习进行人脸识别。为了使 Face ID 安全运行，整个设备栈——从初始上电到模型执行——都必须可验证地可信。
 
-Upon device startup, Secure Boot initiates within Apple's [Secure Enclave](https://support.apple.com/en-us/102381), a dedicated security coprocessor that handles biometric data. The firmware loaded onto the Secure Enclave is digitally signed by Apple, and any unauthorized modification causes the boot process to fail. Once verified, the Secure Enclave performs continuous checks in coordination with the central processor to maintain a trusted boot chain. Each system component, ranging from the iOS kernel to the application-level code, is verified using cryptographic signatures.
+设备启动时，安全启动在 Apple 的 [Secure Enclave](https://support.apple.com/en-us/102381)（处理生物特征数据的专用安全协处理器）中初始化。加载到 Secure Enclave 上的固件由 Apple 数字签名，任何未授权修改都会导致引导过程失败。验证完成后，Secure Enclave 与中央处理器协调执行持续检查，以维护可信引导链。从 iOS 内核到应用级代码的每个系统组件都使用密码学签名进行验证。
 
-After completing the secure boot sequence, the Secure Enclave activates the ML-based Face ID system. The facial recognition model projects over 30,000 infrared points to map a user's face, generating a depth image and computing a mathematical representation that is compared against a securely stored profile. These facial data artifacts are never written to disk, transmitted off-device, or shared externally. All processing occurs within the enclave to protect against eavesdropping or exfiltration, even in the presence of a compromised kernel.
+完成安全引导序列后，Secure Enclave 激活基于 ML 的 Face ID 系统。人脸识别模型投射超过 30,000 个红外点来映射用户面部，生成深度图像并计算与安全存储的配置文件进行比较的数学表示。这些面部数据工件永远不会写入磁盘、传输到设备外或外部共享。所有处理都在飞地内进行，以防范窃听或数据泄露，即使内核已被攻破。
 
-To support continued integrity, Secure Boot also governs software updates. Only firmware or model updates signed by Apple are accepted, ensuring that even over-the-air patches do not introduce risk. This process maintains a robust chain of trust over time, enabling the secure evolution of the ML system while preserving user privacy and device security.
+为了支持持续的完整性，安全启动还管理软件更新。只有经过 Apple 签名的固件或模型更新才会被接受，确保即使是空中下载补丁也不会引入风险。这一过程随着时间推移维护了稳健的信任链，在保护用户隐私和设备安全的同时实现了 ML 系统的安全演进。
 
-While Secure Boot provides strong protection, its adoption presents technical and operational challenges. Managing the cryptographic keys used to sign and verify system components is complex, especially at scale. Enterprises must securely provision, rotate, and revoke keys, ensuring that no trusted root is compromised. Any such breach would undermine the entire security chain.
+虽然安全启动提供了强大的保护，但其采用面临技术和操作挑战。管理用于签名和验证系统组件的密码学密钥是复杂的，特别是在大规模部署时。企业必须安全地配置、轮换和撤销密钥，确保没有信任根被攻破。任何此类入侵都会破坏整个安全链。
 
-Performance is also a consideration. Verifying signatures during the boot process introduces latency, typically on the order of tens to hundreds of milliseconds per component. Although acceptable in many applications, these delays may be problematic for real-time or power-constrained systems. Developers must also ensure that all components, including bootloaders, firmware, kernels, drivers, and even ML models, are correctly signed. Integrating third-party software into a Secure Boot pipeline introduces additional complexity.
+性能也是一个考虑因素。引导过程中验证签名会引入延迟，通常在每个组件几十到几百毫秒的量级。虽然在许多应用中可以接受，但这些延迟对于实时或功耗受限的系统可能是问题。开发人员还必须确保所有组件——包括引导加载程序、固件、内核、驱动程序甚至 ML 模型——都正确签名。将第三方软件集成到安全启动管道中会引入额外的复杂性。
 
-Some systems limit user control in favor of vendor-locked security models, restricting upgradability or customization. In response, open-source bootloaders like [u-boot](https://source.denx.de/u-boot/u-boot) and [coreboot](https://www.coreboot.org/) have emerged, offering Secure Boot features while supporting extensibility and transparency. To further scale trusted device deployments, emerging industry standards such as the [Device Identifier Composition Engine (DICE)](https://www.microsoft.com/en-us/research/project/dice-device-identifier-composition-engine/) and [IEEE 802.1AR IDevID](https://1.ieee802.org/security/802-1ar/) provide mechanisms for secure device identity, key provisioning, and cross-vendor trust assurance.
+一些系统为了厂商锁定的安全模型而限制用户控制，限制了可升级性或可定制性。作为回应，开源引导加载程序如 [u-boot](https://source.denx.de/u-boot/u-boot) 和 [coreboot](https://www.coreboot.org/) 应运而生，在支持可扩展性和透明性的同时提供安全启动特性。为了进一步扩展可信设备部署，新兴行业标准如 [设备标识组合引擎（DICE）](https://www.microsoft.com/en-us/research/project/dice-device-identifier-composition-engine/) 和 [IEEE 802.1AR IDevID](https://1.ieee802.org/security/802-1ar/) 提供了安全设备身份、密钥配置和跨厂商信任保证的机制。
 
-Secure Boot, when implemented carefully and complemented by trusted hardware and secure software update processes, forms the backbone of system integrity for embedded and distributed ML. It provides the assurance that the machine learning model running in production is not only the correct version, but is also executing in a known-good environment, anchored to hardware-level trust.
+安全启动在精心实施并辅以可信硬件和安全软件更新过程时，构成了嵌入式和分布式 ML 系统完整性的支柱。它确保在生产环境中运行的机器学习模型不仅是正确版本，而且在已知良好的环境中执行，锚定于硬件级信任。
 
-#### Hardware Security Modules {#sec-security-privacy-hardware-security-modules-4377}
+#### 硬件安全模块 {#sec-security-privacy-hardware-security-modules-4377}
 
-While TEEs and secure boot provide runtime isolation and integrity verification, Hardware Security Modules (HSMs) specialize in the cryptographic operations that underpin these protections. An HSM[^fn-hsm-performance] is a tamper-resistant physical device designed to perform cryptographic operations and securely manage digital keys. HSMs are widely used across security-important industries such as finance, defense, and cloud infrastructure, and they are increasingly relevant for securing the machine learning pipeline—particularly in deployments where key confidentiality, model integrity, and regulatory compliance are important.
+虽然 TEEs 和安全启动提供运行时隔离和完整性验证，硬件安全模块（HSMs）则专注于支撑这些保护的密码学操作。HSM[^fn-hsm-performance] 是一种防篡改的物理设备，旨在执行密码学操作和安全管理数字密钥。HSMs 广泛应用于金融、国防和云基础设施等安全关键行业，并且在保护机器学习流水线方面越来越重要——特别是在密钥机密性、模型完整性和合规性至关重要的部署中。
 
-[^fn-hsm-performance]: **HSM Performance**: Enterprise HSMs can perform 10,000+ RSA-2048 operations per second but cost $20,000-$100,000+ per unit. In contrast, software-only cryptography on GPUs achieves 100,000+ operations/second at $1,000+ hardware cost, but without the tamper-resistance and regulatory compliance that HSMs provide.
+[^fn-hsm-performance]: **HSM 性能**：企业级 HSMs 每秒可执行 10,000+ 次 RSA-2048 操作，但每台成本 20,000-100,000+ 美元。相比之下，GPU 上的纯软件密码学在 1,000+ 美元硬件成本下可实现每秒 100,000+ 次操作，但缺乏 HSMs 提供的防篡改和合规性。
 
-HSMs provide an isolated, hardened environment for performing sensitive operations such as key generation, digital signing, encryption, and decryption. Unlike general-purpose processors, they are engineered to withstand physical tampering and side-channel attacks, and they typically include protected storage, cryptographic accelerators, and internal audit logging. HSMs may be implemented as standalone appliances, plug-in modules, or integrated chips embedded within broader systems.
+HSMs 提供隔离的、加固的环境来执行密钥生成、数字签名、加密和解密等敏感操作。与通用处理器不同，它们被设计为能够抵御物理篡改和侧信道攻击，通常包含受保护的存储、密码学加速器和内部审计日志。HSMs 可以实现为独立设备、插件模块或嵌入更广泛系统的集成芯片。
 
-In machine learning systems, HSMs enhance security across several dimensions. They are commonly used to protect encryption keys associated with sensitive data that may be processed during training or inference. These keys might encrypt data at rest in model checkpoints or allow secure transmission of inference requests across networked environments. By ensuring that the keys are generated, stored, and used exclusively within the HSM, the system minimizes the risk of key leakage, unauthorized reuse, or tampering.
+在机器学习系统中，HSMs 在多个维度增强安全性。它们通常用于保护与训练或推理过程中可能处理的敏感数据相关的加密密钥。这些密钥可以加密模型检查点中的静态数据，或者允许推理请求在网络环境中安全传输。通过确保密钥在 HSM 内专门生成、存储和使用，系统最大限度地降低了密钥泄露、未授权重用或篡改的风险。
 
-HSMs also play a role in maintaining the integrity of machine learning models. In many production pipelines, models must be signed before deployment to ensure that only verified versions are accepted into runtime environments. The signing keys used to authenticate models can be stored and managed within the HSM, providing cryptographic assurance that the deployed artifact is authentic and untampered. Similarly, secure firmware updates and configuration changes, regardless of whether they pertain to models, hyperparameters, or supporting infrastructure, can be validated using signatures produced by the HSM.
+HSMs 还在维护机器学习模型完整性方面发挥作用。在许多生产流水线中，模型在部署前必须签名，以确保只有经过验证的版本被接受进入运行时环境。用于认证模型的签名密钥可以在 HSM 内存储和管理，提供已部署工件真实且未被篡改的密码学保证。类似地，安全固件更新和配置变更——无论是否涉及模型、超参数还是支持基础设施——都可以使用 HSM 产生的签名进行验证。
 
-In addition to protecting inference workloads, HSMs can be used to secure model training. During training, data may originate from distributed and potentially untrusted sources. HSM-backed protocols can help ensure that training pipelines perform encryption, integrity checks, and access control enforcement securely and in compliance with organizational or legal requirements. In regulated industries such as healthcare and finance, such protections are often mandatory. For instance, HIPAA requires covered entities to implement technical safeguards including "integrity controls" and "encryption and decryption," while GDPR mandates pseudonymization and encryption as examples of appropriate technical measures.
+除了保护推理工作负载外，HSMs 还可用于保护模型训练。在训练过程中，数据可能来自分布式且可能不可信的来源。HSM 支持的协议有助于确保训练流水线安全地执行加密、完整性检查和访问控制强制，并符合组织或法律要求。在医疗和金融等受监管行业，此类保护通常是强制性的。例如，HIPAA 要求受保实体实施技术保障措施，包括"完整性控制"和"加密与解密"，而 GDPR 将假名化和加密作为适当技术措施的示例。
 
-Despite these benefits, incorporating HSMs into embedded or resource-constrained ML systems introduces several trade-offs. First, HSMs are specialized hardware components and often come at a premium. Their cost may be justified in data center settings or safety-important applications but can be prohibitive for low-margin embedded products or wearables. Physical space is also a concern. Embedded systems often operate under strict size, weight, and form factor constraints, and integrating an HSM may require redesigning circuit layouts or sacrificing other functionality.
+尽管有这些优势，将 HSMs 纳入嵌入式或资源受限的 ML 系统会引入若干权衡。首先，HSMs 是专用硬件组件，通常价格昂贵。其成本在数据中心环境或安全关键应用中可能合理，但对于低利润的嵌入式产品或可穿戴设备可能令人望而却步。物理空间也是一个问题。嵌入式系统通常在严格的尺寸、重量和外形约束下运行，集成 HSM 可能需要重新设计电路布局或牺牲其他功能。
 
-From a performance standpoint, HSMs introduce latency, particularly for operations like key exchange, signature verification, or on-the-fly decryption. In real-time inference systems, including autonomous vehicles, industrial robotics, and live translation devices, these delays can affect responsiveness. While HSMs are typically optimized for cryptographic throughput, they are not general-purpose processors, and offloading secure operations must be carefully coordinated.
+从性能角度看，HSMs 引入延迟，特别是对于密钥交换、签名验证或即时解密等操作。在实时推理系统中，包括自动驾驶汽车、工业机器人和实时翻译设备，这些延迟会影响响应性。虽然 HSMs 通常针对密码学吞吐量进行了优化，但它们不是通用处理器，安全操作的卸载必须仔细协调。
 
-Power consumption is another concern. The continuous secure handling of keys, signing of transactions, and cryptographic validations can consume more power than basic embedded components, impacting battery life in mobile or remote deployments.
+功耗是另一个问题。持续的安全密钥处理、交易签名和密码学验证可能比基本嵌入式组件消耗更多功率，影响移动或远程部署中的电池续航。
 
-Integration complexity also grows when HSMs are introduced into existing ML pipelines. Interfacing between the HSM and the host processor requires dedicated APIs and often specialized software development. Firmware and model updates must be routed through secure, signed channels, and update orchestration must account for device-specific key provisioning. These requirements increase the operational burden, especially in large deployments.
+当 HSMs 被引入现有 ML 流水线时，集成复杂性也随之增长。HSM 与主机处理器之间的接口需要专用 API 和通常需要专业软件开发。固件和模型更新必须通过安全的、签名的通道路由，更新编排必须考虑设备特定的密钥配置。这些要求增加了操作负担，特别是在大规模部署中。
 
-Scalability presents its own set of challenges. Managing a distributed fleet of HSM-equipped devices requires secure provisioning of individual keys, secure identity binding, and coordinated trust management. In large ML deployments, including fleets of smart sensors or edge inference nodes, ensuring uniform security posture across all devices is nontrivial.
+可扩展性带来了一系列独特的挑战。管理分布式 HSM 设备集群需要安全的密钥个体配置、安全身份绑定和协调的信任管理。在大型 ML 部署中，包括智能传感器集群或边缘推理节点，确保所有设备的安全态势一致并非易事。
 
-Finally, the use of HSMs often requires organizations to engage in certification and compliance processes[^fn-hsm-certification], particularly when handling regulated data. Meeting standards such as FIPS 140-2[^fn-fips-140] or Common Criteria adds time and cost to development.
+最后，使用 HSMs 通常需要组织参与认证和合规流程[^fn-hsm-certification]，特别是在处理受监管数据时。满足 FIPS 140-2[^fn-fips-140] 或 Common Criteria 等标准会增加开发的时间和成本。
 
-[^fn-hsm-certification]: **HSM Certification**: Hardware Security Module certification under FIPS 140-2 or Common Criteria can take 12-24 months and cost $500,000-$2 million. However, many regulated industries require these certifications, with banking, government, and healthcare sectors mandating Level 3+ certified HSMs for cryptographic operations.
+[^fn-hsm-certification]: **HSM 认证**：依据 FIPS 140-2 或 Common Criteria 的硬件安全模块认证可能需要 12-24 个月，花费 50 万-200 万美元。然而，许多受监管行业要求这些认证，银行、政府和医疗部门强制要求使用 3 级及以上认证的 HSMs 进行密码学操作。
 
-[^fn-fips-140]: **FIPS 140-2 Standard**: Federal Information Processing Standard for cryptographic modules, established in 2001 with four security levels. Level 4 HSMs must survive physical attacks, operating at -40°C to +85°C with tamper detection that zeroizes keys within seconds, making them suitable for the most sensitive ML applications. Access to the HSM is typically restricted to a small set of authorized personnel, which can complicate development workflows and slow iteration cycles.
+[^fn-fips-140]: **FIPS 140-2 标准**：密码学模块的联邦信息处理标准，于 2001 年建立，包含四个安全级别。4 级 HSMs 必须能够承受物理攻击，在 -40°C 至 +85°C 下运行，篡改检测能在秒内清零密钥，使其适用于最敏感的 ML 应用。对 HSM 的访问通常仅限于少数授权人员，这可能使开发工作流复杂化并减慢迭代周期。
 
-Despite these operational complexities, HSMs remain a valuable option for machine learning systems that require high assurance of cryptographic integrity and access control. When paired with TEEs, secure boot, and software-based defenses, HSMs contribute to a multilayered security model that spans hardware, system software, and ML runtime.
+尽管存在这些操作复杂性，HSMs 对于需要高保障密码学完整性和访问控制的机器学习系统仍然是有价值的选择。当与 TEEs、安全启动和基于软件的防御配合使用时，HSMs 贡献于一个跨越硬件、系统软件和 ML 运行时的多层安全模型。
 
-#### Physical Unclonable Functions {#sec-security-privacy-physical-unclonable-functions-6533}
+#### 物理不可克隆函数 {#sec-security-privacy-physical-unclonable-functions-6533}
 
-Physical Unclonable Functions (PUFs)[^fn-puf-adoption] provide a hardware-intrinsic mechanism for cryptographic key generation and device authentication by leveraging physical randomness in semiconductor fabrication [@gassend2002silicon]. Unlike traditional keys stored in memory, a PUF generates secret values based on microscopic variations in a chip's physical properties—variations that are inherent to manufacturing processes and difficult to clone or predict, even by the manufacturer.
+物理不可克隆函数（PUFs）[^fn-puf-adoption] 通过利用半导体制造中的物理随机性，为密码学密钥生成和设备认证提供了一种硬件固有机制 [@gassend2002silicon]。与存储在内存中的传统密钥不同，PUF 基于芯片物理特性的微观差异生成秘密值——这些差异是制造过程固有的，即使制造商也难以克隆或预测。
 
-[^fn-puf-adoption]: **PUF Market Growth**: The PUF market is projected to reach $320 million by 2025, driven by IoT security needs. Major semiconductor companies including Intel, Xilinx, and Synopsis now offer PUF IP, with deployment in smart cards, automotive ECUs, and edge ML devices requiring device-unique authentication.
+[^fn-puf-adoption]: **PUF 市场增长**：受 IoT 安全需求驱动，PUF 市场预计到 2025 年将达到 3.2 亿美元。包括 Intel、Xilinx 和 Synopsis 在内的主要半导体公司现已提供 PUF IP，部署在智能卡、汽车 ECU 和需要设备唯一认证的边缘 ML 设备中。
 
-These variations arise from uncontrollable physical factors such as doping concentration, line edge roughness, and dielectric thickness. As a result, even chips fabricated with the same design masks exhibit small but measurable differences in timing, power consumption, or voltage behavior. PUF circuits amplify these variations to produce a device-unique digital output. When a specific input challenge is applied to a PUF, it generates a corresponding response based on the chip's physical fingerprint. Because these characteristics are effectively impossible to replicate, the same challenge will yield different responses across devices.
+这些差异源于不可控的物理因素，如掺杂浓度、线边缘粗糙度和介电层厚度。因此，即使使用相同设计掩模制造的芯片也会在时序、功耗或电压行为上表现出微小但可测量的差异。PUF 电路放大这些差异以产生设备唯一的数字输出。当向 PUF 施加特定的输入激励时，它会基于芯片的物理指纹生成相应的响应。由于这些特征实际上不可能被复制，相同的激励在不同设备上将产生不同的响应。
 
-This challenge-response mechanism allows PUFs to serve several cryptographic purposes. They can be used to derive device-specific keys that never need to be stored externally, reducing the attack surface for key exfiltration. The same mechanism also supports secure authentication and attestation, where devices must prove their identity to trusted servers or hardware gateways. These properties make PUFs a natural fit for machine learning systems deployed in embedded and distributed environments.
+这种激励-响应机制使 PUFs 能够服务于多种密码学用途。它们可用于派生设备特定密钥，这些密钥无需外部存储，减少了密钥泄露的攻击面。同一机制还支持安全认证和证明，设备必须向可信服务器或硬件网关证明其身份。这些特性使 PUFs 天然适合部署在嵌入式和分布式环境中的机器学习系统。
 
-In ML applications, PUFs offer unique advantages for securing resource-constrained systems. For example, consider a smart camera drone that uses onboard computer vision to track objects. A PUF embedded in the drone's processor can generate a private key to encrypt the model during boot. Even if the model were extracted, it would be unusable on another device lacking the same PUF response. That same PUF-derived key could also be used to watermark the model parameters, creating a cryptographically verifiable link between a deployed model and its origin hardware. If the model were leaked or pirated, the embedded watermark could help prove the source of the compromise.
+在 ML 应用中，PUFs 为保护资源受限系统提供了独特优势。例如，考虑一架使用机载计算机视觉追踪目标的智能摄像头无人机。嵌入无人机处理器的 PUF 可以生成私钥在引导期间加密模型。即使模型被提取，在缺乏相同 PUF 响应的另一台设备上也无法使用。同一 PUF 派生密钥还可用于对模型参数进行水印处理，在已部署模型与其原始硬件之间创建密码学可验证的链接。如果模型被泄露或盗版，嵌入的水印可以帮助证明泄露来源。
 
-PUFs also support authentication in distributed ML pipelines. If the drone offloads computation to a cloud server, the PUF can help verify that the drone has not been cloned or tampered with. The cloud backend can issue a challenge, verify the correct response from the device, and permit access only if the PUF proves device authenticity. These protections enhance trust not only in the model and data, but in the execution environment itself.
+PUFs 还支持分布式 ML 流水线中的认证。如果无人机将计算卸载到云服务器，PUF 可以帮助验证无人机未被克隆或篡改。云后端可以发出激励，验证设备的正确响应，仅在 PUF 证明设备真实性时才允许访问。这些保护不仅增强了对模型和数据的信任，还增强了执行环境本身的信任。
 
-The internal operation of a PUF is illustrated in @fig-pfu. At a high level, a PUF accepts a challenge input and produces a unique response determined by the physical microstructure of the chip [@gao2020physical]. Variants include optical PUFs, in which the challenge consists of a light pattern and the response is a speckle image, and electronic PUFs such as Arbiter PUFs (APUFs), where timing differences between circuit paths produce a binary output. Another common implementation is the SRAM PUF, which exploits the power-up state of uninitialized SRAM cells: due to threshold voltage mismatch, each cell tends to settle into a preferred value when power is first applied. These response patterns form a stable, reproducible hardware fingerprint.
+PUF 的内部操作如 @fig-pfu 所示。在高层次上，PUF 接受激励输入并产生由芯片物理微结构决定的唯一响应 [@gao2020physical]。变体包括光学 PUF（激励为光图案，响应为散斑图像）和电子 PUF（如仲裁器 PUF/APUF，电路路径之间的时序差异产生二进制输出）。另一种常见实现是 SRAM PUF，它利用未初始化 SRAM 单元的上电状态：由于阈值电压失配，每个单元在首次上电时倾向于稳定在一个优选值。这些响应模式形成了稳定、可重现的硬件指纹。
 
-![**Physical Unclonable Functions**: Pufs generate unique hardware fingerprints from inherent manufacturing variations, enabling device authentication and secure key generation without storing secrets. Optical and electronic PUF implementations use physical phenomena—such as light speckle patterns or timing differences—to produce challenge-response pairs that are difficult to predict or replicate. Source: [@gao2020physical].](images/png/puf_basics.png){#fig-pfu}
+![**物理不可克隆函数**：PUFs 从固有的制造差异中生成唯一的硬件指纹，无需存储秘密即可实现设备认证和安全密钥生成。光学和电子 PUF 实现利用物理现象——如光散斑图案或时序差异——来产生难以预测或复制的激励-响应对。来源：[@gao2020physical]。](images/png/puf_basics.png){#fig-pfu}
 
-Despite their promise, PUFs present several challenges in system design. Their outputs can be sensitive to environmental variation, such as changes in temperature or voltage, which can introduce instability or bit errors in the response. To ensure reliability, PUF systems must often incorporate error correction codes or helper data schemes. Managing large sets of challenge-response pairs also raises questions about storage, consistency, and revocation. Additionally, the unique statistical structure of PUF outputs may make them vulnerable to machine learning-based modeling attacks if not carefully shielded from external observation.
+尽管前景广阔，PUFs 在系统设计中也面临若干挑战。它们的输出可能对温度或电压变化等环境变化敏感，这可能导致响应中的不稳定或比特错误。为确保可靠性，PUF 系统通常必须包含纠错码或辅助数据方案。管理大量激励-响应对也引发了关于存储、一致性和撤销的问题。此外，PUF 输出的独特统计结构如果不小心屏蔽外部观测，可能使其容易受到基于机器学习的建模攻击。
 
-From a manufacturing perspective, incorporating PUF technology can increase device cost or require additional layout complexity. While PUFs eliminate the need for external key storage, thereby reducing long-term security risk and provisioning cost, they may require calibration and testing during fabrication to ensure consistent performance across environmental conditions and device aging.
+从制造角度来看，纳入 PUF 技术可能增加设备成本或需要额外的布局复杂性。虽然 PUFs 消除了外部密钥存储的需要，从而降低了长期安全风险和配置成本，但它们可能需要在校准和测试过程中确保在不同环境条件和设备老化下的一致性能。
 
-Nevertheless, Physical Unclonable Functions remain a compelling building block for securing embedded machine learning systems. By embedding hardware identity directly into the chip, PUFs support lightweight cryptographic operations, reduce key management burden, and help establish root-of-trust anchors in distributed or resource-constrained environments. When integrated thoughtfully, they complement other hardware-assisted security mechanisms such as Secure Boot, TEEs, and HSMs to provide defense-in-depth across the ML system lifecycle.
+尽管如此，物理不可克隆函数仍然是保护嵌入式机器学习系统的引人注目的构建模块。通过将硬件身份直接嵌入芯片，PUFs 支持轻量级密码学操作，减少密钥管理负担，并帮助在分布式或资源受限环境中建立信任根锚点。在经过深思熟虑的集成时，它们与其他硬件辅助安全机制（如安全启动、TEEs 和 HSMs）互补，在 ML 系统生命周期中提供纵深防御。
 
-#### Mechanisms Comparison {#sec-security-privacy-mechanisms-comparison-2dcb}
+#### 机制对比 {#sec-security-privacy-mechanisms-comparison-2dcb}
 
-Hardware-assisted security mechanisms play a foundational role in establishing trust within modern machine learning systems. While software-based defenses offer flexibility, they ultimately rely on the security of the hardware platform. As machine learning workloads increasingly operate on edge devices, embedded platforms, and untrusted infrastructure, hardware-backed protections become important for maintaining system integrity, confidentiality, and trust.
+硬件辅助安全机制在现代机器学习系统中建立信任方面发挥着基础性作用。虽然基于软件的防御提供了灵活性，但它们最终依赖于硬件平台的安全性。随着机器学习工作负载越来越多地在边缘设备、嵌入式平台和不可信基础设施上运行，硬件支持的保护对于维护系统完整性、机密性和信任变得越来越重要。
 
-Trusted Execution Environments (TEEs) provide runtime isolation for model inference and sensitive data handling. Secure Boot enforces integrity from power-on, ensuring that only verified software is executed. Hardware Security Modules (HSMs) offer tamper-resistant storage and cryptographic processing for secure key management, model signing, and firmware validation. Physical Unclonable Functions (PUFs) bind secrets and authentication to the physical characteristics of a specific device, enabling lightweight and unclonable identities.
+可信执行环境（TEEs）为模型推理和敏感数据处理提供运行时隔离。安全启动从上电开始强制执行完整性，确保只有经过验证的软件被执行。硬件安全模块（HSMs）提供防篡改存储和密码学处理，用于安全密钥管理、模型签名和固件验证。物理不可克隆函数（PUFs）将秘密和认证绑定到特定设备的物理特征，实现轻量级且不可克隆的身份。
 
-These mechanisms address different layers of the system stack, ranging from initialization and attestation to runtime protection and identity binding, and complement one another when deployed together. @tbl-hw-security-comparison below compares their roles, use cases, and trade-offs in machine learning system design.
+这些机制应对系统栈的不同层面——从初始化和认证到运行时保护和身份绑定——在组合部署时相互补充。下方的 @tbl-hw-security-comparison 比较了它们在机器学习系统设计中的角色、用例和权衡。
 
-+------------------------------+------------------------------+----------------------------------------+----------------------------------------------+
-| **Mechanism**                | **Primary Function**         | **Common Use in ML**                   | **Trade-offs**                               |
-+:=============================+:=============================+:=======================================+:=============================================+
-| **Trusted Execution**        | Isolated runtime environment | Secure inference and on-device privacy | Added complexity, memory limits, perf. cost  |
-|                              | for secure computation       | for sensitive inputs and outputs       |                                              |
-| **Environment (TEE)**        |                              |                                        | Requires trusted code development            |
-+------------------------------+------------------------------+----------------------------------------+----------------------------------------------+
-| **Secure Boot**              | Verified boot sequence       | Ensures only signed ML models and      | Key management complexity, vendor lock-in    |
-|                              | and firmware validation      | firmware execute on embedded devices   | Performance impact during startup            |
-+------------------------------+------------------------------+----------------------------------------+----------------------------------------------+
-| **Hardware Security Module** | Secure key generation and    | Signing ML models, securing training   | High cost, integration overhead, limited I/O |
-| **(HSM)**                    | storage, crypto-processing   | pipelines, verifying firmware          |                                              |
-|                              |                              |                                        | Requires infrastructure-level provisioning   |
-+------------------------------+------------------------------+----------------------------------------+----------------------------------------------+
-| **Physical Unclonable**      | Hardware-bound identity      | Model binding, device authentication,  | Environmental sensitivity, modeling attacks  |
-|                              | and key derivation           | protecting IP in embedded deployments  |                                              |
-| **Function (PUF)**           |                              |                                        | Needs error correction and calibration       |
-+------------------------------+------------------------------+----------------------------------------+----------------------------------------------+
+| **机制** | **主要功能** | **ML 中的常见用途** | **权衡** |
+|:---|:---|:---|:---|
+| **可信执行环境（TEE）** | 安全计算的隔离运行时环境 | 面向敏感输入和输出的安全推理和设备端隐私 | 增加复杂性、内存限制、性能开销；需要可信代码开发 |
+| **安全启动** | 经过验证的引导序列和固件验证 | 确保只有签名的 ML 模型和固件在嵌入式设备上执行 | 密钥管理复杂性、厂商锁定；启动时的性能影响 |
+| **硬件安全模块（HSM）** | 安全密钥生成和存储、密码学处理 | 签名 ML 模型、保护训练流水线、验证固件 | 高成本、集成开销、有限 I/O；需要基础设施级配置 |
+| **物理不可克隆函数（PUF）** | 硬件绑定的身份和密钥派生 | 模型绑定、设备认证、在嵌入式部署中保护知识产权 | 对环境敏感、建模攻击风险；需要纠错和校准 |
 
-: **Hardware Security Mechanisms**: Machine learning systems use diverse hardware defenses—trusted execution environments, secure boot, hardware security modules, and physical unclonable functions—to establish trust and protect sensitive data across the system stack. The table details how each mechanism addresses specific security challenges—from runtime isolation and integrity verification to key management and device identity—and emphasizes the associated trade-offs in performance and complexity. {#tbl-hw-security-comparison}
+: **硬件安全机制**：机器学习系统使用多样化的硬件防御——可信执行环境、安全启动、硬件安全模块和物理不可克隆函数——来建立信任并保护整个系统栈的敏感数据。该表详细说明了每种机制如何应对特定的安全挑战——从运行时隔离和完整性验证到密钥管理和设备身份——并强调了性能和复杂性方面的相关权衡。 {#tbl-hw-security-comparison}
 
-Together, these hardware primitives form the foundation of a defense-in-depth strategy for securing ML systems in adversarial environments. Their integration is especially important in domains that demand provable trust, such as autonomous vehicles, healthcare devices, federated learning systems, and important infrastructure.
+这些硬件原语共同构成了在对抗性环境中保护 ML 系统的纵深防御策略的基础。它们的集成在需要可证明信任的领域尤为重要，如自动驾驶汽车、医疗设备、联邦学习系统和关键基础设施。
 
-<!-- ### Toward Trustworthy Systems {#sec-security-privacy-toward-trustworthy-systems-1e6d}
+<!-- ### 迈向可信系统 {#sec-security-privacy-toward-trustworthy-systems-1e6d}
 
-Defending machine learning systems against adversarial threats, misuse, and system compromise requires more than isolated countermeasures. As this section has shown, effective defense emerges from the careful integration of mechanisms at multiple layers of the ML stack—from privacy-preserving data handling and robust model design to runtime monitoring and hardware-enforced isolation. No single component can provide complete protection; instead, a trustworthy system is the result of coordinated design decisions that address risk across the data, model, system, and infrastructure layers.
+保护机器学习系统免受对抗性威胁、滥用和系统攻破需要的不仅仅是孤立的对策。正如本节所示，有效的防御来自在 ML 栈多个层面精心整合机制——从隐私保护的数据处理和鲁棒模型设计到运行时监控和硬件强制隔离。没有单个组件能提供完整的保护；相反，可信系统是跨越数据、模型、系统和基础设施层面应对风险的协调设计决策的结果。
 
-Defensive strategies must align with the deployment context and threat model. What is appropriate for a public cloud API may differ from the requirements of an embedded medical device or a fleet of edge-deployed sensors. Design choices must balance security, performance, and usability, recognizing that protections often introduce operational trade-offs. Monitoring and incident response mechanisms ensure resilience during live operation, while hardware-based roots of trust ensure system integrity even when higher layers are compromised.
+防御策略必须与部署环境和威胁模型保持一致。适用于公共云 API 的策略可能不同于嵌入式医疗设备或边缘部署传感器集群的要求。设计选择必须平衡安全性、性能和可用性，认识到保护措施通常会引入操作权衡。监控和事件响应机制确保在线操作期间的弹性，而硬件信任根确保即使高层被攻破也能保持系统完整性。
 
-As machine learning continues to expand into safety-important, privacy-sensitive, and decentralized environments, the need for robust, end-to-end defense becomes increasingly urgent. Building ML systems that are not only accurate, but secure, private, and auditable, is core to long-term deployment success and public trust.
+随着机器学习不断扩展到安全关键、隐私敏感和去中心化环境中，对鲁棒的端到端防御的需求变得日益迫切。构建不仅准确，而且安全、私密和可审计的 ML 系统，是长期部署成功和公众信任的核心。
 
-The technical defenses we've established here form the foundation for the broader robustness framework explored in @sec-robust-ai. While this chapter has focused on protecting against malicious attacks and privacy breaches, @sec-robust-ai extends these concepts to ensure system-wide reliability under all forms of stress—from natural distribution shifts to hardware failures. The adversarial training techniques introduced here for security become part of a comprehensive robustness strategy that includes uncertainty quantification, out-of-distribution detection, and graceful degradation. Similarly, the monitoring infrastructure we've established for security incident detection provides the foundation for the broader observability systems required for robust AI deployment.
+我们在此建立的技术防御为 @sec-robust-ai 中探讨的更广泛的鲁棒性框架奠定了基础。虽然本章侧重于防范恶意攻击和隐私泄露，但 @sec-robust-ai 将这些概念扩展到确保在各种压力下的系统级可靠性——从自然分布偏移到硬件故障。此处为安全引入的对抗性训练技术成为综合鲁棒性策略的一部分，包括不确定性量化、分布外检测和优雅降级。类似地，我们为安全事件检测建立的监控基础设施为鲁棒 AI 部署所需的更广泛可观测系统提供了基础。
 
-These security and privacy foundations also connect directly to the operational practices detailed in @sec-ml-operations, which provides the frameworks for implementing these protections at scale. The energy and computational overhead of security measures must be considered within the sustainability frameworks explored in @sec-sustainable-ai, and the broader ethical implications connect to the responsible AI practices covered in @sec-responsible-ai.
+这些安全和隐私基础还直接关联到 @sec-ml-operations 中详细的操作实践，后者提供了大规模实施这些保护的框架。安全措施的能量和计算开销必须在 @sec-sustainable-ai 中探讨的可持续性框架中考虑，更广泛的伦理影响则与 @sec-responsible-ai 中涵盖的负责任 AI 实践相关联。
 
-The process of engineering trustworthy ML systems requires a structured approach that applies the layered defense principles established earlier to specific deployment contexts. @fig-trustworthy-ml-recipe provides a practical framework to guide this process across technical and deployment dimensions. The design flow begins with a thorough assessment of the threat model and deployment context, which informs the selection of appropriate defenses from our established stack. This includes data-layer protections such as differential privacy (DP), federated learning (FL), and encryption; model-layer defenses like robustness techniques, watermarking, and secure deployment practices; runtime-layer measures such as input validation and output monitoring; and hardware-layer solutions including TEEs, secure boot, and PUFs.
+工程化可信 ML 系统的过程需要结构化方法，将前面建立的分层防御原则应用于特定部署环境。@fig-trustworthy-ml-recipe 提供了跨技术和部署维度指导这一过程的实用框架。设计流程从对威胁模型和部署环境的全面评估开始，这指导了从我们已建立的防御栈中选择适当防御措施。这包括数据层保护（如差分隐私 DP、联邦学习 FL 和加密）、模型层防御（如鲁棒性技术、水印和安全部署实践）、运行时层措施（如输入验证和输出监控）以及硬件层解决方案（包括 TEEs、安全启动和 PUFs）。
 
 ::: {#fig-trustworthy-ml-recipe fig-env="figure" fig-pos="htb"}
 ```{.tikz}
@@ -2243,11 +2207,11 @@ Box6/.style={Box,draw=OrangeLine,fill=OrangeL!50},
 \end{tikzpicture}
 ```
 
-**Trustworthy ML System Design**: Engineering secure and private machine learning systems requires a layered approach, integrating defenses at the data, model, runtime, and hardware levels to mitigate evolving threats and ensure responsible deployment. This design flow connects threat modeling with practical safeguards, enabling robust and auditable ML solutions for safety-important applications.
+**可信 ML 系统设计**：工程化安全和私密的机器学习系统需要分层方法，在数据、模型、运行时和硬件层面集成防御，以减轻不断演进的威胁并确保负责任的部署。这一设计流程将威胁建模与实用保障措施联系起来，为安全关键应用提供鲁棒和可审计的 ML 解决方案。
 
 :::
 
-This design flow emphasizes the importance of a comprehensive approach to security, where each layer of the system is fortified against potential threats while remaining adaptable to evolving risks. By integrating these principles into the design and deployment of machine learning systems, organizations can build solutions that are not only effective but also resilient, trustworthy, and aligned with ethical standards.
+这一设计流程强调了综合安全方法的重要性，其中系统的每一层都针对潜在威胁进行了加固，同时保持对不断变化的风险的适应性。通过将这些原则集成到机器学习系统的设计和部署中，组织可以构建不仅有效，而且具有弹性、可信并与伦理标准一致的解决方案。
 
 ### 防御选择框架 {#sec-security-privacy-defense-selection-framework-320b}
 
