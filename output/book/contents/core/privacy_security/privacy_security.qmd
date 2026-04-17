@@ -686,8 +686,13 @@ until it’s too late to do anything about it.};
 node[below=5pt,pos=0.1]{Update from source}
 node[left=5pt,pos=0.85,black,fill=magenta!20,circle,inner sep=1pt]{2}(EKV4.north);
 \end{tikzpicture}
-```**震网病毒**：通过利用Windows和西门子软件漏洞攻击PLC，展示了供应链攻击如何使数字恶意软件造成物理基础设施损坏。现代机器学习系统通过受损的训练数据、后门依赖项和被篡改的模型权重面临类似的风险。@fig-stuxnet
-:::### 隔离不足：Jeep切诺基黑客事件 {#sec-security-privacy-insufficient-isolation-jeep-cherokee-hack-6a7c}
+```
+
+**震网病毒**：通过利用Windows和西门子软件漏洞攻击PLC，展示了供应链攻击如何使数字恶意软件造成物理基础设施损坏。现代机器学习系统通过受损的训练数据、后门依赖项和被篡改的模型权重面临类似的风险。@fig-stuxnet
+
+:::
+
+### 隔离不足：Jeep切诺基黑客事件 {#sec-security-privacy-insufficient-isolation-jeep-cherokee-hack-6a7c}
 
 2015年的Jeep切诺基黑客事件展示了日常产品中的互联性如何制造新的漏洞。安全研究人员公开演示了对Jeep切诺基的一次远程网络攻击，揭示了汽车系统设计中的重要漏洞[@miller2015remote; @miller2019lessons]。作为一项受控实验，研究人员利用了车辆Uconnect娱乐系统中的一个漏洞，该系统通过蜂窝网络连接到互联网。通过远程访问该系统，他们发送了影响车辆发动机、变速箱和制动系统的命令，而无需物理接触汽车。
 
