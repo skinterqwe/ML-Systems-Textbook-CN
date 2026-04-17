@@ -947,22 +947,15 @@ anchor=north]{\textbf{Exact Model Theft}};
 
 该攻击并未重建整个模型，但揭示了内部架构参数，并为未来更深层次的提取开了先例。这项工作表明，即使是部分模型窃取也会对机密性和竞争优势构成风险，尤其是在可以通过诸如 logit bias 和 log-probabilities 之类的丰富 API 响应对模型行为进行探测时。
 
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
-| **Model**                         | **Size**                   | **Number of**       | **RMS**                        | **Cost (USD)**             |
-|                                   | **(Dimension Extraction)** | **Queries**         | **(Weight Matrix Extraction)** |                            |
-+:==================================+:===========================+:====================:+:===============================+:===========================:+
-| **OpenAI ada**                    | 1024 ✓                     | &lt; 2 \times 10^6$ | $5 \cdot 10^{-4}$              | $1 /$4                    |
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
-| **OpenAI babbage**                | 2048 ✓                     | &lt; 4 \times 10^6$|$7 \cdot 10^{-4}$|$2 / $12                   |
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
-| **OpenAI babbage-002**            | 1536 ✓                     | &lt; 4 \times 10^6$ | Not implemented                | $2 /$12                   |
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
-| **OpenAI gpt-3.5-turbo-instruct** | Not disclosed              | &lt; 4 \times 10^7$| Not implemented                |$200 / ~$2,000 (estimated) |
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
-| **OpenAI gpt-3.5-turbo-1106**     | Not disclosed              | &lt; 4 \times 10^7$ | Not implemented                | $800 / ~$8,000 (estimated) |
-+-----------------------------------+----------------------------+---------------------+--------------------------------+----------------------------+
+| **模型** | **大小（维度提取）** | **查询次数** | **RMS（权重矩阵提取）** | **成本（美元）** |
+|:---|:---|:---|:---|:---|
+| **OpenAI ada** | 1024 ✓ | $< 2 	imes 10^6$ | $5 \cdot 10^{-4}$ | $1 / $4 |
+| **OpenAI babbage** | 2048 ✓ | $< 4 	imes 10^6$ | $7 \cdot 10^{-4}$ | $2 / $12 |
+| **OpenAI babbage-002** | 1536 ✓ | $< 4 	imes 10^6$ | 未实现 | $2 / $12 |
+| **OpenAI gpt-3.5-turbo-instruct** | 未公开 | $< 4 	imes 10^7$ | 未实现 | $200 / ~$2,000（估计） |
+| **OpenAI gpt-3.5-turbo-1106** | 未公开 | $< 4 	imes 10^7$ | 未实现 | $800 / ~$8,000（估计） |
 
-: **模型窃取成本**：攻击者可以利用公开可用的 API，以相对较低的查询成本提取模型权重；该表量化了针对 OpenAI 的 ada 和 babbage 模型的这一威胁，显示提取权重可在少于 \(4 \cdot 10^6\) 次查询下实现较低的均方根误差（RMSE）。权重提取的估计成本范围为$1 to $12，尽管存在 API 速率限制和相关开销，模型窃取攻击在经济上仍然可行。来源：@carlini2024stealing。 {#tbl-openai-theft}
+: **模型窃取成本**：攻击者可以利用公开可用的 API，以相对较低的查询成本提取模型权重；该表量化了针对 OpenAI 的 ada 和 babbage 模型的这一威胁，显示提取权重可在少于 $4 \cdot 10^6$ 次查询下实现较低的均方根误差（RMSE）。权重提取的估计成本范围为 $1 到 $12，尽管存在 API 速率限制和相关开销，模型窃取攻击在经济上仍然可行。来源：@carlini2024stealing。 {#tbl-openai-theft}
 
 如其经验评估结果所示，复现于@tbl-openai-theft，模型参数可以以低至$10^{-4}$的均方根误差被提取出来，这证实了大规模高保真近似是可行的。这些发现对系统设计具有重要启示，表明像返回 top-k logits 这样的无害 API 功能，如果控制不严，也可能成为重大的泄露向量。
 
@@ -1028,16 +1021,11 @@ $$这一形式化描述刻画了对手通过引入精心构造的数据点来操
 
 常见攻击策略包括替代模型构建、利用对抗迁移性的迁移攻击，以及基于 GAN 的扰动生成。这些方法的技术细节及其数学形式化在@sec-robust-ai 中有全面介绍。
 
-+-------------------------------+----------------------------------------------+--------------------------+------------------------------------------------+---------------------------------------------+
-| **Adversary Knowledge Level** | **Model Access**                             | **Training Data Access** | **Attack Example**                             | **Common Scenario**                         |
-+:==============================+:=============================================+:=========================+:===============================================+:============================================+
-| **White-box**                 | Full access to architecture and parameters   | Full access              | Crafting adversarial examples using gradients  | Insider threats, open-source model reuse    |
-+-------------------------------+----------------------------------------------+--------------------------+------------------------------------------------+---------------------------------------------+
-| **Grey-box**                  | Partial access (e.g., architecture only)     | Limited or no access     | Attacks based on surrogate model approximation | Known model family, unknown fine-tuning     |
-+-------------------------------+----------------------------------------------+--------------------------+------------------------------------------------+---------------------------------------------+
-| **Black-box**                 | No internal access; only query-response view | No access                | Query-based surrogate model training and       | Public APIs, model-as-a-service deployments |
-|                               |                                              |                          | transfer attacks                               |                                             |
-+-------------------------------+----------------------------------------------+--------------------------+------------------------------------------------+---------------------------------------------+
+| **对抗者知识级别** | **模型访问** | **训练数据访问** | **攻击示例** | **常见场景** |
+|:---|:---|:---|:---|:---|
+| **白盒** | 完全访问架构和参数 | 完全访问 | 使用梯度构造对抗样本 | 内部威胁、开源模型复用 |
+| **灰盒** | 部分访问（如仅架构） | 有限或无访问 | 基于替代模型近似的攻击 | 已知模型家族、未知微调 |
+| **黑盒** | 无内部访问；仅查询-响应视图 | 无访问 | 基于查询的替代模型训练和迁移攻击 | 公共 API、模型即服务部署 |
 
 : **对抗知识谱系**：攻击者对模型细节和训练数据的访问级别不同，定义了不同的威胁模型，从而影响对抗攻击的可行性和复杂性，并影响部署安全策略。该表按访问级别、典型攻击方法和常见部署场景对这些模型进行分类，阐明了保护机器学习系统的实际挑战。 {#tbl-adversary-knowledge-spectrum}
 
@@ -1057,15 +1045,11 @@ $$这一形式化描述刻画了对手通过引入精心构造的数据点来操
 
 这些威胁类型贯穿 ML 生命周期的不同阶段，并要求不同的防御策略。@tbl-threats-models-summary 下面总结了它们的关键特征。
 
-+-------------------------+---------------------+---------------------------+-----------------------------------------------+
-| **Threat Type**         | **Lifecycle Stage** | **Attack Vector**         | **Example Impact**                            |
-+:========================+:====================+:==========================+:==============================================+
-| **Model Theft**         | Deployment          | API access, insider leaks | Stolen IP, model inversion, behavioral clone  |
-+-------------------------+---------------------+---------------------------+-----------------------------------------------+
-| **Data Poisoning**      | Training            | Label flipping, backdoors | Targeted misclassification, degraded accuracy |
-+-------------------------+---------------------+---------------------------+-----------------------------------------------+
-| **Adversarial Attacks** | Inference           | Input perturbation        | Real-time misclassification, safety failure   |
-+-------------------------+---------------------+---------------------------+-----------------------------------------------+
+| **威胁类型** | **生命周期阶段** | **攻击向量** | **示例影响** |
+|:---|:---|:---|:---|
+| **模型窃取** | 部署 | API 访问、内部泄露 | 窃取知识产权、模型反演、行为克隆 |
+| **数据投毒** | 训练 | 标签翻转、后门 | 定向误分类、精度下降 |
+| **对抗攻击** | 推理 | 输入扰动 | 实时误分类、安全故障 |
 
 : **威胁态势**：机器学习系统在其整个生命周期中面临多样化威胁，从训练期间的数据操纵到部署后的模型窃取，不一而足。该表按生命周期阶段和攻击向量对这些威胁进行分类，阐明脆弱性如何显现，并支持有针对性的缓解策略。 {#tbl-threats-models-summary}
 
@@ -1640,25 +1624,13 @@ $$这一特性支持在不可信环境中的隐私保护计算，例如对敏感
 
 在考察了单个技术之后，可以清楚地看到，这些隐私保护方法不仅在其提供的保证上不同，而且在系统层面的影响上也不同。对于实践者来说，机制的选择取决于计算约束、部署架构和监管要求等因素。@tbl-privacy-technique-comparison 总结了这些方法的比较属性，重点关注隐私强度、运行时开销、成熟度和常见用例。理解这些权衡对于设计在现实约束下运行的隐私感知机器学习系统至关重要。
 
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
-| **Technique**              | **Privacy Guarantee** | **Computational Overhead** | **Deployment Maturity** | **Typical Use Case**         | **Trade-offs**                                            |
-+:===========================+:======================+:===========================+:========================+:=============================+:==========================================================+
-| **Differential Privacy**   | Formal (ε-DP)         | Moderate to High           | Production              | Training with sensitive      | Reduced accuracy; careful tuning of ε/noise               |
-|                            |                       |                            |                         | or regulated data            | required to balance utility and protection                |
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
-| **Federated Learning**     | Structural            | Moderate                   | Production              | Cross-device or cross-org    | Gradient leakage risk; requires secure aggregation        |
-|                            |                       |                            |                         | collaborative learning       | and orchestration infrastructure                          |
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
-| **Homomorphic Encryption** | Strong (Encrypted)    | High                       | Experimental            | Inference in untrusted       | High latency and memory usage; suitable for limited-scope |
-|                            |                       |                            |                         | cloud environments           | inference on fixed-function models                        |
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
-| **Secure MPC**             | Strong (Distributed)  | Very High                  | Experimental            | Joint training across        | Expensive communication; challenging to scale to many     |
-|                            |                       |                            |                         | mutually untrusted parties   | participants or deep models                               |
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
-| **Synthetic Data**         | Weak (if standalone)  | Low to Moderate            | Emerging                | Data sharing, benchmarking   | May leak sensitive patterns if training process is not    |
-|                            |                       |                            |                         | without direct access to raw | differentially private or audited for fidelity            |
-|                            |                       |                            |                         | data                         |                                                           |
-+----------------------------+-----------------------+----------------------------+-------------------------+------------------------------+-----------------------------------------------------------+
+| **技术** | **隐私保证** | **计算开销** | **部署成熟度** | **典型用例** | **权衡** |
+|:---|:---|:---|:---|:---|:---|
+| **差分隐私** | 形式化（ε-DP） | 中等到高 | 生产 | 使用敏感或受监管数据训练 | 精度下降；需精心调节 ε/噪声以平衡效用和保护 |
+| **联邦学习** | 结构性 | 中等 | 生产 | 跨设备或跨组织协作学习 | 梯度泄露风险；需要安全聚合和编排基础设施 |
+| **同态加密** | 强（加密） | 高 | 实验 | 不可信云环境中的推理 | 高延迟和内存使用；适用于固定功能模型的有限范围推理 |
+| **安全多方计算** | 强（分布式） | 非常高 | 实验 | 多个互不信任方的联合训练 | 昂贵的通信；难以扩展到多个参与者或深层模型 |
+| **合成数据** | 弱（若单独使用） | 低到中等 | 新兴 | 数据共享、基准测试，在不直接访问原始数据的情况下 | 如果训练过程未经差分隐私或保真度审计，可能泄露敏感模式 |
 
 : **隐私-准确率权衡**：数据隐私技术会带来不同程度的计算成本，并提供不同级别的正式隐私保证，因此实践者需要在隐私强度、模型效用和部署约束之间进行平衡。该表总结了关键属性——隐私保证、计算开销、成熟度、典型用例和权衡——以指导在设计隐私感知机器学习系统时做出明智决策。 {#tbl-privacy-technique-comparison}
 
@@ -2279,61 +2251,17 @@ Box6/.style={Box,draw=OrangeLine,fill=OrangeL!50},
 
 To support practical decision making, @tbl-defense-selection-framework maps common threat scenarios to appropriate defensive techniques, organized by deployment context. This framework synthesizes the strategies presented throughout this section into actionable patterns.
 
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Deployment Context**      | **Primary Threats**                 | **Recommended Defenses**                         | **Key Trade-offs**                            |
-+:============================+:====================================+:=================================================+:==============================================+
-| **Healthcare ML**           | Data leakage (HIPAA violation),     | - Differential Privacy (ε ≤ 4) for training      | 2-5% accuracy loss acceptable for compliance; |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Federated diagnostic**   | membership inference,               | - Federated Learning across hospitals            | 50-100ms inference latency from TEE overhead  |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **models)**                 | unauthorized access                 | - TEE for inference on sensitive data            |                                               |
-|                             |                                     | - Audit logging and access control (RBAC)        |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Financial ML**            | Model theft (IP loss),              | - Model encryption (AES-256) at rest             | HSM adds $10-50K capital cost; rate limiting  |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Fraud detection API)**   | adversarial evasion,                | - HSM for cryptographic key management           | may impact legitimate high-frequency users    |
-|                             | data poisoning                      | - Adversarial training (PGD-based)               |                                               |
-|                             |                                     | - Input validation + rate limiting (100 req/min) |                                               |
-|                             |                                     | - Output confidence monitoring                   |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Edge ML**                 | Physical access,                    | - Secure Boot (verified firmware)                | TEE memory limits constrain model size        |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Mobile/IoT devices)**    | side-channel attacks,               | - ARM TrustZone or similar TEE                   | (&lt;50MB); quantization required for large   |
-|                             | model extraction                    | - Model quantization + obfuscation               | models; 15-30% power overhead from encryption |
-|                             |                                     | - Encrypted model storage                        |                                               |
-|                             |                                     | - Anti-tampering hardware (PUF)                  |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Cloud ML Training**       | Data poisoning,                     | - Secure data pipelines (provenance tracking)    | Training time increases 30-120% with DP;      |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Multi-tenant platform)** | backdoor injection,                 | - Differential Privacy (DP-SGD, ε ≈ 1-10)        | gradient verification adds 10-15% compute     |
-|                             | gradient leakage                    | - Gradient verification and anomaly detection    | overhead; federated aggregation requires      |
-|                             |                                     | - Secure aggregation (if federated)              | secure communication protocols                |
-|                             |                                     | - Model watermarking for IP protection           |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Public-Facing LLM**       | Prompt injection,                   | - Input sanitization (prompt filtering)          | Aggressive filtering may block 5-10% of       |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Chatbot/API)**           | data extraction (training leakage), | - Output monitoring (PII detection)              | legitimate requests; response time increases  |
-|                             | abuse/overuse                       | - Rate limiting (per-user quotas)                | 50-100ms for content filtering; watermarking  |
-|                             |                                     | - Response watermarking                          | may be detectable by sophisticated users      |
-|                             |                                     | - Confidence thresholding (abstention)           |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Multi-Party ML**          | Data sharing restrictions,          | - Federated Learning (no raw data sharing)       | Communication overhead: 10-100x more rounds   |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Cross-organizational**   | honest-but-curious participants,    | - SMPC for secure aggregation                    | than centralized training; SMPC adds 1000x+   |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **training)**               | privacy compliance (GDPR)           | - Differential Privacy (ε ≤ 1)                   | compute cost; accuracy may degrade 5-15%;     |
-|                             |                                     | - Homomorphic Encryption (for sensitive ops)     | requires legal agreements for liability       |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **Critical Infrastructure** | Supply chain compromise,            | - Hardware attestation (TPM/PUF)                 | Development cost: 6-18 months additional      |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **(Autonomous vehicles,**   | real-time adversarial attacks,      | - Secure Boot + runtime integrity checks         | engineering; 20-40% higher hardware costs;    |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
-| **power grids)**            | safety-critical failures            | - Redundant model validation                     | latency constraints limit cryptographic       |
-|                             |                                     | - Fault injection detection                      | defenses; requires certified hardware         |
-|                             |                                     | - Fail-safe fallback mechanisms                  |                                               |
-+-----------------------------+-------------------------------------+--------------------------------------------------+-----------------------------------------------+
+| **部署场景** | **主要威胁** | **推荐防御** | **关键权衡** |
+|:---|:---|:---|:---|
+| **医疗 ML（联邦诊断模型）** | 数据泄露（违反 HIPAA）、成员推理、未授权访问 | - 训练时使用差分隐私（ε ≤ 4）；- 跨医院联邦学习；- 对敏感数据使用 TEE 推理；- 审计日志和访问控制（RBAC） | 合规可接受 2-5% 精度损失；TEE 开销导致 50-100ms 推理延迟 |
+| **金融 ML（欺诈检测 API）** | 模型窃取（知识产权损失）、对抗规避、数据投毒 | - 静态模型加密（AES-256）；- HSM 用于密码学密钥管理；- 对抗训练（基于 PGD）；- 输入验证 + 速率限制（100 次/分钟）；- 输出置信度监控 | HSM 增加 10-50K 美元资本成本；速率限制可能影响合法高频用户 |
+| **边缘 ML（移动/IoT 设备）** | 物理访问、侧信道攻击、模型提取 | - 安全启动（验证固件）；- ARM TrustZone 或类似 TEE；- 模型量化 + 混淆；- 加密模型存储；- 防篡改硬件（PUF） | TEE 内存限制约束模型大小（<50MB）；大型模型需量化；加密带来 15-30% 功耗开销 |
+| **云 ML 训练（多租户平台）** | 数据投毒、后门注入、梯度泄露 | - 安全数据流水线（溯源跟踪）；- 差分隐私（DP-SGD，ε ≈ 1-10）；- 梯度验证和异常检测；- 安全聚合（若联邦）；- 模型水印保护知识产权 | 使用 DP 时训练时间增加 30-120%；梯度验证增加 10-15% 计算开销；联邦聚合需要安全通信协议 |
+| **面向公众的 LLM（聊天机器人/API）** | 提示注入、数据提取（训练数据泄露）、滥用/过度使用 | - 输入净化（提示过滤）；- 输出监控（PII 检测）；- 速率限制（每用户配额）；- 响应水印；- 置信度阈值（弃权） | 激进过滤可能阻止 5-10% 的合法请求；内容过滤增加 50-100ms 响应时间；水印可能被高级用户检测到 |
+| **多方 ML（跨组织训练）** | 数据共享限制、诚实但好奇的参与者、隐私合规（GDPR） | - 联邦学习（不共享原始数据）；- SMPC 用于安全聚合；- 差分隐私（ε ≤ 1）；- 同态加密（用于敏感操作） | 通信开销：比集中式训练多 10-100 倍轮次；SMPC 增加 1000 倍以上计算成本；精度可能下降 5-15%；需要法律协议明确责任 |
+| **关键基础设施（自动驾驶汽车、电网）** | 供应链攻破、实时对抗攻击、安全关键故障 | - 硬件认证（TPM/PUF）；- 安全启动 + 运行时完整性检查；- 冗余模型验证；- 故障注入检测；- 故障安全回退机制 | 开发成本：额外 6-18 个月工程时间；硬件成本高 20-40%；延迟约束限制密码学防御；需要经过认证的硬件 |
 
-: **Defense Selection Framework**: Maps deployment contexts to threat-specific defensive strategies with quantified trade-offs. The framework provides starting points for security architecture design, highlighting primary threats, recommended defense combinations, and key implementation trade-offs across common ML system deployment scenarios. Practitioners should adapt these patterns based on specific regulatory requirements, risk assessments, and operational constraints. {#tbl-defense-selection-framework}
+: **防御选择框架**：将部署场景映射到特定威胁的防御策略及量化权衡。该框架为安全架构设计提供起点，突出主要威胁、推荐防御组合以及常见 ML 系统部署场景中的关键实施权衡。实践者应根据具体法规要求、风险评估和操作约束来调整这些模式。 {#tbl-defense-selection-framework}
 
 This framework provides starting points rather than complete solutions. Real-world systems typically require combinations of defenses tailored to specific regulatory requirements, threat models, and operational constraints. Use these patterns as templates, adapting them based on risk assessments, compliance mandates, and resource availability. The baseline defenses identified in Step 1 (authentication, TLS, audit logging, input validation) apply universally and are assumed present in all deployment contexts above. --><!-- ### 实施路线图：保护生产环境中的 ML 系统 {#sec-security-privacy-implementation-roadmap-securing-production-ml-system-511c-securing-production-ml-system-511c}
 
