@@ -4,216 +4,209 @@ quiz: footnote_context_quizzes.json
 concepts: conclusion_concepts.yml
 glossary: conclusion_glossary.json
 crossrefs: conclusion_xrefs.json
+engine: jupyter
 ---
 
-# Conclusion {#sec-conclusion}
+# 结论 {#sec-conclusion}
 
 ::: {layout-narrow}
+
 ::: {.column-margin}
-_DALL·E 3 Prompt: An image depicting a concluding chapter of an ML systems book, open to a two-page spread. The pages summarize key concepts such as neural networks, model architectures, hardware acceleration, and MLOps. One page features a diagram of a neural network and different model architectures, while the other page shows illustrations of hardware components for acceleration and MLOps workflows. The background includes subtle elements like circuit patterns and data points to reinforce the technological theme. The colors are professional and clean, with an emphasis on clarity and understanding._
-:::
 
-\noindent
-![](images/png/cover_conclusion.png)
+_DALL·E 3 提示词：一幅描绘机器学习系统教材总结章节的图像，打开的书页是双页展开。页面总结了神经网络、模型架构、硬件加速和 MLOps 等关键概念。一页展示神经网络和不同模型架构的图示，另一页展示用于加速的硬件组件以及 MLOps 工作流的插图。背景包含微妙的电路图案和数据点元素，以强化技术主题。整体配色专业且简洁，强调清晰与理解。_
 
 :::
 
-::: {.callout-tip title="Learning Objectives"}
-
-- Synthesize the six core systems engineering principles that transcend specific ML technologies and provide systematic guidance for engineering decisions
-- Analyze how the "measure everything" principle manifests across data engineering, benchmarking, and operational monitoring contexts
-- Apply the "design for 10x scale" principle to evaluate system architectures for cloud, edge, and mobile deployment scenarios
-- Evaluate bottleneck optimization strategies across the full ML systems stack from data pipelines to inference deployment
-- Critique failure planning approaches in ML systems by comparing traditional software reliability with ML-specific failure modes
-- Design cost-conscious ML systems that balance computational performance, operational expenses, and environmental sustainability
-- Assess hardware-software co-design opportunities across different deployment contexts including cloud, edge, and embedded systems
-- Create integrated solutions that combine technical excellence with operational maturity, security requirements, and ethical considerations
+\noindent![](images/png/cover_conclusion.png)
 
 :::
 
-## Synthesizing ML Systems Engineering: From Components to Intelligence {#sec-conclusion-synthesizing-ml-systems-engineering-components-intelligence-f244}
+::: {.callout-tip title="学习目标"}
 
-This chapter synthesizes machine learning systems engineering concepts from the preceding twenty chapters, establishing systems thinking as the fundamental paradigm for artificial intelligence development. Our progression from data engineering principles through model architectures, optimization techniques, and operational infrastructure has constructed a comprehensive knowledge foundation spanning ML systems engineering. This synthesis establishes theoretical and practical frameworks that define professional competency in machine learning systems engineering within computer systems research.
+- 综合六项核心系统工程原则，这些原则超越特定的机器学习技术，并为工程决策提供系统性指导
+- 分析“测量一切”原则如何在数据工程、基准测试和运行监控等场景中体现
+- 将“按 10 倍规模设计”原则应用于评估云端、边缘和移动部署场景下的系统架构
+- 评估从数据管道到推理部署的整个机器学习系统栈中的瓶颈优化策略
+- 通过比较传统软件可靠性与机器学习特有的失效模式，批判性地审视机器学习系统中的故障规划方法
+- 设计注重成本的机器学习系统，在计算性能、运营开销和环境可持续性之间取得平衡
+- 评估不同部署场景下硬件与软件协同设计的机会，包括云、边缘和嵌入式系统
+- 创建集成式解决方案，将技术卓越与运行成熟度、安全要求和伦理考量结合起来
+:::
 
-Contemporary artificial intelligence[^fn-ai-systems-view] achievements emerge not from isolated algorithmic innovations, but through principled systems integration that unifies computational theory with engineering practice. This systems perspective positions machine learning within computer systems engineering traditions, where transformative capabilities arise from systematic orchestration of interdependent components. The transformer architectures [@vaswani2017attention] enabling large language models exemplify this principle: their practical utility derives from integrating mathematical foundations with distributed training infrastructure, algorithmic optimization techniques, and robust operational frameworks rather than architectural innovation alone.
+## 综合机器学习系统工程：从组件到智能 {#sec-conclusion-synthesizing-ml-systems-engineering-components-intelligence-f244}
 
-[^fn-ai-systems-view]: **Artificial Intelligence (Systems Perspective)**: Intelligence emerging from integrated systems rather than individual algorithms. Modern AI applications like GPT-4 combine data pipelines (processing petabytes), distributed training (coordinating thousands of processors), efficient inference (serving millions of requests), security measures (preventing attacks), and governance frameworks (ensuring safety). Success depends on systems engineering excellence across all components.
+本章综合了前二十章中的机器学习系统工程概念，将系统思维确立为人工智能开发的基本范式。我们从数据工程原则出发，经过模型架构、优化技术和运行基础设施的逐步推进，构建了一个涵盖机器学习系统工程的全面知识基础。这一综合建立了理论与实践框架，定义了计算机系统研究中机器学习系统工程的专业能力。
 
-This chapter addresses three fundamental questions that define machine learning systems engineering boundaries. First, what enduring principles transcend specific technologies and provide systematic guidance for engineering decisions across deployment contexts, from contemporary production systems to anticipated artificial general intelligence architectures? Second, how do these principles manifest across resource-abundant cloud infrastructures, resource-constrained edge devices, and emerging generative systems? Third, how can this knowledge be applied systematically to create systems that satisfy technical requirements while addressing broader societal objectives and ethical considerations?
+当代人工智能[^fn-ai-systems-view] 的成就并非源于孤立的算法创新，而是通过将计算理论与工程实践统一起来的原则性系统集成实现的。这种系统视角将机器学习置于计算机系统工程传统之中，在这一传统里，变革性能力来自对相互依赖组件的系统化编排。赋能大语言模型的 Transformer 架构[@vaswani2017attention] 便体现了这一原则：其实际效用并不仅仅来自架构创新，而是源于将数学基础与分布式训练基础设施、算法优化技术以及稳健的运行框架整合在一起。
 
-Our analysis reflects the systems thinking paradigm that has structured this textbook, drawing from established computer systems research and engineering methodology. We systematically derive six fundamental engineering principles from technical concepts established throughout the text: comprehensive measurement, scale-oriented design, bottleneck optimization, systematic failure planning, cost-conscious design, and hardware co-design. These principles constitute a framework for principled decision-making across machine learning systems contexts. We examine their application across three domains that structure contemporary ML systems engineering: establishing technical foundations, engineering for performance at scale, and navigating production deployment realities.
+[^fn-ai-systems-view]: **人工智能（系统视角）**：智能不是来自单个算法，而是来自集成系统。现代 AI 应用如 GPT-4 结合了数据流水线（处理拍字节级数据）、分布式训练（协调成千上万的处理器）、高效推理（服务数百万请求）、安全措施（防止攻击）以及治理框架（确保安全）。成功取决于所有组件上的系统工程卓越能力。
 
-The analysis examines emerging frontiers where these principles confront their most significant challenges. From developing resilient AI systems that manage failure modes gracefully to deploying artificial intelligence for societal benefit across healthcare, education, and climate science, these engineering principles will determine artificial intelligence's societal impact trajectory. As artificial intelligence systems approach general intelligence capabilities[^fn-agi-systems], the critical question becomes not feasibility, but whether they will be engineered according to established principles of sound systems design and responsible computing.
+本章围绕定义机器学习系统工程边界的三个基本问题展开。第一，哪些持久原则能够超越具体技术，并为跨部署场景的工程决策提供系统性指导，从当代生产系统到未来预期的通用人工智能架构皆适用？第二，这些原则如何体现在资源充裕的云基础设施、资源受限的边缘设备以及新兴生成式系统中？第三，如何系统地应用这些知识，以创建既满足技术要求又兼顾更广泛社会目标和伦理考量的系统？
 
-The frameworks synthesized in this chapter establish systematic approaches for navigating the rapidly evolving artificial intelligence technology landscape while maintaining focus on fundamental engineering objectives: creating systems that scale effectively, perform reliably under diverse conditions, and address significant societal challenges. Artificial intelligence's future trajectory will be determined not through isolated research contributions, but through systematic application of systems engineering principles by practitioners who master the integration of technical excellence with operational realities and societal responsibility.
+我们的分析反映了贯穿本教材的系统思维范式，借鉴了既有的计算机系统研究与工程方法论。我们基于全文中建立的技术概念，系统地推导出六项基本工程原则：全面测量、面向规模的设计、瓶颈优化、系统性故障规划、成本意识设计以及软硬件协同设计。这些原则构成了机器学习系统语境下原则性决策的框架。我们考察它们在当代机器学习系统工程中的三个结构化领域中的应用：建立技术基础、面向规模的性能工程，以及应对生产部署现实。
 
-[^fn-agi-systems]: **Artificial General Intelligence (AGI)**: AI systems matching human-level performance across all cognitive tasks. Current estimates suggest AGI would require 10^15-10^17 FLOPS (1000x more than GPT-4), demanding novel distributed architectures, energy-efficient hardware, and infrastructure investments exceeding $1 trillion. The engineering challenge lies not in algorithms but in scaling current ML systems principles to unprecedented computational requirements.
+该分析还探讨了这些原则面临最重大挑战的新兴前沿。从构建能够优雅处理故障模式的弹性 AI 系统，到将人工智能部署于医疗、教育和气候科学等领域以造福社会，这些工程原则将决定人工智能对社会的影响轨迹。随着人工智能系统逐步逼近通用智能能力[^fn-agi-systems]，关键问题不再是可行性，而是它们是否会按照成熟系统设计和负责任计算的既定原则进行工程化构建。
 
-This synthesis establishes systematic theoretical understanding and provides the conceptual foundation for professional application within machine learning systems as a mature engineering discipline.
+本章综合出的框架，为在快速演进的人工智能技术版图中导航提供了系统性方法，同时保持对基本工程目标的关注：创建能够有效扩展、在多样条件下可靠运行并应对重大社会挑战的系统。人工智能的未来走向不会由孤立的研究贡献决定，而将由掌握技术卓越与运行现实、社会责任整合能力的实践者，通过系统性应用系统工程原则来塑造。
 
-## Systems Engineering Principles for ML {#sec-conclusion-systems-engineering-principles-ml-6501}
+[^fn-agi-systems]: **通用人工智能（AGI）**：在所有认知任务上都能达到人类水平表现的 AI 系统。当前估计表明，AGI 需要 10^15-10^17 FLOPS（比 GPT-4 高 1000 倍），这要求全新的分布式架构、能效更高的硬件，以及超过 1 万亿美元的基础设施投资。工程挑战不在算法本身，而在于将当前机器学习系统原则扩展到前所未有的计算需求上。
 
-We extract six core principles that unite the concepts explored across twenty chapters. These principles transcend specific technologies and provide enduring guidance for building today's production systems or tomorrow's artificial general intelligence.
+这一综合建立了系统性的理论理解，并为将机器学习作为一门成熟工程学科中的专业应用提供了概念基础。
 
-**Principle 1: Measure Everything**
+## ML 的系统工程原则 {#sec-conclusion-systems-engineering-principles-ml-6501}
 
-The measurement frameworks established in @sec-benchmarking-ai, complemented by the monitoring systems from @sec-ml-operations, demonstrate that successful ML systems instrument every component because you cannot optimize what you do not measure. Four analytical frameworks provide enduring measurement foundations that transcend specific technologies.
+我们提炼出六项核心原则，它们将二十章中探讨的概念统一起来。这些原则超越具体技术，为构建当今的生产系统或明日的通用人工智能提供持久的指导。
 
-Roofline analysis[^fn-roofline-analysis] identifies computational bottlenecks by plotting operational intensity against peak performance, revealing whether systems are memory bound or compute bound, essential for optimizing everything from training workloads to edge inference.
+**原则 1：衡量一切**
 
-[^fn-roofline-analysis]: **Roofline Analysis**: Performance modeling technique developed at UC Berkeley that plots computational intensity (operations per byte) against achievable performance. Reveals whether applications are limited by memory bandwidth or computational throughput, guiding optimization priorities for ML workloads.
+在@sec-benchmarking-ai 中建立的测量框架，以及由@sec-ml-operations 提供补充的监控系统，都表明成功的 ML 系统会对每个组件进行埋点，因为你无法优化你没有衡量的东西。四种分析框架为超越特定技术的持久测量基础提供了支撑。
 
-Cost performance evaluation systematically compares total ownership costs against delivered capabilities, incorporating training expenses, infrastructure requirements, and operational overhead to guide deployment decisions. Systematic benchmarking establishes reproducible measurement protocols that enable fair comparisons across architectures, frameworks, and deployment targets, ensuring optimization efforts target actual rather than perceived bottlenecks. These measurements reveal a critical insight: systems rarely fail at expected loads but when demand exceeds design assumptions by orders of magnitude.
+Roofline 分析[^fn-roofline-analysis] 通过将算术强度与峰值性能进行绘图来识别计算瓶颈，从而揭示系统是受内存限制还是受计算限制；这对于从训练负载到边缘推理的各类优化都至关重要。
 
-**Principle 2: Design for 10x Scale**
+[^fn-roofline-analysis]: **Roofline 分析**：一种在加州大学伯克利分校开发的性能建模技术，通过绘制计算强度（每字节操作数）与可实现性能的关系，来揭示应用受内存带宽还是计算吞吐量限制，并为 ML 工作负载的优化优先级提供指导。
 
-Systems that work in research rarely survive production traffic, requiring design for an order of magnitude more data, users, and computational demands than currently needed[^fn-scale-challenges]. Building on concepts from @sec-ml-systems, this principle manifests across deployment contexts: cloud systems must handle traffic spikes from thousands to millions of users, edge systems need redundancy for network partitions, and embedded systems require graceful degradation under resource exhaustion.
+成本性能评估系统地比较总拥有成本与所交付的能力，纳入训练开销、基础设施需求和运维开销，以指导部署决策。系统化基准测试建立可重复的测量协议，使跨架构、框架和部署目标的公平比较成为可能，确保优化工作针对的是实际瓶颈而不是感知中的瓶颈。这些测量揭示了一个关键洞见：系统很少在预期负载下失效，而通常是在需求超出设计假设数个数量级时才会出问题。
 
-[^fn-scale-challenges]: **10x Scale Design**: Engineering principle that systems must handle 10x their expected load to survive real-world deployment. Netflix's recommendation system scales from handling thousands to millions of concurrent users, while maintaining sub-100ms response times through careful architecture design and predictive scaling.
+**原则 2：按照 10 倍规模进行设计**
 
-Scale alone, however, provides no value if systems waste resources on non-critical paths.
+在研究环境中可行的系统很少能承受生产流量，因此需要按比当前需求高一个数量级的数据量、用户量和计算需求来设计[^fn-scale-challenges]。基于@sec-ml-systems 中的概念，这一原则在不同部署场景中都有体现：云系统必须应对从数千到数百万用户的流量峰值，边缘系统需要为网络分区提供冗余，而嵌入式系统则要求在资源耗尽时优雅降级。
 
-**Principle 3: Optimize the Bottleneck**
+[^fn-scale-challenges]: **10 倍规模设计**：一种工程原则，要求系统必须能够承受预期负载的 10 倍，才能在真实世界的部署中存活。Netflix 的推荐系统在处理从数千到数百万并发用户时仍能通过精心的架构设计和预测性扩展保持低于 100ms 的响应时间。
 
-While @sec-efficient-ai establishes efficiency principles and @sec-model-optimizations provides optimization techniques, systems analysis reveals that 80% of performance gains come from addressing the primary constraint: memory bandwidth in training workloads, network latency in distributed inference, or energy consumption in mobile deployment.
+然而，如果系统在非关键路径上浪费资源，单纯的规模扩大也毫无价值。
 
-**Principle 4: Plan for Failure**
+**原则 3：优化瓶颈**
 
-The robustness techniques from @sec-robust-ai, combined with security frameworks from @sec-responsible-ai, assume systems will fail, requiring redundancy, monitoring, and recovery mechanisms from the start. Production systems experience component failures, network partitions, and adversarial inputs daily, necessitating circuit breakers[^fn-circuit-breakers], graceful fallbacks, and automated recovery procedures.
+虽然@sec-efficient-ai 建立了效率原则，而@sec-model-optimizations 提供了优化技术，但系统分析表明，80% 的性能提升来自于解决主要约束：训练负载中的内存带宽、分布式推理中的网络延迟，或者移动部署中的能耗。
 
-[^fn-circuit-breakers]: **Circuit Breakers**: Software design pattern that prevents cascading failures by temporarily blocking requests to failing services. When error rates exceed thresholds (typically 50% over 30 seconds), circuit breakers open to prevent additional load, automatically retrying after cooldown periods to detect service recovery.
+**原则 4：为失败做规划**
 
-**Principle 5: Design Cost-Consciously**
+来自@sec-robust-ai 的鲁棒性技术，结合来自@sec-responsible-ai 的安全框架，都假定系统会失败，因此从一开始就需要冗余、监控和恢复机制。生产系统每天都会经历组件故障、网络分区和对抗性输入，因此需要熔断器[^fn-circuit-breakers]、优雅回退和自动恢复流程。
 
-From sustainability concerns to operational expenses, every technical decision has economic implications. Optimizing for total cost of ownership[^fn-ml-tco], not just performance, becomes critical when cloud GPU costs can exceed $30,000/month for large models [@ben2019cost], making efficiency optimizations worth millions in operational savings over deployment lifetimes.
+[^fn-circuit-breakers]: **熔断器**：一种软件设计模式，通过暂时阻止请求流向故障服务来防止级联故障。当错误率超过阈值（通常为 30 秒内超过 50%）时，熔断器会打开以防止进一步负载，并在冷却期后自动重试以检测服务是否恢复。
 
-[^fn-ml-tco]: **Total Cost of Ownership (TCO) for ML**: Comprehensive cost including training ($100K-$10M for large models), infrastructure (3x training costs annually), data preparation (40-60% of project budgets), operations (monitoring, updates, compliance), and failure costs (downtime averaging $5,600/minute for e-commerce). TCO analysis drives architectural decisions from cloud vs. edge deployment to model compression priorities.
+**原则 5：以成本意识进行设计**
 
-**Principle 6: Co-Design for Hardware**
+从可持续性问题到运营支出，每一项技术决策都具有经济影响。优化总拥有成本[^fn-ml-tco]，而不仅仅是性能，在云 GPU 成本对大模型而言可能超过每月 30,000 美元[@ben2019cost] 时变得尤为关键，因为效率优化在整个部署生命周期中可带来数百万美元的运营节省。
 
-Building on the acceleration techniques from @sec-ai-acceleration, efficient AI systems require algorithm hardware co-optimization, not just individual component excellence. This comprehensive approach encompasses three critical dimensions: algorithm hardware matching ensures computational patterns align with target hardware capabilities (systolic arrays favor dense matrix operations while sparse accelerators require structured pruning patterns), memory hierarchy optimization provides frameworks for analyzing data movement costs and optimizing for cache locality, and energy efficiency modeling incorporates TOPS/W metrics to guide power-conscious design decisions essential for mobile and edge deployment.
+[^fn-ml-tco]: **ML 的总拥有成本（TCO）**：包括训练（大模型可达$100K-$10M）、基础设施（每年为训练成本的 3 倍）、数据准备（占项目预算的 40–60%）、运维（监控、更新、合规）以及失败成本（电子商务停机平均每分钟 5,600 美元）在内的综合成本。TCO 分析驱动着从云端与边缘部署的选择，到模型压缩优先级等架构决策。
 
-## Applying Principles Across Three Critical Domains {#sec-conclusion-applying-principles-across-three-critical-domains-ca7d}
+**原则 6：面向硬件进行协同设计**
 
-These six foundational principles apply practically across the ML systems landscape. These principles are not abstract ideals but concrete guides that shaped every technical decision explored throughout our journey. Their manifestation varies by context yet remains consistent in purpose. We examine how they operate across three critical domains that structure ML systems engineering: building robust technical foundations where measurement and co-design establish the groundwork, engineering for performance at scale where optimization and planning enable growth, and navigating production realities where all principles converge under operational constraints.
+在@sec-ai-acceleration 中的加速技术基础上，高效的 AI 系统需要算法与硬件的协同优化，而不仅仅是单个组件的卓越表现。这种综合方法涵盖三个关键维度：算法与硬件匹配确保计算模式与目标硬件能力相一致（脉动阵列偏好稠密矩阵运算，而稀疏加速器需要结构化剪枝模式），内存层次结构优化提供分析数据移动成本与优化缓存局部性的框架，而能效建模则纳入 TOPS/W 指标，以指导对功耗敏感的设计决策，这对于移动和边缘部署尤为重要。
 
-### Building Technical Foundations {#sec-conclusion-building-technical-foundations-5865}
+## 将原则应用于三个关键领域 {#sec-conclusion-applying-principles-across-three-critical-domains-ca7d}
 
-Machine learning systems engineering rests on solid technical foundations where multiple principles converge.
+这六项基础原则在机器学习系统领域中具有广泛的实际适用性。这些原则并非抽象的理想，而是贯穿我们整个探索过程、塑造每一项技术决策的具体指南。它们的体现会因上下文而异，但目的始终一致。我们将考察它们如何作用于构成机器学习系统工程的三个关键领域：构建稳健的技术基础，其中测量与协同设计奠定底层；面向大规模性能进行工程设计，其中优化与规划推动增长；以及应对生产环境中的现实约束，在这些约束下所有原则汇聚并接受运行条件的制约。
 
-The foundation begins with data engineering, where @sec-ai-workflow established that data quality determines system quality. "Data is the new code" [@karpathy2017software] for neural networks. Production systems require instrumentation for schema evolution, lineage tracking, and quality degradation detection. When data quality degrades, effects cascade through the entire system, making data governance both a technical necessity and ethical imperative. The measurement principle manifests through continuous monitoring of distribution shifts, labeling consistency, and pipeline performance.
+### 构建技术基础 {#sec-conclusion-building-technical-foundations-5865}
 
-Building on this data foundation, frameworks and training systems embody both scale and co-design principles. The framework ecosystem from @sec-ai-frameworks introduced you to navigating trade-offs between TensorFlow's production maturity and PyTorch's research flexibility. @sec-ai-training then revealed how these frameworks scale beyond single machines, teaching you data parallelism strategies that transform weeks of training into hours through distributed coordination. Framework selection (@sec-ai-frameworks) impacts development velocity and deployment constraints. Specialization from TensorFlow Lite for mobile (@sec-ai-frameworks) to JAX for research (@sec-ai-frameworks) exemplifies hardware co-design. Distributed training through data and model parallelism, mixed precision techniques, and gradient compression all demonstrate designing for scale beyond current needs while optimizing for hardware capabilities.
+机器学习系统工程建立在坚实的技术基础之上，而多项原则正是在这里汇聚。
 
-Efficiency and Optimization (Principle 3: Optimize the Bottleneck): @sec-efficient-ai demonstrates that efficiency determines whether AI moves beyond laboratories to resource-constrained deployment. Neural compression algorithms (pruning, quantization, and knowledge distillation) systematically address bottlenecks (memory, compute, energy) while maintaining performance. This multidimensional optimization requires identifying the limiting factor and addressing it systematically rather than pursuing isolated improvements.
+基础始于数据工程，@sec-ai-workflow 说明了数据质量决定系统质量。“数据是新的代码”[@karpathy2017software] 适用于神经网络。生产系统需要对模式演进、数据血缘跟踪以及质量退化检测进行仪器化监控。当数据质量下降时，影响会在整个系统中级联传播，因此，数据治理既是技术上的必需，也是伦理上的要求。测量原则体现在对分布漂移、标注一致性和流水线性能的持续监控中。
 
-## Engineering for Performance at Scale {#sec-conclusion-engineering-performance-scale-a99a}
+在这一数据基础之上，框架和训练系统体现了规模与协同设计两项原则。来自@sec-ai-frameworks 的框架生态系统向你介绍了如何在 TensorFlow 的生产成熟度与 PyTorch 的研究灵活性之间权衡取舍。随后，@sec-ai-training 展示了这些框架如何突破单机限制，教会你使用数据并行策略，通过分布式协调将数周的训练缩短到数小时。框架选择（@sec-ai-frameworks）会影响开发速度和部署约束。从面向移动端的 TensorFlow Lite（@sec-ai-frameworks）到面向研究的 JAX（@sec-ai-frameworks）的专门化，体现了硬件协同设计。通过数据并行和模型并行进行分布式训练、混合精度技术以及梯度压缩，都展示了在优化硬件能力的同时，面向超越当前需求的规模进行设计。
 
-The technical foundations we have examined (data engineering, frameworks, and efficiency) provide the substrate for ML systems. Yet foundations alone do not create value. The second pillar of ML systems engineering transforms these foundations into systems that perform reliably at scale, shifting focus from "does it work?" to "does it work efficiently for millions of users?" This transition demands new engineering priorities and systematic application of our scaling and optimization principles.
+效率与优化（原则 3：优化瓶颈）：@sec-efficient-ai 说明了效率决定了人工智能能否走出实验室并进入资源受限的部署环境。神经压缩算法（剪枝、量化和知识蒸馏）系统性地解决了瓶颈（内存、计算、能耗），同时保持性能。这种多维优化要求识别限制因素并系统地加以解决，而不是追求孤立的改进。
 
-### Model Architecture and Optimization {#sec-conclusion-model-architecture-optimization-4e0b}
+## 面向大规模性能工程 {#sec-conclusion-engineering-performance-scale-a99a}
 
-@sec-dnn-architectures traced your journey from understanding simple perceptrons (where you first grasped how weighted inputs produce decisions) through convolutional networks that revealed how hierarchical feature extraction mirrors biological vision, to transformer architectures whose attention mechanisms enabled the language understanding powering today's AI assistants. However, architectural innovation alone proves insufficient for production deployment. Optimization techniques from @sec-model-optimizations bridge research architectures and production constraints.
+我们已经考察的技术基础（数据工程、框架和效率）为机器学习系统提供了底座。然而，只有基础还不足以创造价值。机器学习系统工程的第二根支柱将这些基础转化为能够在大规模场景下可靠运行的系统，将关注点从“它能工作吗？”转向“它能否高效地为数百万用户工作？”这一转变需要新的工程优先级，以及对我们的扩展与优化原则进行系统化应用。
 
-Following the hardware co-design principles outlined earlier, three complementary compression approaches demonstrate systematic bottleneck optimization: pruning removes redundant parameters while maintaining accuracy, quantization reduces precision requirements for 4x memory reduction, and knowledge distillation transfers capabilities to compact networks for resource-constrained deployment.
+### 模型架构与优化 {#sec-conclusion-model-architecture-optimization-4e0b}@sec-dnn-architectures 追溯了你的学习路径：从理解简单感知机（在那里你第一次领会到加权输入如何产生决策），到揭示分层特征提取如何映射生物视觉的卷积网络，再到其注意力机制使语言理解成为可能、从而支撑当今人工智能助手的 Transformer 架构。然而，仅靠架构创新不足以满足生产部署的要求。来自@sec-model-optimizations 的优化技术弥合了研究架构与生产约束之间的鸿沟。
 
-The Deep Compression pipeline [@han2015deep] exemplifies this systematic integration. Pruning, quantization, and coding combine for 10-50x compression ratios[^fn-mobilenets]. Operator fusion (combining conv-batchnorm-relu sequences) reduces memory bandwidth by 3x, demonstrating how algorithmic and systems optimizations compound when guided by the co-design imperative established in our foundational principles.
+遵循前文概述的硬件协同设计原则，三种互补的压缩方法展示了系统性的瓶颈优化：剪枝在保持准确率的同时去除冗余参数；量化通过降低精度需求实现 4 倍内存缩减；知识蒸馏则将能力迁移到更紧凑的网络中，以便在资源受限的环境中部署。
 
-[^fn-mobilenets]: **Efficient Architecture Design**: MobileNets [@howard2017mobilenets] achieve 8-9x computation reduction through depthwise separable convolutions, enabling real-time inference on mobile devices. These constraint-driven architectures demonstrate how deployment limitations catalyze algorithmic innovation applicable to all contexts.
+Deep Compression 流水线[@han2015deep] 体现了这种系统化整合。剪枝、量化和编码结合起来，可实现 10–50 倍的压缩比[^fn-mobilenets]。算子融合（将 conv-batchnorm-relu 序列合并）将内存带宽需求降低了 3 倍，这表明当算法与系统优化在我们基础原则中确立的协同设计要求指导下进行时，它们会产生叠加效应。
 
-These optimizations validate Principle 3's core insight: identify the bottleneck (memory, compute, or energy), then optimize systematically rather than pursuing isolated improvements.
+[^fn-mobilenets]: **高效架构设计**：MobileNets[@howard2017mobilenets] 通过深度可分离卷积实现 8–9 倍的计算量降低，从而支持在移动设备上进行实时推理。这些受约束条件驱动的架构表明，部署限制如何催化出可适用于所有场景的算法创新。
 
-### Hardware Acceleration and System Performance {#sec-conclusion-hardware-acceleration-system-performance-59cc}
+这些优化验证了原则 3 的核心洞见：先识别瓶颈（内存、计算或能耗），再系统地进行优化，而不是追求彼此孤立的改进。
 
-@sec-ai-acceleration shows how specialized hardware transforms computational bottlenecks into acceleration opportunities. GPUs excel at parallel matrix operations, TPUs[^fn-tpu-performance] optimize for tensor workloads, and FPGAs[^fn-fpga-ml] provide reconfigurable acceleration for specific operators.
+### 硬件加速与系统性能 {#sec-conclusion-hardware-acceleration-system-performance-59cc}@sec-ai-acceleration 展示了专用硬件如何将计算瓶颈转化为加速机会。GPU 擅长并行矩阵运算，TPU[^fn-tpu-performance] 针对张量工作负载进行了优化，而 FPGA[^fn-fpga-ml] 则为特定算子提供可重配置的加速能力。
 
-[^fn-tpu-performance]: **Tensor Processing Unit (TPU)**: Google's custom ASIC designed specifically for neural network operations, achieving significantly better performance-per-watt than contemporary GPUs for ML workloads. TPU v4 pods deliver 1.1 exaflops of peak performance for large-scale model training.
+[^fn-tpu-performance]: **张量处理单元（TPU）**：谷歌专门为神经网络运算设计的定制 ASIC，与当代 GPU 相比，在机器学习工作负载上实现了显著更高的单位功耗性能。TPU v4 pod 为大规模模型训练提供 1.1 exaflops 的峰值性能。
 
-[^fn-fpga-ml]: **Field-Programmable Gate Array (FPGA)**: Reconfigurable hardware that can be optimized for specific ML operators post-manufacturing. Microsoft's Brainwave achieves ultra-low latency inference (sub-millisecond) by customizing FPGA configurations for specific neural network architectures.
+[^fn-fpga-ml]: **现场可编程门阵列（FPGA）**：一种可重配置硬件，可在制造后针对特定机器学习算子进行优化。微软的 Brainwave 通过为特定神经网络架构定制 FPGA 配置，实现了超低延迟推理（亚毫秒级）。
 
-Building on the co-design framework established previously, software optimizations must align with hardware capabilities through kernel fusion, operator scheduling, and precision selection that balances accuracy with throughput.
+在前面建立的协同设计框架基础上，软件优化必须通过内核融合、算子调度和精度选择与硬件能力保持一致，在准确率与吞吐量之间取得平衡。@sec-benchmarking-ai 将基准测试确立为性能工程中必不可少的反馈回路。MLPerf[^fn-mlperf-impact] 为不同硬件平台提供标准化指标，使基于数据的部署权衡决策成为可能。
 
-@sec-benchmarking-ai establishes benchmarking as the essential feedback loop for performance engineering. MLPerf[^fn-mlperf-impact] provides standardized metrics across hardware platforms, enabling data-driven decisions about deployment trade-offs.
+[^fn-mlperf-impact]: **MLPerf**：衡量人工智能系统在训练与推理工作负载上性能的行业标准基准测试套件。自 2018 年以来，MLPerf[@mattson2020mlperf] 一直推动硬件创新；参与系统在公平比较各厂商的前提下，4 年间在多项基准上实现了 2–5 倍的性能提升。
 
-[^fn-mlperf-impact]: **MLPerf**: Industry-standard benchmark suite measuring AI system performance across training and inference workloads. Since 2018, MLPerf [@mattson2020mlperf] has driven hardware innovation, with participating systems showing 2-5x performance improvements across various benchmarks over 4 years while maintaining fair comparisons across vendors.
+这一性能工程基础催生了新的部署范式，使系统不再局限于中心化架构，而是延伸到边缘和移动环境。
 
-This performance engineering foundation enables new deployment paradigms that extend beyond centralized systems to edge and mobile environments.
+## 驾驭生产现实 {#sec-conclusion-navigating-production-reality-c406}
 
-## Navigating Production Reality {#sec-conclusion-navigating-production-reality-c406}
+第三个支柱关注生产部署的现实：在系统必须可靠、安全且负责任地为用户提供服务这一约束下，六项原则在此汇聚。
 
-The third pillar addresses production deployment realities where all six principles converge under the constraint that systems must serve users reliably, securely, and responsibly.
+运维与部署领域展示了 MLOps[^fn-mlops] 如何编排整个系统生命周期，从带有质量门禁的持续集成流水线，到用于安全发布的 A/B 测试框架。边缘部署则体现了多项原则的融合：在隐私收益与延迟约束之间取得平衡，同时确保在网络故障下优雅降级。
 
-The operations and deployment landscape demonstrates how MLOps[^fn-mlops] orchestrates the full system lifecycle, from continuous integration pipelines with quality gates to A/B testing frameworks for safe rollout. Edge deployment exemplifies the convergence of multiple principles: balancing privacy benefits against latency constraints while ensuring graceful degradation under network failures.
+[^fn-mlops]: **机器学习运维（MLOps）**：将 DevOps 原则应用于机器学习系统的工程学科。Netflix 通过自动化流水线每天部署 4,000 多次机器学习模型更新，同时保持 99.99% 的正常运行时间。MLOps 将手工式的模型开发转变为工业化软件工程，涵盖持续集成、部署、监控以及生产规模下的治理。
 
-[^fn-mlops]: **Machine Learning Operations (MLOps)**: Engineering discipline applying DevOps principles to ML systems. Netflix deploys 4,000+ ML model updates daily through automated pipelines, while maintaining 99.99% uptime. MLOps transforms artisanal model development into industrial software engineering, encompassing continuous integration, deployment, monitoring, and governance at production scale.
+安全与隐私方面的考量揭示了机器学习独有的脆弱性（模型提取、数据投毒、成员推断），这需要分层防御。差分隐私提供数学上的保证，联邦学习支持安全协作，而对抗训练则增强了对抗攻击的鲁棒性——这是传统软件从未面临的问题。
 
-Security and privacy considerations reveal ML's unique vulnerabilities (model extraction, data poisoning, membership inference) requiring layered defenses. Differential privacy provides mathematical guarantees, federated learning enables secure collaboration, and adversarial training builds robustness against attacks that traditional software never faces.
+除了技术层面的关注，负责任的人工智能与可持续性考量也将成本意识扩展到计算之外。公平性指标与可解释性要求从一开始就塑造了架构选择。环境影响成为设计约束：GPT-3 训练所消耗的 1,287 MWh[@strubell2019energy] 相当于为 120 户家庭供电一年，这使得对 60 多亿智能手机进行效率改进，比数据中心优化更具影响力。
 
-Beyond technical concerns, responsible AI and sustainability considerations broaden cost consciousness beyond computation. Fairness metrics and explainability requirements shape architectural choices from inception. Environmental impact becomes a design constraint: GPT-3's 1,287 MWh training cost [@strubell2019energy] equals powering 120 homes annually, making efficiency improvements on 6+ billion smartphones more impactful than datacenter optimizations.
+生产现实验证了：孤立的技术卓越是不够的。系统必须整合运维成熟度、安全防护、伦理框架与环境责任，才能持续创造价值。
 
-Production reality validates that isolated technical excellence proves insufficient. Systems must integrate operational maturity, security defenses, ethical frameworks, and environmental responsibility to deliver sustained value.
+## 未来方向与新兴机遇 {#sec-conclusion-future-directions-emerging-opportunities-0840}
 
-## Future Directions and Emerging Opportunities {#sec-conclusion-future-directions-emerging-opportunities-0840}
+在已经建立技术基础、面向性能进行工程优化并应对生产现实之后，我们将审视新兴机遇，在这些领域中，这六项原则将引导未来的发展。
 
-Having established technical foundations, engineered for performance, and navigated production realities, we examine emerging opportunities where the six principles guide future development.
+技术基础、性能工程与生产现实的融合揭示出三个新兴前沿，在这些前沿中，我们既有原则将面临最严峻的考验：跨多样化场景的近期部署、构建惠及社会的鲁棒系统，以及朝着通用人工智能迈进的工程化路径。
 
-The convergence of technical foundations, performance engineering, and production reality reveals three emerging frontiers where our established principles face their greatest tests: near-term deployment across diverse contexts, building resilient systems for societal benefit, and engineering the path toward artificial general intelligence.
+### 将原则应用于新兴部署场景 {#sec-conclusion-applying-principles-emerging-deployment-contexts-e1bb}
 
-### Applying Principles to Emerging Deployment Contexts {#sec-conclusion-applying-principles-emerging-deployment-contexts-e1bb}
+随着机器学习系统走出研究实验室，三种部署范式检验着我们既有原则的不同组合：资源充裕的云环境、资源受限的边缘设备，以及新兴的生成式系统。
 
-As ML systems move beyond research labs, three deployment paradigms test different combinations of our established principles: resource-abundant cloud environments, resource-constrained edge devices, and emerging generative systems.
+云端部署优先考虑吞吐量和可扩展性，通过内核融合、混合精度训练以及在@sec-model-optimizations 和@sec-ai-training 中探讨的梯度压缩技术，实现高 GPU 利用率。成功需要在大规模场景下平衡性能优化与成本效率。
 
-Cloud deployment prioritizes throughput and scalability, achieving high GPU utilization through kernel fusion, mixed precision training, and gradient compression techniques explored in @sec-model-optimizations and @sec-ai-training. Success requires balancing performance optimization with cost efficiency at scale.
+相比之下，移动和边缘系统面临严格的功耗、内存和延迟约束，这就要求复杂的软硬件协同设计。来自 @sec-efficient-ai 的效率技术——深度可分离卷积、神经架构搜索和量化——使模型能够部署到计算能力比数据中心低 100 到 1000 倍的设备上。边缘部署体现了人工智能的民主化[^fn-ai-democratization]：无法在数十亿边缘设备上运行的系统，不可能产生全球影响。
 
-In contrast, mobile and edge systems face stringent power, memory, and latency constraints that demand sophisticated hardware-software co-design. The efficiency techniques from @sec-efficient-ai—depthwise separable convolutions, neural architecture search, and quantization—enable deployment on devices with 100-1000x less computational power than data centers. Edge deployment represents AI's democratization[^fn-ai-democratization]: systems that cannot run on billions of edge devices cannot achieve global impact.
+[^fn-ai-democratization]: **AI 民主化**：通过高效系统工程，让人工智能走出科技巨头，面向更广泛人群。面向移动设备优化的模型使人工智能能够运行在全球 60 多亿部智能手机上，而云端 API 则服务于 5000 多万开发者。通过$100,000 to $100 训练专用模型所带来的成本降低，正在使访问人工智能变得更加普及，但这需要在硬件、算法和基础设施上进行系统性的优化，才能在大规模场景下保持质量。
 
-[^fn-ai-democratization]: **AI Democratization**: Making AI accessible beyond tech giants through efficient systems engineering. Mobile-optimized models enable AI on 6+ billion smartphones worldwide, while cloud APIs serve 50+ million developers. Cost reductions from $100,000 to $100 for training specialized models democratize access, but require systematic optimization across hardware, algorithms, and infrastructure to maintain quality at scale.
+生成式人工智能系统以前所未有的规模体现了这些原则，它们需要在自回归计算、动态模型分区和投机解码方面采取新的方法。这些系统表明，前文各节中的测量、优化和协同设计原则，同样适用于推动基础设施边界的新兴技术。
 
-Generative AI systems exemplify the principles at unprecedented scale, requiring novel approaches to autoregressive computation, dynamic model partitioning, and speculative decoding. These systems demonstrate how the measurement, optimization, and co-design principles from earlier sections apply to emerging technologies pushing infrastructure boundaries.
+在更极端的约束下运行时，TinyML 和嵌入式系统面临千字节级内存预算、毫瓦级功耗上限以及长达十年的部署生命周期。在这些场景中的成功验证了完整的系统工程方法：谨慎测量能够揭示真实瓶颈，软硬件协同设计能够最大化效率，而为失败做规划则能确保在严重资源受限的条件下依然保持可靠性。移动端部署约束催生了 MobileNet 和 EfficientNet 等突破性技术，它们惠及所有人工智能部署场景，表明系统约束能够推动算法创新。
 
-Operating under even more extreme constraints, TinyML and embedded systems face kilobyte memory budgets, milliwatt power envelopes, and decade-long deployment lifecycles. Success in these contexts validates the full systems engineering approach: careful measurement reveals actual bottlenecks, hardware co-design maximizes efficiency, and planning for failure ensures reliability despite severe resource limitations. Mobile deployment constraints have driven breakthrough techniques like MobileNets and EfficientNets that benefit all AI deployment contexts, demonstrating how systems constraints catalyze algorithmic innovation.
+这些部署场景验证了我们的核心论点：成功取决于系统性地应用这六项系统工程原则，而不是追求孤立的优化。
 
-These deployment contexts validate our core thesis: success depends on applying the six systems engineering principles systematically rather than pursuing isolated optimizations.
+### 构建鲁棒的人工智能系统 {#sec-conclusion-building-robust-ai-systems-827c}@sec-robust-ai 表明，鲁棒性需要从一开始就围绕失败进行设计，这正是原则 4 的核心要求。机器学习系统面临独特的失效模式：分布漂移会降低准确率，对抗性输入会利用漏洞，而边缘案例会暴露训练数据的局限。鲁棒系统将冗余硬件用于容错（@sec-robust-ai）、使用集成方法减少单点故障（@sec-robust-ai），并通过不确定性量化实现优雅降级（@sec-robust-ai）。随着人工智能系统承担越来越自主的角色，为失败做规划将决定系统是安全部署还是灾难性失败。
 
-### Building Robust AI Systems {#sec-conclusion-building-robust-ai-systems-827c}
+### 面向社会福祉的人工智能 {#sec-conclusion-ai-societal-benefit-daba}@sec-ai-good 展示了人工智能在医疗保健、气候科学、教育和可访问性等领域的变革潜力，而在这些领域中，六项原则汇聚一处。气候建模需要高效推理（原则 3：优化瓶颈）。医疗人工智能要求可解释的决策和持续监控（原则 1：测量）。教育技术需要在全球规模上提供保护隐私的个性化服务（原则 2 和 4：面向规模进行设计、为失败做规划）。这些应用验证了仅有技术卓越是不够的。成功需要技术人员、领域专家、政策制定者以及受影响社区之间的跨学科协作。
 
-@sec-robust-ai demonstrates that robustness requires designing for failure from the ground up, Principle 4's core mandate. ML systems face unique failure modes: distribution shifts degrade accuracy, adversarial inputs exploit vulnerabilities, and edge cases reveal training data limitations. Resilient systems combine redundant hardware for fault tolerance (@sec-robust-ai), ensemble methods to reduce single-point failures (@sec-robust-ai), and uncertainty quantification to enable graceful degradation (@sec-robust-ai). As AI systems take on increasingly autonomous roles, planning for failure becomes the difference between safe deployment and catastrophic failure.
+### 通往 AGI 的道路 {#sec-conclusion-path-agi-1c6d}
 
-### AI for Societal Benefit {#sec-conclusion-ai-societal-benefit-daba}
+复合人工智能系统[^fn-compound-ai] 框架为高级智能提供了架构蓝图：可独立更新的模块化组件、针对特定任务优化的专用模型，以及通过多层验证实现可解释性和安全性的可分解架构。
 
-@sec-ai-good demonstrates AI's transformative potential across healthcare, climate science, education, and accessibility, domains where all six principles converge. Climate modeling requires efficient inference (Principle 3: Optimize Bottleneck). Medical AI demands explainable decisions and continuous monitoring (Principle 1: Measure). Educational technology needs privacy-preserving personalization at global scale (Principles 2 & 4: Design for Scale, Plan for Failure). These applications validate that technical excellence alone proves insufficient. Success requires interdisciplinary collaboration among technologists, domain experts, policymakers, and affected communities.
+[^fn-compound-ai]: **复合人工智能系统**：由多个专用模型组合而成的架构，而不是单一的整体式系统。Google 的 PaLM-2 为推理、记忆和工具使用分别设置了独立模型，从而支持独立扩展与调试。这种模块化方法通过冗余和专业化将训练成本降低 10 倍，同时提升了可靠性，验证了模块化与故障隔离的系统工程原则。
 
-### The Path to AGI {#sec-conclusion-path-agi-1c6d}
+前方的工程挑战要求我们掌握所探讨的完整技术栈，从数据工程（@sec-ai-workflow）和分布式训练（@sec-ai-training）到模型优化（@sec-model-optimizations）以及运维基础设施（@sec-ml-operations）。决定通往通用人工智能之路的，不是算法突破，而是这些系统工程原则。
 
-The compound AI systems[^fn-compound-ai] framework provides the architectural blueprint for advanced intelligence: modular components that can be updated independently, specialized models optimized for specific tasks, and decomposable architectures that enable interpretability and safety through multiple validation layers.
+## 你的前行之旅：工程化智能 {#sec-conclusion-journey-forward-engineering-intelligence-427d}
 
-[^fn-compound-ai]: **Compound AI Systems**: Architectures combining multiple specialized models rather than single monolithic systems. Google's PaLM-2 uses separate models for reasoning, memory, and tool use, enabling independent scaling and debugging. This modular approach reduces training costs by 10x while improving reliability through redundancy and specialization, validating systems engineering principles of modularity and fault isolation.
+二十章之前，我们怀着一个愿景开始：人工智能（AI）作为一种变革性力量，重塑文明。如今，你已经掌握了把这一愿景变为现实的系统工程原则。
 
-The engineering challenges ahead require mastery across the full stack we have explored, from data engineering (@sec-ai-workflow) and distributed training (@sec-ai-training) to model optimization (@sec-model-optimizations) and operational infrastructure (@sec-ml-operations). These systems engineering principles, not algorithmic breakthroughs, define the path toward artificial general intelligence.
+通用人工智能将由这样的工程师构建：他们懂得智能是一种系统属性，源于各组件的集成，而非某个单一突破。想想 GPT-4 的成功[@openai2023gpt4]：它需要能够处理拍字节级文本的数据流水线（@sec-ai-workflow）、协调成千上万块 GPU 的分布式训练基础设施[^fn-distributed-ml]（@sec-ai-training）、利用注意力机制和混合专家模型的高效架构（@sec-efficient-ai）、防止提示注入攻击的安全部署（@sec-responsible-ai），以及实现安全过滤器和使用策略的负责任治理（@sec-responsible-ai）。
 
-## Your Journey Forward: Engineering Intelligence {#sec-conclusion-journey-forward-engineering-intelligence-427d}
+[^fn-distributed-ml]: **分布式机器学习系统**：将传统分布式系统原理（共识、分区、复制）扩展到机器学习工作负载。GPT-3 训练需要 1024 块 A100 GPU 共同通信 1750 亿个参数，其中网络拓扑和梯度同步成为关键瓶颈。不同于无状态的 Web 服务，机器学习系统维护着巨大的共享状态，因此需要梯度压缩和异步更新等新方法。
 
-Twenty chapters ago, we began with a vision: artificial intelligence (AI) as a transformative force reshaping civilization. You now possess the systems engineering principles to make that vision reality.
+本文中的每一条原则，从“度量一切”到“为硬件进行协同设计”，都代表着构建那个未来的工具。
 
-Artificial general intelligence will be built by engineers who understand that intelligence is a systems property, emerging from the integration of components rather than any single breakthrough. Consider GPT-4's success [@openai2023gpt4]: it required robust data pipelines processing petabytes of text (@sec-ai-workflow), distributed training infrastructure[^fn-distributed-ml] coordinating thousands of GPUs (@sec-ai-training), efficient architectures leveraging attention mechanisms and mixture-of-experts (@sec-efficient-ai), secure deployment preventing prompt injection attacks (@sec-responsible-ai), and responsible governance implementing safety filters and usage policies (@sec-responsible-ai).
+你已经掌握的这六项原则超越了具体技术。随着框架演进、硬件进步以及新架构涌现，这些基础概念仍将保持不变。无论你是在优化当今生产环境中的推荐系统，还是在架构明天逼近通用智能的复合式 AI 系统，它们都会为你指引方向。你所探索的复合式 AI 框架、边缘部署范式以及效率优化技术，都是持久系统思维的当代体现。
 
-[^fn-distributed-ml]: **Distributed ML Systems**: Traditional distributed systems principles (consensus, partitioning, replication) extended for ML workloads. GPT-3 training required 1024 A100 GPUs communicating 175 billion parameters, where network topology and gradient synchronization become critical bottlenecks. Unlike stateless web services, ML systems maintain massive shared state, requiring novel approaches like gradient compression and asynchronous updates.
+但仅仅掌握技术原则还不够。摆在我们这一代面前的问题，不是通用人工智能是否会到来，而是它将以何种方式被构建：是否足够高效，从而让财富机构之外的人也能公平获得；是否足够安全，能够抵御滥用；是否足够可持续，能够保护我们的星球；是否足够负责任，能够公平地服务全人类。这些挑战需要机器学习系统工程的完整技术栈，需要将技术卓越与伦理承诺统一起来。
 
-Every principle in this text, from measuring everything to co-designing for hardware, represents a tool for building that future.
+当你将这些原则应用到自己的工程挑战中时，请记住，机器学习系统工程的核心是服务用户和社会。每一个架构决策、每一种优化技术、每一项运维实践，最终都应让 AI 更有益、更可及、更可信。衡量你的成功，不仅要看延迟是否降低、准确率是否提升，还要看现实世界的影响：改善了多少生命，解决了多少问题，让多少能力得以普惠。
 
-The six principles you have mastered transcend specific technologies. As frameworks evolve, hardware advances, and new architectures emerge, these foundational concepts remain constant. They will guide you whether optimizing today's production recommendation systems or architecting tomorrow's compound AI systems approaching general intelligence. The compound AI framework, edge deployment paradigms, and efficiency optimization techniques you have explored represent current instantiations of enduring systems thinking.
+那些将定义下一个世纪的智能系统——从预测极端天气的气候模型，到诊断罕见疾病的医疗 AI；从个性化学习的教育系统，到赋能数十亿人的辅助技术——都在等待你的工程专长。你现在已经拥有构建它们的知识：指导设计的原则、确保效率的技术、保障安全的框架，以及负责任部署的智慧。
 
-But mastery of technical principles alone proves insufficient. The question confronting our generation is not whether artificial general intelligence will arrive, but whether it will be built well: efficiently enough to democratize access beyond wealthy institutions, securely enough to resist exploitation, sustainably enough to preserve our planet, and responsibly enough to serve all humanity equitably. These challenges demand the full stack of ML systems engineering, technical excellence unified with ethical commitment.
+你作为机器学习系统工程师的旅程，从现在开始。带着你已经掌握的原则，去应对真正重要的挑战。构建能够扩展的系统。创造经得起时间考验的解决方案。工程化出服务人类的智能。
 
-As you apply these principles to your own engineering challenges, remember that ML systems engineering centers on serving users and society. Every architectural decision, every optimization technique, and every operational practice should ultimately make AI more beneficial, accessible, and trustworthy. Measure your success not only in reduced latency or improved accuracy, but in real-world impact: lives improved, problems solved, capabilities democratized.
+智能的未来并不是我们只需见证的东西；它是我们必须亲手构建的东西。去把它建好。
 
-The intelligent systems that will define the coming century (from climate models predicting extreme weather to medical AI diagnosing rare diseases, from educational systems personalizing learning to assistive technologies empowering billions) await your engineering expertise. You now possess the knowledge to build them: the principles to guide design, the techniques to ensure efficiency, the frameworks to guarantee safety, and the wisdom to deploy responsibly.
-
-Your journey as an ML systems engineer begins now. Take the principles you have mastered. Apply them to challenges that matter. Build systems that scale. Create solutions that endure. Engineer intelligence that serves humanity.
-
-The future of intelligence is not something we will simply witness; it is something we must build. Go build it well.
-
-*Prof. Vijay Janapa Reddi, Harvard University*
+*Vijay Janapa Reddi 教授，哈佛大学*
 
 ::: { .quiz-end }
+
 :::
