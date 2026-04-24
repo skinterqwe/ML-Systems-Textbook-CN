@@ -316,9 +316,7 @@ Cloud ML 以规模化方式推动医疗研究和诊断进步。像 [Google Genom
 
 韧性系统实现分层回退机制，在不同故障条件下保留关键功能。一个医疗监测系统展示了这种方法：
 
-```
-
-python
+```python
 class ResilientHealthcareAI:
     def diagnose(self, symptoms, connectivity_status, power_level):
         # 根据系统状态自适应选择模型
@@ -753,9 +751,7 @@ node[Text,right=1mm]{Increased\\ Resources}(BB3.20);
 
 PyTorch 通过 torchscript 优化和量化工具提供了强大的移动端部署能力。对于需要渐进式增强的社会公益类应用：
 
-```
-
-python
+```python
 class ProgressiveHealthcareAI:
     def __init__(self):
         # 基线模型：2MB，可在任何 Android 设备上运行
@@ -789,9 +785,7 @@ class ProgressiveHealthcareAI:
 
 TensorFlow Lite 擅长为资源受限的部署层创建经过优化的模型：
 
-```
-
-python
+```python
 # 渐进式增强的量化流水线
 converter = tf.lite.TFLiteConverter.from_saved_model(model_path)
 converter.optimizations = [tf.lite.Optimize.DEFAULT]
@@ -821,9 +815,7 @@ intermediate_model = converter.convert()
 
 高级实现会根据实时资源可用性动态选择模型：
 
-```
-
-python
+```python
 class AdaptivePowerManagement:
     def __init__(self, models):
         self.models = {
