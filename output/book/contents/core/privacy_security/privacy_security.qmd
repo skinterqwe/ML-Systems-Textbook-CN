@@ -1136,7 +1136,7 @@ Box4/.style={Box,  draw=OrangeLine,fill=OrangeL!50,text width=43mm}
 
 ### 硬件漏洞 {#sec-security-privacy-hardware-bugs-9efc}
 
-第一类硬件威胁源于设计漏洞。硬件并非对普遍存在的设计缺陷或漏洞免疫。攻击者可以利用这些漏洞来访问、操纵或提取敏感数据，从而破坏用户和服务所依赖的机密性和完整性。最著名的例子之一是 [Meltdown 和 Spectre](https://meltdownattack.com/) 的发现 [^fn-meltdown-spectre-impact]——现代处理器中的两个漏洞，允许恶意程序绕过内存隔离并读取其他应用程序和操作系统的 [@Lipp2018meltdown; @Kocher2018spectre]数据。
+第一类硬件威胁源于设计漏洞。硬件并非对普遍存在的设计缺陷或漏洞免疫。攻击者可以利用这些漏洞来访问、操纵或提取敏感数据，从而破坏用户和服务所依赖的机密性和完整性。最著名的例子之一是 [Meltdown 和 Spectre](https://meltdownattack.com/) 的发现 [^fn-meltdown-spectre-impact]——现代处理器中的两个漏洞，允许恶意程序绕过内存隔离并读取其他应用程序和操作系统的 [@Lipp2018meltdown; @Kocher2018spectre] 数据。
 
 [^fn-meltdown-spectre-impact]: **Meltdown/Spectre 影响**：这些漏洞于 2018 年 1 月披露，影响了自 1995 年以来制造的几乎所有处理器（数十亿台设备）。此次披露引发了所有主要操作系统的紧急补丁，导致某些工作负载的性能下降 5-30%，并促使人们重新思考处理器安全性。
 
@@ -1532,7 +1532,9 @@ anchor=north]{\textbf{Data Privacy \& Governance}};
 \end{tikzpicture}
 ```
 
-**分层防御栈**：机器学习系统需要多层面的安全策略，从基础的硬件保护逐步延伸到以数据为中心的隐私技术，并在所有层之间建立信任。这种架构将数据、模型、运行时和基础设施层面的防护措施整合起来，以缓解威胁，并确保在生产环境中的稳健部署。:::
+**分层防御栈**：机器学习系统需要多层面的安全策略，从基础的硬件保护逐步延伸到以数据为中心的隐私技术，并在所有层之间建立信任。这种架构将数据、模型、运行时和基础设施层面的防护措施整合起来，以缓解威胁，并确保在生产环境中的稳健部署。
+
+:::
 
 ### 隐私保护数据技术 {#sec-security-privacy-privacypreserving-data-techniques-64f8}
 
@@ -2303,9 +2305,8 @@ This framework provides starting points rather than complete solutions. Real-wor
 - 不恰当的密码学操作破坏了模型计算
 
 *诊断*：
-```
 
-python
+```python
 # 检查 DP 噪声影响
 def measure_privacy_utility_tradeoff(model, data, epsilon_values):
     results = {}
@@ -2346,9 +2347,8 @@ def measure_privacy_utility_tradeoff(model, data, epsilon_values):
 *症状*：将合法输入标记为对抗样本，导致服务中断。
 
 *调优方法*：
-```
 
-python
+```python
 # 调整检测阈值
 def calibrate_adversarial_detector(detector, clean_data, attack_data):
     # 找到在误报率与
@@ -2400,7 +2400,9 @@ def calibrate_adversarial_detector(detector, clean_data, attack_data):
 - 为非 IID 数据实现 FedProx 或 FedAvgM
 - 使用客户端采样策略以确保具有代表性的参与
 - 增加梯度压缩以降低通信开销
-- 实现客户端可靠性评分和故障切换机制::: -->
+- 实现客户端可靠性评分和故障切换机制
+
+:::
 
 ## 实践实施路线图 {#sec-security-privacy-practical-roadmap-8f3a}
 

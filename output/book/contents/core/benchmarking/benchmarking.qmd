@@ -1638,7 +1638,6 @@ ggplot(power_data, aes(x = SystemType)) +
 :::
 
 这种成本门槛解释了为什么 MLPerf 提交主要由大型科技公司和硬件厂商主导，而小型组织则依赖已发布的结果，而非自行进行全面评估。高门槛也促使人们需要更轻量级的内部基准实践，使组织能够在不承担全规模标准化基准测试费用的情况下做出明智决策。
-:::
 
 #### MLPerf Mobile {#sec-benchmarking-ai-mlperf-mobile-9cce}
 
