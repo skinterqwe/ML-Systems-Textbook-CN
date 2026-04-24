@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.9.36" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+
+<title>ML Systems Textbook</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "/"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="apple-touch-icon" href="/assets/images/icons/favicon.png">
+<meta name="theme-color" content="#A51C30">
+
+<script src="/assets/scripts/sidebar-auto-collapse.js" defer></script>
+
+<!-- TikZ.js for browser-side TikZ rendering -->
+<link rel="stylesheet" href="/assets/scripts/tikzjax/fonts.css">
+<script src="/assets/scripts/tikzjax/tikzjax.js" defer></script>
+<style>
+.callout-resource-slides {
+  --color1: #E0F2F1;
+  --color2: #20B2AA;
+}
+.callout-resource-exercises {
+  --color1: #E0F2F1;
+  --color2: #20B2AA;
+}
+.callout-code {
+  --color1: #F2F4F8;
+  --color2: #D1D7E0;
+}
+.callout-quiz-answer {
+  --color1: #E8F2EA;
+  --color2: #4a7c59;
+}
+.callout-definition {
+  --color1: #F0F4F8;
+  --color2: #1B4F72;
+}
+.callout-chapter-connection {
+  --color1: #FDF2F7;
+  --color2: #A51C30;
+}
+.callout-example {
+  --color1: #F0F8F6;
+  --color2: #148F77;
+}
+.callout-quiz-question {
+  --color1: #F0F0F8;
+  --color2: #5B4B8A;
+}
+.callout-resource-videos {
+  --color1: #E0F2F1;
+  --color2: #20B2AA;
+}
+.callout-colab {
+  --color1: #FFF5E6;
+  --color2: #FF6B35;
+}
+</style>
+<style>
+details.callout-resource-slides > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_resource_slides.png");
+}
+details.callout-resource-exercises > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_resource_exercises.png");
+}
+details.callout-code > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_code.png");
+}
+details.callout-quiz-answer > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_quiz_answer.png");
+}
+details.callout-definition > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_definition.png");
+}
+details.callout-chapter-connection > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_chapter_connection.png");
+}
+details.callout-example > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_example.png");
+}
+details.callout-quiz-question > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_quiz_question.png");
+}
+details.callout-resource-videos > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_resource_videos.png");
+}
+details.callout-colab > summary::before {
+  background-image: url("../../../assets/images/icons/callouts/icon_callout_colab.png");
+}
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="/index.html" class="navbar-brand navbar-brand-logo">
+    <img src="/assets/images/icons/favicon.png" alt="" class="navbar-logo light-content" />
+    <img src="/assets/images/icons/favicon.png" alt="" class="navbar-logo dark-content" />
+    </a>
+    <a class="navbar-brand" href="/index.html">
+    <span class="navbar-title">Machine Learning Systems</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn"
+      data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs"></h1>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" role="link"
+        aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+        onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="b43e2aeb169c88acb08fe42121c141fd" class="alert alert-primary hidden"><i class="bi bi-megaphone quarto-announcement-icon"></i><div class="quarto-announcement-content">🎉 **Happy New Year!** New navbar with dropdown menus. Try them out!<br>
+🔥 **TinyTorch:** Build your own ML framework from scratch. [Start →](https://mlsysbook.ai/tinytorch)<br>
+📦 **Hardware Kits:** Arduino, Seeed & Raspberry Pi labs. [Explore →](https://mlsysbook.ai/kits)<br>
+📬 **Newsletter:** ML Systems insights & updates. [Subscribe →](#subscribe)
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homepage</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/frontmatter/foreword.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foreword</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/frontmatter/about/about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/frontmatter/acknowledgements/acknowledgements.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Acknowledgements</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/frontmatter/socratiq/socratiq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SocratiQ AI</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Systems Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/introduction/introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">简介</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/ml_systems/ml_systems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML Systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/dl_primer/dl_primer.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">深度学习入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/dnn_architectures/dnn_architectures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DNN Architectures</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Design Principles</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/workflow/workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Workflow</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/data_engineering/data_engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/frameworks/frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Frameworks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/training/training.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Training</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Performance Engineering</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/efficient_ai/efficient_ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Efficient AI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/optimizations/optimizations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Model Optimizations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/hw_acceleration/hw_acceleration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Acceleration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/benchmarking/benchmarking.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benchmarking AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Robust Deployment</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/ops/ops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ML Operations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/ondevice_learning/ondevice_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">On-Device Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/privacy_security/privacy_security.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Security & Privacy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/robust_ai/robust_ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Robust AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Trustworthy Systems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/responsible_ai/responsible_ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Responsible AI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/sustainable_ai/sustainable_ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sustainable AI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/ai_for_good/ai_for_good.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Good</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Frontiers of ML Systems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/frontiers/frontiers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AGI Systems</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/core/conclusion/conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusion</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7"  role="navigation" aria-expanded="true">
+ <span class="menu-text">Glossary</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/contents/backmatter/glossary/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Complete Glossary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" ></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <div id="quarto-toc-target"></div>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<script id = "quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-dl-primer" id="toc-sec-dl-primer">深度学习入门</a>
+  <ul>
+  <li><a href="#目的" id="toc-目的">目的</a></li>
+  <li><a href="#sec-dl-primer-deep-learning-systems-engineering-foundation-822c" id="toc-sec-dl-primer-deep-learning-systems-engineering-foundation-822c">深度学习系统工程基础</a></li>
+  <li><a href="#sec-dl-primer-evolution-ml-paradigms-e0a4" id="toc-sec-dl-primer-evolution-ml-paradigms-e0a4">机器学习范式的演进</a>
+  <ul>
+  <li><a href="#sec-dl-primer-traditional-rulebased-programming-limitations-e82d" id="toc-sec-dl-primer-traditional-rulebased-programming-limitations-e82d">传统基于规则的编程的局限性</a></li>
+  <li><a href="#sec-dl-primer-classical-machine-learning-dec9" id="toc-sec-dl-primer-classical-machine-learning-dec9">经典机器学习</a></li>
+  <li><a href="#sec-dl-primer-deep-learning-automatic-pattern-discovery-a3c1" id="toc-sec-dl-primer-deep-learning-automatic-pattern-discovery-a3c1">深度学习：自动模式发现</a></li>
+  <li><a href="#sec-dl-primer-computational-infrastructure-requirements-62fd" id="toc-sec-dl-primer-computational-infrastructure-requirements-62fd">计算基础设施需求</a>
+  <ul>
+  <li><a href="#sec-dl-primer-parallel-matrix-operation-patterns-969c" id="toc-sec-dl-primer-parallel-matrix-operation-patterns-969c">并行矩阵运算模式</a></li>
+  <li><a href="#sec-dl-primer-hierarchical-memory-architecture-5ae2" id="toc-sec-dl-primer-hierarchical-memory-architecture-5ae2">分层内存架构</a></li>
+  <li><a href="#sec-dl-primer-distributed-computing-requirements-f7a5" id="toc-sec-dl-primer-distributed-computing-requirements-f7a5">分布式计算需求</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#sec-dl-primer-biology-silicon-0482" id="toc-sec-dl-primer-biology-silicon-0482">从生物学到硅芯片</a>
+  <ul>
+  <li><a href="#sec-dl-primer-biological-neural-processing-principles-3485" id="toc-sec-dl-primer-biological-neural-processing-principles-3485">生物神经处理原理</a></li>
+  <li><a href="#sec-dl-primer-biological-neuron-structure-ab31" id="toc-sec-dl-primer-biological-neuron-structure-ab31">生物神经元结构</a></li>
+  <li><a href="#sec-dl-primer-artificial-neural-network-design-principles-57f0" id="toc-sec-dl-primer-artificial-neural-network-design-principles-57f0">人工神经网络设计原理</a></li>
+  <li><a href="#sec-dl-primer-mathematical-translation-neural-concepts-b375" id="toc-sec-dl-primer-mathematical-translation-neural-concepts-b375">神经概念的数学转化</a></li>
+  <li><a href="#sec-dl-primer-hardware-software-requirements-6309" id="toc-sec-dl-primer-hardware-software-requirements-6309">硬件和软件需求</a></li>
+  <li><a href="#sec-dl-primer-evolution-neural-network-computing-ba82" id="toc-sec-dl-primer-evolution-neural-network-computing-ba82">神经网络计算的演化</a></li>
+  </ul></li>
+  <li><a href="#sec-dl-primer-neural-network-fundamentals-68cd" id="toc-sec-dl-primer-neural-network-fundamentals-68cd">神经网络基础</a>
+  <ul>
+  <li><a href="#sec-dl-primer-network-architecture-fundamentals-e6a7" id="toc-sec-dl-primer-network-architecture-fundamentals-e6a7">网络架构基础</a>
+  <ul>
+  <li><a href="#sec-dl-primer-nonlinear-activation-functions-868a" id="toc-sec-dl-primer-nonlinear-activation-functions-868a">非线性激活函数</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#self-check-answers" id="toc-self-check-answers">Self-Check Answers</a></li>
+  </ul></li>
+  </ul>
+</nav>
+<section id="sec-dl-primer" class="level1">
+<h1>深度学习入门</h1>
+<div class="{layout-narrow}">
+<div class="column-margin">
+<p>_ DALL·E 3 提示词：在干净的白色背景上，一幅矩形插图被分成两半。左侧展示了一个生物神经网络的详细且色彩丰富的描绘，呈现出彼此连接的神经元、发光的突触和树突。右侧显示了一个时尚现代的人工神经网络，以类似数字电路的、由相互连接的节点和边组成的网格来表示。两侧之间的过渡清晰但和谐，每一半都明确展示了各自的主题：左侧为生物，右侧为人工。_</p>
+</div>
+<p> <img src="images/png/cover_nn_primer.png" class="img-fluid" /></p>
+</div>
+<section id="目的" class="level2 unnumbered">
+<h2 class="unnumbered">目的</h2>
+<p><em>为什么深度学习系统工程师需要对神经网络运算有深刻的数学理解，而不是将它们视为黑盒组件？</em></p>
+<p>现代深度学习系统以神经网络作为其核心计算引擎，但成功的工程实践要求理解支配其行为的数学原理。神经网络数学决定了内存需求、计算复杂度以及优化空间，而这些都直接影响系统设计决策。如果不能掌握梯度流、激活函数和反向传播机制等概念，工程师就无法预测系统行为、诊断训练失败，或优化资源分配。每一种数学运算都会转化为特定的硬件需求：矩阵乘法需要每秒数 GB 的内存带宽，而激活函数的选择则决定了其与移动处理器的兼容性。理解这些运算，能将神经网络从晦涩难懂的组件转变为可预测、可工程化的系统。</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="学习目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class='callout-icon'></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>学习目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>追溯人工智能从基于规则的系统到神经网络的发展演进，并识别其背后的工程挑战</p></li>
+<li><p>分析神经网络运算（矩阵乘法、激活、梯度）及其硬件影响</p></li>
+<li><p>基于计算约束和任务需求，通过选择合适的层配置、激活函数和连接模式来设计神经网络架构</p></li>
+<li><p>通过多层网络实现前向传播，计算加权和并应用激活函数，将原始输入转换为分层的特征表示</p></li>
+<li><p>执行反向传播算法计算梯度并更新网络权重，展示预测误差如何沿着网络层向后传播</p></li>
+<li><p>比较训练和推理这两个运行阶段，分析它们在不同部署场景下各自不同的计算需求、资源需求和优化策略</p></li>
+<li><p>评估损失函数和优化算法，解释这些选择如何影响训练动态、收敛行为和最终模型性能</p></li>
+<li><p>评估深度学习流程，以识别计算瓶颈和优化机会</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="sec-dl-primer-deep-learning-systems-engineering-foundation-822c" class="level2">
+<h2>深度学习系统工程基础</h2>
+<p>考虑一个看似简单的任务：在照片中识别猫。如果使用传统编程，你需要编写明确的规则：寻找三角形的耳朵，检查胡须，确认是否有四条腿，检查毛发图案，并处理光照、角度、姿势和品种中的无数变化。每个边界情况都需要额外的规则，从而生成越来越复杂的决策树，而这些树在遇到意外变化时仍会失败。这一局限性——也就是无法手工为复杂的现实世界问题编码所有模式——推动了从基于规则的编程向机器学习的演进。</p>
+<p>深度学习代表了这一演进的最终成果，它通过直接从数百万张猫和非猫图像中学习来解决猫识别问题。我们不再编写规则，而是提供示例，让系统自动发现模式。这种从显式编程到学习到的表示的转变，对我们如何设计和工程化计算系统具有重要影响。</p>
+<p>深度学习系统提出了一个与传统软件不同的工程挑战。传统系统基于显式规则执行确定性算法，而深度学习系统则通过学习数据表示的数学过程运行。这一转变要求负责其设计、实现和维护的工程师理解这些系统背后的数学运算。</p>
+<p>这种数学复杂性的工程影响非常重要。当生产系统表现出性能退化时，传统调试方法往往不足以应对。性能异常可能源于优化过程中梯度不稳定<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>，源于激活计算中的数值精度限制，或者源于张量操作固有的内存访问模式<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。如果没有基础数学素养，系统工程师就无法有效区分实现故障与算法约束，无法准确预测计算资源需求，也无法系统地优化由底层数学运算引发的性能瓶颈。</p>
+<div id="callout-definition*-1.1" class="callout callout-definition" title="“深度学习”">
+<p><details class="callout-definition fbx-default closebutton" open><summary><strong>Definition: </strong>“深度学习”</summary><div><strong><em>深度学习</em></strong> 是机器学习的一个子领域，它使用_具有多层的神经网络_从数据中_自动学习分层表示_，从而无需_显式特征工程_。</p>
+</div></details>
+</div>
+<p>深度学习已成为现代人工智能中的主导方法，它解决了早期方法所受的限制。基于规则的系统需要穷尽式地手工指定决策路径，而传统机器学习技术则要求具备特征工程专业知识；相比之下，神经网络架构能够直接从原始数据中发现模式表示。这种能力使得许多过去被认为难以处理的应用成为可能，但也引入了计算复杂性，要求我们重新思考系统架构设计原则。如@fig-ai-ml-dl所示，神经网络是机器学习和人工智能更广泛层级中的基础组成部分。</p>
+<div id="fig-ai-ml-dl" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-ai-ml-dl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/png/ai_dl_progress_nvidia.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure 1: 人工智能层级：神经网络通过对大型数据集中的模式进行建模，构成机器学习和人工智能中深度学习的核心组成部分。机器学习算法使系统能够从数据中学习，是更广泛的 AI 领域中的一个子集。"><img src="images/png/ai_dl_progress_nvidia.png" class="img-fluid" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ai-ml-dl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1: <strong>人工智能层级</strong>：神经网络通过对大型数据集中的模式进行建模，构成机器学习和人工智能中深度学习的核心组成部分。机器学习算法使系统能够从数据中学习，是更广泛的 AI 领域中的一个子集。
+</figcaption>
+</figure>
+</div>
+<p>向神经网络架构的转变，不仅是算法层面的演进，更意味着需要重新构想系统设计方法。神经网络通过大规模并行的矩阵运算执行计算，这与专用硬件架构高度契合。这些系统通过迭代优化过程进行学习，会产生独特的内存访问模式，并施加严格的数值精度要求。推理阶段的计算特性与训练阶段有显著差异，因此每种运行模式都需要不同的优化策略。</p>
+<p>本章旨在建立有效工程化神经网络系统所需的数学素养。我们不会把这些架构视为难以理解的抽象概念，而是会考察决定系统行为和性能的数学运算。我们将探讨生物神经过程如何启发人工神经元模型，分析单个神经元如何组合成复杂的网络拓扑，并研究这些网络如何通过数学优化获取知识。每个概念都与实际系统工程考量直接相关：理解矩阵乘法运算有助于揭示内存带宽需求，理解梯度计算机制有助于解释数值精度约束，而认识优化动态则能为资源分配决策提供依据。</p>
+<p>我们首先考察人工智能方法如何从显式的基于规则的编程演化为自适应学习系统。随后，我们将研究启发人工神经元模型的生物神经过程，建立支配神经网络运算的数学框架，并分析使这些系统能够从复杂数据集中提取模式的优化过程。在整个讨论中，我们始终关注每一数学原理的系统工程含义，构建设计、实现和优化生产级深度学习系统所需的理论基础。</p>
+<p>完成本章后，学生将不再把神经网络视为晦涩的算法构造，而是将其理解为可工程化的计算系统；其数学运算能够为实际实现和运行部署提供直接指导。</p>
+<div id="quiz-question-sec-dl-primer-deep-learning-systems-engineering-foundation-822c" class="callout callout-quiz-question">
+<details class="callout-quiz-question fbx-default closebutton"><summary><strong>Self-Check: Question 1.1</strong></summary><div>
+<ol type="1">
+<li><p>What is a primary limitation of rule-based programming that machine learning addresses?</p>
+<ol type="a">
+<li>The need for explicit feature engineering.</li>
+<li>The inability to handle unexpected variations in data.</li>
+<li>The requirement for large datasets.</li>
+<li>The complexity of mathematical operations.</li>
+</ol></li>
+<li><p>Explain why deep learning systems require a different engineering approach compared to traditional software systems.</p></li>
+<li><p>Which of the following best describes the role of tensor operations in deep learning?</p>
+<ol type="a">
+<li>They simplify the implementation of rule-based systems.</li>
+<li>They eliminate the need for numerical precision.</li>
+<li>They are used exclusively during the training phase.</li>
+<li>They form the computational backbone of neural networks.</li>
+</ol></li>
+</ol>
+<p><a href="#quiz-answer-sec-dl-primer-deep-learning-systems-engineering-foundation-822c" class="question-label">See Answers →</a></p>
+</div></details>
+</div>
+</section>
+<section id="sec-dl-primer-evolution-ml-paradigms-e0a4" class="level2">
+<h2>机器学习范式的演进</h2>
+<p>为了理解为什么深度学习会成为需要专用计算基础设施的主导方法，我们来考察人工智能方法是如何随时间演进的。当前的人工智能时代，代表着从基于规则的编程，经由经典机器学习，直至现代神经网络的最新演化阶段。理解这一进程有助于揭示每种方法如何建立在前代方法之上，并解决其局限性。</p>
+<section id="sec-dl-primer-traditional-rulebased-programming-limitations-e82d" class="level3">
+<h3>传统基于规则的编程的局限性</h3>
+<p>传统编程要求开发者明确定义规则，告诉计算机如何处理输入并产生输出。以一个像 Breakout<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> 这样的简单游戏为例，如@fig-breakout所示。程序需要为每一种交互都定义明确的规则：当球撞到砖块时，代码必须指定应删除该砖块，并将球的方向反转。虽然这种方法在具有清晰物理规律和有限状态的游戏中效果很好，但它体现了基于规则系统的一个局限性。</p>
+<div id="fig-breakout" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-breakout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb1"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\scalebox</span>{0.85}{<span class="co">%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[line join=round,font=<span class="fu">\small\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{BlueGreen}{RGB}{20,188,188}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Cerulean}{RGB}{0,173,231}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Dandelion}{RGB}{255,185,76}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Goldenrod}{RGB}{255,219,87}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Lavender}{RGB}{253,160,204}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{LimeGreen}{RGB}{136,201,70}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Maroon}{RGB}{186,49,50}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{OrangeRed}{RGB}{255,46,88}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Peach}{RGB}{255,147,88}</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Thistle}{RGB}{222,132,191}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\columns</span>{5}</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\rows</span>{3}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\cellsize</span>{25mm}</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\cellheight</span>{7mm}</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\rowone</span>{Peach,BlueGreen,OrangeRed,Thistle,Dandelion}</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\rowtwo</span>{brown!50,lime,teal,pink,lightgray}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">\def\rowthree</span>{Lavender,Goldenrod,Cerulean,Maroon,LimeGreen}</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,<span class="fu">\columns</span>}{</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,<span class="fu">\rows</span>}{</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">%</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\node</span>[draw=black, fill=green!30, minimum width=<span class="fu">\cellsize</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                    minimum height=<span class="fu">\cellheight</span>, line width=0.25pt] (cell-<span class="fu">\x</span>-<span class="fu">\y</span>) at (<span class="fu">\x*\cellsize</span>,-<span class="fu">\y*\cellheight</span>) {};</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\color</span> [count=<span class="fu">\x</span>] in <span class="fu">\rowone</span> {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\node</span>[fill=<span class="fu">\color</span>,draw=black,line width=0.25pt, minimum size=<span class="fu">\cellsize</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    minimum height=<span class="fu">\cellheight</span>] at (cell-<span class="fu">\x</span>-1) {};</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\color</span> [count=<span class="fu">\x</span>] in <span class="fu">\rowtwo</span> {</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\node</span>[fill=<span class="fu">\color</span>,draw=black,line width=0.25pt, minimum size=<span class="fu">\cellsize</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>               minimum height=<span class="fu">\cellheight</span>] at (cell-<span class="fu">\x</span>-2) {};</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\color</span> [count=<span class="fu">\x</span>] in <span class="fu">\rowthree</span> {</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\node</span>[fill=<span class="fu">\color</span>,draw=black,line width=0.25pt, minimum size=<span class="fu">\cellsize</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>               minimum height=<span class="fu">\cellheight</span>] at (cell-<span class="fu">\x</span>-3) {};</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">scope</span>}[shift={(<span class="ss">$(cell-4-3)+(0,-1.7)$</span>)}]</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[align=left,font=<span class="fu">\small\ttfamily</span>]at(0,0){if (ball.collide(brick)) <span class="fu">\{</span> <span class="fu">\\</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">\qquad</span>    removeBrick();<span class="fu">\\</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">\qquad</span>    ball.dx = 1.1 * (ball.dx);<span class="fu">\\</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">\qquad</span>    ball.dy = -1 * (ball.dy);<span class="fu">\\</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu">\}</span>};</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[draw,rectangle,minimum width=40mm,minimum height=4mm,fill=Sepia!50!black!]</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>at(<span class="ss">$(cell-3-3.south west)+(0,-2.8)$</span>)(R){};</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[draw,circle,minimum size=5mm,fill=Sepia!50!black!,anchor=north]</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>at(<span class="ss">$(cell-1-3.south west)!0.8!(cell-1-3.south east)$</span>)(C){};</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[thick,-latex,dash pattern={on 5pt off 2pt on 1pt off 3pt}](R)--(C)--++(225:2);</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-breakout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: <strong>基于规则的系统</strong>：传统编程依赖显式定义的规则将输入映射到输出，这使其在复杂或不确定环境中的适应性受限，因为必须预先考虑并编码每一种可能的场景。这种方法与深度学习形成对比，后者从数据中学习模式，而不是依赖预先编程的逻辑。
+</figcaption>
+</figure>
+</div>
+<p>除了单个应用之外，这种基于规则的范式也扩展到所有传统编程，如@fig-traditional所示。程序同时接收用于处理的规则和输入数据，以产生输出。早期人工智能研究探索过这种方法是否能通过编码足够多的规则来刻画智能行为，从而扩展到解决复杂问题。</p>
+<div id="fig-traditional" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-traditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb2"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\resizebox</span>{.65<span class="fu">\textwidth</span>}{!}{<span class="co">%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[font=<span class="fu">\small\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{<span class="co">%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Line/.style={line width=1.0pt,black!50,text=black},</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  Box/.style={inner xsep=2pt,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    node distance=1,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    draw=GreenLine, line width=0.75pt,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    fill=GreenL,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    text width=22mm,align=flush center,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    minimum width=22mm, minimum height=8mm</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  Box1/.style={Box, draw=RedLine, fill=RedL,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    text width=36mm, minimum width=40mm</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box1](B1){Traditional Programming};</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box,right=of B1](B2){Answers};</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box,above left=0.2 and 1 of B1](B3){Rules};</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box, below left=0.2 and 1 of B1](B4){Data};</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B1)--(B2);</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B3)-|(B1);</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B4)-|(B1);</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-traditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3: <strong>基于规则的编程</strong>：传统程序使用明确定义的规则对数据进行操作，这为早期人工智能系统奠定了基础，但缺乏现代机器学习方法的适应性。这种方法与深度学习形成对比，后者从示例中推断规则，而不是依赖预先编程的逻辑。
+</figcaption>
+</figure>
+</div>
+<p>尽管看似简单，但当面对复杂的现实世界任务时，基于规则的局限性就会显现出来。识别人类活动（<a href="#fig-activity-rules" class="quarto-xref">Figure 4</a>）就体现了这一挑战：将 4 mph 以下的运动分类为步行看起来很简单，直到现实世界的复杂性出现。速度变化、活动之间的过渡以及边界情况都会需要额外的规则，从而形成难以处理的决策树。计算机视觉任务会进一步加剧这些困难：检测猫需要关于耳朵、胡须和身体形状的规则，同时还要考虑观察角度、光照、遮挡以及自然变化。早期系统只有在约束明确、条件受控的环境中才能取得成功。</p>
+<div id="fig-activity-rules" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-activity-rules-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/png/activities.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure 4: 基于规则的编程：传统程序依赖显式定义的规则对数据进行操作，这为早期人工智能系统奠定了基础，但在复杂任务中缺乏适应性。"><img src="images/png/activities.png" class="img-fluid" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-activity-rules-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: <strong>基于规则的编程</strong>：传统程序依赖显式定义的规则对数据进行操作，这为早期人工智能系统奠定了基础，但在复杂任务中缺乏适应性。
+</figcaption>
+</figure>
+</div>
+<p>认识到这些局限后，20 世纪 70 年代和 80 年代人工智能研究所体现的知识工程方法，试图将规则创建系统化。专家系统<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> 将领域知识编码为显式规则，在参数明确的特定领域表现出潜力，但在处理人类自然执行的任务时却显得力不从心，例如物体识别、语音理解或自然语言解析。这些局限凸显了一个挑战：智能行为的许多方面依赖于隐性知识，而这种知识难以用显式基于规则的表示来表达。</p>
+</section>
+<section id="sec-dl-primer-classical-machine-learning-dec9" class="level3">
+<h3>经典机器学习</h3>
+<p>面对基于规则系统的可扩展性障碍，研究人员开始探索能够从数据中学习的方法。机器学习提供了一个有希望的方向：与其为每种情况编写规则，不如编写能够识别示例中模式的程序。然而，这些方法的成功仍然在很大程度上依赖于人类洞察力来定义相关模式，这一过程被称为__特征工程__。</p>
+<p>这种方法引入了__特征工程__：将原始数据转换为能够向学习算法暴露模式的表示。方向梯度直方图（Histogram of Oriented Gradients, HOG）<span class="citation" data-cites="dalal2005histograms">(<a href="#ref-dalal2005histograms" role="doc-biblioref">Dalal and Triggs, n.d.</a>)</span><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> 方法（<a href="#fig-hog" class="quarto-xref">Figure 5</a>）就是这一方法的典型代表，它通过识别亮度急剧变化的边缘，将图像划分为多个单元，并测量每个单元内的边缘方向。这样就把原始像素转换为对光照变化和轻微位置变化更具鲁棒性的形状描述符。</p>
+<div id="fig-hog" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-hog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/png/hog.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure 5: HOG 方法：识别图像中的边缘以创建梯度直方图，将像素值转换为对光照变化不敏感的形状描述符。"><img src="images/png/hog.png" class="img-fluid" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: <strong>HOG 方法</strong>：识别图像中的边缘以创建梯度直方图，将像素值转换为对光照变化不敏感的形状描述符。
+</figcaption>
+</figure>
+</div>
+<p>SIFT<span class="citation" data-cites="lowe1999object">(<a href="#ref-lowe1999object" role="doc-biblioref">Lowe 1999</a>)</span><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>（尺度不变特征变换，Scale-Invariant Feature Transform）和 Gabor 滤波器<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> 等互补方法捕捉了不同的视觉模式——SIFT 检测在尺度和方向变化下仍稳定的关键点，而 Gabor 滤波器则识别纹理和频率。它们都编码了关于视觉模式识别的领域专业知识。</p>
+<p>这些工程化努力推动了 2000 年代计算机视觉的发展。系统如今能够在一定程度上抵抗现实世界中的变化来识别物体，从而带来了人脸检测、行人检测和目标识别等应用。尽管取得了这些成功，但这种方法仍有局限。专家需要为每个新问题精心设计特征提取器，而得到的特征可能会遗漏其设计时未曾预料到的重要模式。</p>
+</section>
+<section id="sec-dl-primer-deep-learning-automatic-pattern-discovery-a3c1" class="level3">
+<h3>深度学习：自动模式发现</h3>
+<p>神经网络代表了我们使用计算机解决问题方式的一种转变，建立了一种从数据中学习而非遵循显式规则的新型编程方法。当考虑诸如计算机视觉，特别是识别图像中的物体等任务时，这种转变尤为明显。</p>
+<p>深度学习的不同之处在于它直接从原始数据中学习。正如我们先前在@fig-traditional中看到的那样，传统编程需要规则和数据共同作为输入来产生答案。机器学习则颠倒了这种关系，如@fig-deeplearning所示。我们不再编写规则，而是提供示例（数据）及其正确答案，让系统自动发现底层规则。这种转变消除了人类指定哪些模式重要的需求。</p>
+<div id="fig-deeplearning" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-deeplearning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb3"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\resizebox</span>{.65<span class="fu">\textwidth</span>}{!}{<span class="co">%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[font=<span class="fu">\small\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{<span class="co">%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Line/.style={line width=1.0pt,black!50,text=black},</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  Box/.style={inner xsep=2pt,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    node distance=1,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    draw=GreenLine, line width=0.75pt,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    fill=GreenL,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    text width=22mm,align=flush center,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    minimum width=22mm, minimum height=8mm</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  Box1/.style={Box,  draw=RedLine,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    fill=RedL, text width=36mm,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    minimum width=40mm</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box1](B1){MachineLearning};</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box,right=of B1](B2){Rules};</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box,above left=0.2 and 1 of B1](B3){Answers};</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a> <span class="fu">\node</span>[Box, below left=0.2 and 1 of B1](B4){Data};</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B1)--(B2);</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B3)-|(B1);</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a> <span class="fu">\draw</span>[-latex,Line](B4)-|(B1);</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-deeplearning-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 6: <strong>数据驱动的规则发现</strong>：深度学习模型直接从数据中学习模式和关系，消除了手动指定规则的需要，并使得可以从原始输入中自动提取特征。这与传统编程形成对比，后者需要规则和数据共同生成输出；也与经典机器学习形成对比，后者从带标签数据中推断规则。
+</figcaption>
+</figure>
+</div>
+<p>通过这一自动化过程，系统从示例中发现这些模式。当向系统展示数百万张猫的图像时，它会学习识别越来越复杂的视觉模式，从简单边缘到构成类猫特征的更复杂组合。这与人类视觉系统的工作方式相似：从基本视觉元素逐步建立对复杂物体的理解。</p>
+<p>基于这一层次化学习原理，深度网络学习层次化表示，其中复杂模式从简单模式中涌现。每一层都会学习越来越抽象的特征：边缘 → 形状 → 物体 → 概念。更深的网络只需多项式级别增加参数，却能表示指数级更多的函数，这就是理论上“深”的重要性。组合性原理解释了深度学习为何有效：复杂的现实世界模式往往具有层次结构，与网络的表示偏置相匹配。</p>
+<p>这种层次结构带来了一项优势：与性能达到平台期的传统方法不同，深度学习模型会随着更多数据（识别更多变化）和更多计算（发现更细微的模式）而持续改进。这种可扩展性推动了性能的显著提升。图像识别准确率从 2012 年的 74% 提高到如今的 95% 以上<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>。</p>
+<p>神经网络性能遵循可预测的缩放关系，这直接影响系统设计。这些缩放定律解释了为什么现代人工智能系统更重视更大模型而非更长训练：GPT-4 的参数量约为 GPT-1 的 1000 倍，但训练时间相近。因此，内存带宽和存储容量成为主要约束，而不再是原始计算能力。关于这些缩放定律的详细数学形式及其定量分析见@sec-ai-training，而@sec-model-optimizations则探讨其实际实现。</p>
+<p>除了性能提升之外，这种方法还对人工智能系统构建产生影响。深度学习能够直接从原始数据中学习，消除了手动__特征工程__的需要，同时也带来了新的需求。需要先进的基础设施来处理海量数据，需要强大的计算机来处理这些数据，还需要专用硬件来高效执行复杂数学计算。深度学习的计算需求推动了针对这些计算优化的专用计算芯片的发展。</p>
+<p>经验证据强有力地支持这些主张。深度学习在计算机视觉中的成功说明了：当获得足够的数据和计算资源时，这种方法可以超越传统方法。类似的模式已在多个领域反复出现，从语音识别到游戏对弈，确立了深度学习作为人工智能变革性方法的地位。</p>
+<p>然而，这一转变也伴随着权衡：深度学习的计算需求重塑了系统要求。理解这些要求有助于为后续神经网络的技术细节提供背景。</p>
+</section>
+<section id="sec-dl-primer-computational-infrastructure-requirements-62fd" class="level3">
+<h3>计算基础设施需求</h3>
+<p>从传统编程到深度学习的演进，不仅意味着我们解决问题方式的转变，也意味着计算系统需求的变革，这会直接影响机器学习系统设计的方方面面。当我们考虑机器学习系统的全谱系，从大规模云部署到资源受限的 Tiny ML 设备时，这种变革就显得尤为重要。</p>
+<p>传统程序遵循可预测的模式。它们按顺序执行指令，以规则的方式访问内存，并以人们熟知的方式使用计算资源。一个典型的基于规则的图像处理系统可能会系统地扫描像素，应用固定操作，其计算和内存需求都较为适中且可预测。这些特性使得传统程序在不同计算平台上的部署相对简单。</p>
+<div id="tbl-evolution" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 1: <strong>系统资源演进</strong>：编程范式将系统需求从顺序计算转向具备特征工程的结构化并行，最终转向深度学习中的大规模矩阵运算和复杂内存层次结构。该表阐明了与传统编程和带工程化特征的机器学习相比，深度学习如何从根本上改变系统需求，影响计算与内存访问模式。
+</figcaption>
+<div aria-describedby="tbl-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top" style="width:98%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 29%" />
+<col style="width: 22%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>系统方面</strong></th>
+<th style="text-align: left;"><strong>传统编程</strong></th>
+<th style="text-align: left;"><strong>带特征的机器学习</strong></th>
+<th style="text-align: left;"><strong>深度学习</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>计算</strong></td>
+<td colspan="3" style="text-align: left;">顺序、 | 结构化并行 | 大规模矩阵 | 可预测的路径 | 操作 | 并行 |</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>内存访问</strong></td>
+<td colspan="3" style="text-align: left;">小而可预测的 | 中等、 | 大而复杂的 | 模式 | 以批处理为导向 | 层次化模式 |</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>数据移动</strong></td>
+<td colspan="3" style="text-align: left;">简单的输入/输出 | 结构化批处理 | 跨系统的密集 | 流 | 处理 | 数据移动 |</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>硬件需求</strong></td>
+<td colspan="3" style="text-align: left;">以 CPU 为中心 | 带向量 | 专用 | | 单元的 CPU | 加速器</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>资源扩展</strong></td>
+<td colspan="3" style="text-align: left;">固定需求 | 随数据规模线性增长 | 随复杂度 | | | 指数增长</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>当我们转向数据驱动的方法时，带有工程化特征的经典机器学习引入了新的复杂性。特征提取算法需要更密集的计算和结构化的数据移动。前文讨论的 HOG 特征提取器，例如，需要对图像数据进行多次遍历，计算梯度并构建直方图。虽然这增加了计算需求和内存复杂度，但资源需求仍然是可预测的，并且可以跨平台扩展。</p>
+<p>然而，深度学习会从多个维度重塑系统需求，如@tbl-evolution所示。理解这些演化变化很重要，因为这些差异会以多种方式显现，并影响整个机器学习系统谱系。</p>
+<section id="sec-dl-primer-parallel-matrix-operation-patterns-969c" class="level4">
+<h4>并行矩阵运算模式</h4>
+<p>当比较这些方法时，计算范式的转变会立刻显现出来。传统程序遵循顺序逻辑流程。与之形成鲜明对比的是，深度学习需要对矩阵进行大规模并行运算。这一转变解释了为什么为顺序处理而设计的传统 CPU 在神经网络计算中效率低下。</p>
+<p>这种并行计算模型带来了新的瓶颈。根本挑战是内存墙：虽然可以通过增加更多处理单元来提升计算能力，但为这些单元供数的内存带宽却不会同样理想地扩展<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>。现代加速器通过多级缓存和专用内存架构构建层次化内存系统，以实现数据复用。关键洞见是：让数据尽量靠近其被处理的位置——也就是更快、更小的缓存，而不是更慢、更大的主存——能显著提升性能。</p>
+<p>这些内存层次结构方面的挑战解释了为什么神经网络加速器专注于最大化数据复用。成功的设计不会反复从缓慢的主存中提取相同权重，而是将频繁访问的数据保存在快速本地存储中，并精心调度操作以尽量减少数据移动。关于这些内存系统及其性能特征的详细定量分析见@sec-ai-acceleration。</p>
+<p>对并行处理的需求推动了专用硬件架构的采用，从强大的云端 GPU，到专用移动处理器，再到 Tiny ML 加速器。关于这些硬件架构及其在机器学习工作负载中的权衡见@sec-ai-acceleration。</p>
+</section>
+<section id="sec-dl-primer-hierarchical-memory-architecture-5ae2" class="level4">
+<h4>分层内存架构</h4>
+<p>内存需求带来了另一个转变。传统程序通常维护较小且固定的内存占用。相比之下，深度学习模型必须在复杂的内存层次结构中管理参数。内存带宽往往成为主要性能瓶颈，对资源受限系统构成挑战。</p>
+<p>这种内存密集型特性会带来神经计算特有的性能瓶颈。矩阵乘法——神经网络的核心操作——通常受内存带宽限制，而非受计算限制<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>。根本问题在于，处理器执行计算的速度往往快于它们从内存中获取数据的速度。每个权重在进行乘法运算前都必须从内存中加载，如果内存系统无法足够快地提供数据，计算单元就会因等待值到来而空闲。这种计算能力与内存带宽之间的不平衡解释了为什么仅仅增加处理单元数量并不会按比例提升性能。</p>
+<p>GPU 通过更高的内存带宽和大规模并行性来应对这一挑战，从而比传统 CPU 实现更高的利用率。然而，底层约束依然存在：神经网络中的能耗主要由数据移动而非计算所主导。将数据从主存移动到处理单元所消耗的能量，往往超过实际数学运算本身。这种能耗层次结构解释了为什么专用处理器会重点采用减少数据移动的技术，把数据尽量放在离处理位置更近的地方。</p>
+<p>这种根本性的内存-计算权衡在不同部署场景中表现不同。云服务器可以承受更多内存和功耗以最大化吞吐量，而移动设备则必须仔细优化以满足严格的功耗预算。训练系统优先考虑计算吞吐量，即使要付出更高能耗；而推理系统则更强调能效。这些不同约束推动了机器学习系统谱系中的不同优化策略，从内存丰富的云部署到高度优化的 Tiny ML 实现。</p>
+<p>量化和剪枝等内存优化策略详见@sec-model-optimizations，而硬件架构及其内存系统见@sec-ai-acceleration。</p>
+</section>
+<section id="sec-dl-primer-distributed-computing-requirements-f7a5" class="level4">
+<h4>分布式计算需求</h4>
+<p>研究人员发现，深度学习改变了系统扩展方式以及效率的重要性。传统程序的资源需求相对固定，性能特征可预测。随着复杂度增长，深度学习模型可能消耗指数级更多的资源。模型能力与资源消耗之间的这种关系，使系统效率成为一个重要问题。<strong>?@sec-efficient-ai涵盖了优化这种关系的技术</strong>，包括在保持模型性能的同时降低计算需求的方法。</p>
+<p>将算法概念与硬件现实连接起来变得至关重要。传统程序通常可以较直接地映射到标准计算机架构，而深度学习则需要仔细考虑：</p>
+<ul>
+<li>如何高效地将矩阵运算映射到物理硬件（<strong>?@sec-ai-acceleration涵盖了面向硬件的优化策略</strong>）</li>
+<li>如何尽量减少跨内存层次结构的数据移动</li>
+<li>如何在计算能力与资源约束之间取得平衡（<strong>?@sec-efficient-ai探讨了缩放定律和效率权衡</strong>）</li>
+<li>如何同时优化算法和系统级效率（<strong>?@sec-model-optimizations提供了模型压缩技术</strong>）</li>
+</ul>
+<p>这些转变解释了为什么深度学习推动了整个计算栈的创新。从专用硬件加速器，到新的内存架构，再到复杂的软件框架，深度学习的需求持续重塑计算机系统设计。</p>
+<p>在明确了从基于规则的系统到神经网络的历史演进，以及这一演进所要求的计算基础设施之后，我们现在来考察这些系统背后的基础灵感。神经网络究竟计算什么的答案，并不是从硅片和软件开始，而是从生物学开始——具体来说，是从我们大脑中的神经网络出发，这些网络启发了驱动现代人工智能系统的人工神经网络。</p>
+<div id="quiz-question-sec-dl-primer-evolution-ml-paradigms-e0a4" class="callout callout-quiz-question">
+<details class="callout-quiz-question fbx-default closebutton"><summary><strong>Self-Check: Question 1.2</strong></summary><div>
+<ol type="1">
+<li><p>Which of the following best describes a limitation of rule-based systems that led to the development of machine learning?</p>
+<ol type="a">
+<li>Rule-based systems are too complex to implement.</li>
+<li>Rule-based systems require too much computational power.</li>
+<li>Rule-based systems cannot adapt to new data without manual updates.</li>
+<li>Rule-based systems are not interpretable.</li>
+</ol></li>
+<li><p>Explain how deep learning differs from classical machine learning in terms of feature extraction.</p></li>
+<li><p>What is a key system-level implication of adopting deep learning over traditional programming?</p>
+<ol type="a">
+<li>Deep learning requires less data movement across memory hierarchies.</li>
+<li>Deep learning models have fixed resource requirements.</li>
+<li>Deep learning simplifies the deployment of ML systems.</li>
+<li>Deep learning necessitates specialized hardware for efficient computation.</li>
+</ol></li>
+<li><p>In a production system, what trade-offs might you consider when choosing between classical machine learning and deep learning?</p></li>
+</ol>
+<p><a href="#quiz-answer-sec-dl-primer-evolution-ml-paradigms-e0a4" class="question-label">See Answers →</a></p>
+</div></details>
+</div>
+</section>
+</section>
+</section>
+<section id="sec-dl-primer-biology-silicon-0482" class="level2">
+<h2>从生物学到硅芯片</h2>
+<p>在考察了编程方法如何从规则演变为数据驱动学习，以及这种演变如何推动了我们今天看到的计算基础设施需求之后，我们现在转向这样一个问题：这些神经网络究竟在计算什么？答案并不是从硅芯片开始，而是从生物学开始。</p>
+<p>我们刚刚考察过的巨大计算需求（专用处理器、分层内存系统、高带宽数据移动）都可以追溯到一个简单的灵感来源：生物神经元。理解自然如何用 20 瓦功耗解决信息处理问题，既揭示了人工神经系统的潜力，也揭示了其挑战。在考察生物神经元及其人工对应物时，请留意这样一个模式：我们选择实现或近似的每一个生物特征，都会带来特定的计算需求，将树突和突触模型直接连接到我们刚才讨论过的处理能力和内存带宽需求。</p>
+<p>本节通过考察三个关键转换，连接生物学灵感与系统实现：生物神经元如何启发人工神经元设计，神经原理如何转化为数学运算，以及这些运算如何驱动我们前面概述的系统需求。到本节结束时，你将理解为什么即使实现简化的神经计算，也需要现代 ML 系统所要求的专用硬件基础设施。</p>
+<section id="sec-dl-primer-biological-neural-processing-principles-3485" class="level3">
+<h3>生物神经处理原理</h3>
+<p>从系统角度看，生物神经网络为我们刚刚讨论过的计算挑战提供了答案：它们在消耗极少能量的同时，实现了大规模并行、有效的内存使用和自适应学习。来自生物智能的四个关键原理，直接影响了人工神经网络设计：</p>
+<p><strong>自适应学习</strong>：大脑会根据经验持续修改神经连接，通过与环境的交互不断改进响应。这种生物能力启发了机器学习的核心原则：不是遵循固定的、预先编程好的规则，而是从数据中不断改进。</p>
+<p><strong>并行处理</strong>：大脑同时处理海量信息，不同区域专门负责特定功能，并协同工作。这种分布式、并行架构与传统的顺序计算形成对比，并影响了现代 AI 系统设计。</p>
+<p><strong>模式识别</strong>：生物系统擅长在复杂、嘈杂的数据中识别模式——在人群中识别人脸、在嘈杂环境中理解语音、从不完整信息中识别物体。这种能力启发了计算机视觉和语音识别中的应用，但人工系统仍在努力追赶大脑的效率。</p>
+<p><strong>能效</strong>：生物系统以极高的能效完成处理。人类大脑 20 瓦的功耗<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>形成了鲜明的效率差距，而人工系统仍在努力弥合这一差距。<strong>?@sec-sustainable-ai通过环境影响分析和节能优化策略探讨了理解并复制这种效率的问题</strong>。</p>
+<p>这些生物学原理为人工神经系统提出了关键要求：能够整合多个输入的简单处理单元、可调节的连接强度、基于输入阈值的非线性激活、并行处理架构，以及通过修改连接强度来学习。下文将考察我们如何把这些生物学洞见转化为数学运算，并进一步转化为硅芯片实现。</p>
+<p>这些生物学原理塑造了人工智能中的两种方法。第一种尝试直接模仿神经结构和功能，创建在结构上类似生物网络的人工神经网络。第二种则采用更抽象的方法，在不精确复制生物结构的前提下，调整生物学原理，使其能够在计算机硬件约束下高效工作。</p>
+<p>要理解这两种方法在实践中如何运作，我们首先必须考察使神经计算成为可能的基本单元：单个神经元。通过理解生物神经元如何处理信息，我们就能看到这一过程如何转化为驱动人工神经网络的数学运算。</p>
+</section>
+<section id="sec-dl-primer-biological-neuron-structure-ab31" class="level3">
+<h3>生物神经元结构</h3>
+<p>要将这些高层原理转化为实际实现，就需要考察生物信息处理的基本单元：神经元。这个细胞构件为其人工对应物提供了蓝图，并揭示了复杂神经网络如何从简单组件协同工作中涌现。</p>
+<p>在生物系统中，神经元（或细胞）代表神经系统的基本功能单元。理解其结构对于与人工系统建立类比至关重要。<strong>?@fig-bio_nn2ai_nn展示了生物神经元的结构</strong>。</p>
+<div id="fig-bio_nn2ai_nn" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-bio_nn2ai_nn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/png/bio_nn2ai_nn.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure 7: 生物神经元映射：人工神经元从其生物对应物中抽象出关键功能，在树突处接收加权输入，在细胞体中求和，并通过轴突产生输出，这与人工神经网络中的激活函数类似。这种抽象使构建能够进行复杂信息处理的人工神经网络成为可能。来源：geeksforgeeks。"><img src="images/png/bio_nn2ai_nn.png" class="img-fluid" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bio_nn2ai_nn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 7: <strong>生物神经元映射</strong>：人工神经元从其生物对应物中抽象出关键功能，在树突处接收加权输入，在细胞体中求和，并通过轴突产生输出，这与人工神经网络中的激活函数类似。这种抽象使构建能够进行复杂信息处理的人工神经网络成为可能。来源：geeksforgeeks。
+</figcaption>
+</figure>
+</div>
+<p>生物神经元由若干关键组成部分构成。中心部分是细胞体，即胞体（soma），其中包含细胞核并执行细胞的基本生命过程。从胞体延伸出树枝状结构，称为树突，它们充当来自其他神经元的输入信号接收器。神经元之间的连接发生在突触处<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>，突触会调节传输信号的强度。最后，一条细长的投射结构称为轴突，它将电冲动从细胞体传导到其他神经元。</p>
+<p>综合这些结构组件，神经元的工作方式如下：树突充当接收器，收集来自其他神经元的输入信号。位于这些连接处的突触调节每个信号的强度，决定每个输入产生多大影响。胞体对这些加权信号进行整合，并决定是否触发输出信号。如果触发，轴突就将该信号传递给其他神经元。</p>
+<p>生物神经元的每个元素在人工系统中都有计算类比，反映了自然界中的学习、适应性和效率原理。为了更好地理解生物智能如何影响人工系统，<strong>?@tbl-bio_nn2ai_nn展示了生物神经元与人工神经元各组成部分之间的映射</strong>。应结合@fig-bio_nn2ai_nn一起查看，以获得完整图景。两者共同展示了从生物神经元到人工神经元的映射关系。</p>
+<div id="tbl-bio_nn2ai_nn" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bio_nn2ai_nn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 2: <strong>神经元对应关系</strong>：生物神经元通过类比组件启发人工神经元设计——树突对应输入（接收信号），突触对应权重（调节连接强度），胞体对应净输入，轴突对应输出——为智能的计算建模奠定基础。该表阐明了生物神经元的关键功能如何被抽象并实现为人工神经网络，使学习和信息处理成为可能。
+</figcaption>
+<div aria-describedby="tbl-bio_nn2ai_nn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top" style="width:67%;">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="2" style="text-align: left;"><strong>生物神经元</strong> | <strong>人工神经元</strong> |</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>细胞</strong> | 神经元 / 节点 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>树突</strong> | 输入 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>突触</strong> | 权重 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>胞体</strong> | 净输入 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>轴突</strong> | 输出 |</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>理解这些对应关系对于把握人工系统如何近似生物智能至关重要。每个组件通过不同机制发挥相似功能，并对人工神经网络产生特定影响。</p>
+<ol type="1">
+<li><p><strong>细胞<span class="math inline">\(\longleftrightarrow\)</span>神经元/节点</strong>：人工神经元或节点作为基本计算单元，镜像了生物系统中细胞的作用。</p></li>
+<li><p><strong>树突<span class="math inline">\(\longleftrightarrow\)</span>输入</strong>：生物神经元中的树突接收来自其他神经元的输入信号，类似于输入如何馈送到人工神经元中。它们充当信号接收器，就像天线收集信息一样。</p></li>
+<li><p><strong>突触<span class="math inline">\(\longleftrightarrow\)</span>权重</strong>：突触调节神经元之间连接的强度，这与人工神经元中的权重直接类比。这些权重是可调的，使学习和优化能够随时间进行，通过控制每个输入的影响程度实现。</p></li>
+<li><p><strong>胞体<span class="math inline">\(\longleftrightarrow\)</span>净输入</strong>：人工神经元中的净输入会对加权输入求和以决定是否激活，类似于胞体在生物神经元中整合信号的方式。</p></li>
+<li><p><strong>轴突<span class="math inline">\(\longleftrightarrow\)</span>输出</strong>：人工神经元的输出将处理后的信息传递给后续网络层，就像轴突将信号传递给其他神经元一样。</p></li>
+</ol>
+<p>这种映射说明了人工神经网络如何在保留本质计算原理的同时，对生物过程进行简化和抽象。理解单个神经元只是起点。神经网络的真正力量来自这些基本单元在更大系统中的协同工作。</p>
+<p>从系统工程角度看，这种生物到人工的转换揭示了为什么神经网络具有如此苛刻的计算需求。每个简单的生物过程都对应着需要并行执行数百万甚至数十亿次的密集数学运算。</p>
+</section>
+<section id="sec-dl-primer-artificial-neural-network-design-principles-57f0" class="level3">
+<h3>人工神经网络设计原理</h3>
+<p>为了从生物学灵感过渡到实际实现，从生物原理到人工计算的转化需要深刻理解生物神经网络在细胞层面和网络层面为何都如此高效，以及为何在硅芯片上复制这些能力会带来如此显著的系统挑战。大脑通过分布在数十亿个神经元上的分布式计算来处理信息，每个神经元与硅晶体管相比运行得都相对缓慢。生物神经元的放电频率约为 200 Hz，而现代处理器则以吉赫兹频率运行。尽管速度有限，大脑的并行架构仍使其能够对复杂感官输入进行复杂的实时处理、决策和行为控制。</p>
+<p>尽管表面上速度不占优势，但这种计算效率源于大脑的基本组织原理。每个神经元都充当一个简单的处理单元，从成千上万个其他神经元接收输入，并根据整合后的输入是否超过阈值来产生二元输出信号。神经元之间通过突触介导的连接强度会不断通过经验进行修改。这种突触可塑性构成了生物神经网络学习和适应的基础。</p>
+<p>在人工系统中复制生物效率需要处理根本性的权衡。虽然大脑以约 20 瓦的功耗实现了惊人的效率（如前所述），但可比的人工神经网络却需要高出几个数量级的功率。例如，大语言模型在训练期间可能消耗兆瓦级功率，在推理期间消耗千瓦级功率——比大脑高出数千到数十万倍。这一巨大的效率差距推动了对专用硬件、量化技术和架构创新的工程关注。</p>
+<p>从这些组织洞见出发，生物系统为人工神经系统所需的若干关键计算元素提供了启示：</p>
+<ul>
+<li>能整合多个输入的简单处理单元</li>
+<li>单元之间可调的连接强度</li>
+<li>基于输入阈值的非线性激活</li>
+<li>并行处理架构</li>
+<li>通过修改连接强度进行学习</li>
+</ul>
+<p>问题现在变成：我们如何将这些抽象的生物学原理转化为计算机能够执行的具体数学运算？</p>
+</section>
+<section id="sec-dl-primer-mathematical-translation-neural-concepts-b375" class="level3">
+<h3>神经概念的数学转化</h3>
+<p>将生物学洞见转化为实际系统时，我们面临的挑战是：如何在数字系统的刚性框架内捕捉神经计算的本质。正如我们在神经元模型分析中所确立的（见@tbl-bio_nn2ai_nn），人工神经元将生物过程简化为三个关键操作：加权输入处理（突触强度）、求和（信号整合）以及激活函数（基于阈值的放电）。<strong>?@tbl-bio2comp对这些生物特征如何映射到其计算对应物提供了系统性的视图</strong>，揭示了数字神经实现的可能性与局限性。</p>
+<div id="tbl-bio2comp" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bio2comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 3: <strong>生物-计算类比</strong>：人工神经元将生物神经系统的关键原理进行抽象，把神经元放电映射为激活函数，把突触强度映射为加权连接，把信号整合映射为求和操作——为数字神经实现奠定基础。生物系统中的分布式记忆和并行处理分别在权重矩阵和并发计算中找到计算对应物，突出这种抽象的力量与局限。
+</figcaption>
+<div aria-describedby="tbl-bio2comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top" style="width:81%;">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="2" style="text-align: left;"><strong>生物特征</strong> | <strong>计算转化</strong> |</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>神经元放电</strong> | 激活函数 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>突触强度</strong> | 加权连接 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>信号整合</strong> | 求和操作 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>分布式记忆</strong> | 权重矩阵 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>并行处理</strong> | 并发计算 |</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>使用前文概述的从生物到人工的映射原理，这种数学抽象保留了关键计算原理，同时支持高效的数字实现。加权、求和和激活操作，直接对应于我们在神经元对应关系分析中识别出的突触强度、信号整合和阈值放电机制。</p>
+<p>这种抽象是有计算成本的。生物中轻而易举完成的事情，在人工系统中却需要密集的数学计算。正如在内存系统一节中讨论的那样，由于内存带宽限制，这些操作会带来显著的计算需求。</p>
+<p>人工神经网络中的记忆形式与生物系统有显著不同。生物记忆分布在突触连接和神经模式中，而人工网络将信息存储在离散的权重和参数中。这种架构差异反映了当前计算硬件的限制：在这些硬件中，内存和处理在物理上是分离的，而不像生物系统那样集成在一起。尽管实现方式不同，人工神经网络在模式识别和学习方面仍能实现类似的功能能力。</p>
+<p>大脑的大规模并行性是人工实现中的一项挑战。生物神经网络通过数十亿个同时运行的神经元处理信息，而人工系统则通过 GPU 和张量处理单元等专用硬件来近似这种并行性。这些设备高效地计算构成人工神经网络数学基础的矩阵运算，以不同于生物系统的规模和粒度实现并行处理。</p>
+</section>
+<section id="sec-dl-primer-hardware-software-requirements-6309" class="level3">
+<h3>硬件和软件需求</h3>
+<p>神经原理的计算转化带来了基础设施需求，这些需求源自生物实现与人工实现之间的关键差异，并直接塑造了系统设计。<strong>?@tbl-comp2sys展示了每个计算元素如何驱动特定的系统需求</strong>。该映射说明，计算转化中所做的选择会直接影响实现所需的硬件和系统架构。</p>
+<div id="tbl-comp2sys" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-comp2sys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 4: <strong>计算需求</strong>：人工神经网络设计会直接转化为特定的系统需求；例如，高效的激活函数需要快速非线性运算单元，而大规模权重存储则要求高带宽内存访问。理解这种映射有助于指导有效实现人工智能所需的硬件和系统架构选择。
+</figcaption>
+<div aria-describedby="tbl-comp2sys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top" style="width:86%;">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th colspan="2" style="text-align: left;"><strong>计算元素</strong> | <strong>系统需求</strong> |</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>激活函数</strong> | 快速非线性运算单元 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>权重运算</strong> | 高带宽内存访问 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>并行计算</strong> | 专用并行处理器 |</td>
+</tr>
+<tr class="even">
+<td colspan="2" style="text-align: left;"><strong>权重存储</strong> | 大规模内存系统 |</td>
+</tr>
+<tr class="odd">
+<td colspan="2" style="text-align: left;"><strong>学习算法</strong> | 梯度计算硬件 |</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>存储架构是一项关键需求，它由生物系统和人工系统处理记忆方式的关键差异所驱动。在生物系统中，记忆与处理是内在集成的——突触既存储连接强度，也处理信号。然而，人工系统必须清晰地区分处理单元和内存。这就需要既有高容量存储来容纳数百万甚至数十亿个连接权重，也有高带宽通路来在存储单元和处理单元之间快速移动这些数据。这种数据移动的效率常常成为一个关键瓶颈，而生物系统并不存在这个问题。</p>
+<p>学习过程本身也给人工系统施加了不同的要求。生物网络通过局部化学过程修改突触强度，而人工网络则必须在整个网络范围内协调权重更新。这在训练期间带来了计算和内存需求，因为系统不仅要存储当前权重，还要为梯度和中间计算保留空间。反向传播误差信号这一需求并没有真正的生物对应物，它使系统架构更加复杂。保护这些大型模型并保护敏感训练数据，会带来复杂的需求，这些需求在@sec-robust-ai中有所处理。</p>
+<p>能效是最后一项关键要求，凸显了生物实现与人工实现之间最鲜明的对比。人类大脑以约 20 瓦运行，能效惊人，而人工神经网络则需要大量功率。当前系统通常需要高出几个数量级的能量才能实现类似能力。这一差距推动了更高效硬件架构的持续研究，并对神经网络的实际部署产生深远影响，尤其是在移动设备或边缘计算系统等资源受限环境中。<strong>?@sec-sustainable-ai探讨了这种能耗的环境影响以及可持续AI</strong> 开发策略。</p>
+<p>这些系统需求直接驱动我们在构建 ML 系统时所做的架构选择，从@sec-ai-acceleration中介绍的专用硬件加速器，到@sec-ai-training中讨论的分布式训练系统。理解这些需求为何存在——其根源在于生物计算与人工计算之间的关键差异——对于做出明智的系统设计和优化决策至关重要。</p>
+</section>
+<section id="sec-dl-primer-evolution-neural-network-computing-ba82" class="level3">
+<h3>神经网络计算的演化</h3>
+<p>我们可以通过硬件和算法的进步，理解深度学习领域如何演化以满足这些挑战。这段历程始于 20 世纪 50 年代早期的人工神经网络，标志性事件是感知机<span class="citation" data-cites="rosenblatt1958perceptron">(<a href="#ref-rosenblatt1958perceptron" role="doc-biblioref">Rosenblatt 1958</a>)</span><a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> 的提出。尽管这一概念具有开创性，但早期系统受到当时计算能力的严重限制，主要依赖缺乏复杂网络所需处理能力和内存容量的大型主机计算机。</p>
+<p>20 世纪 80 年代反向传播算法的开发<span class="citation" data-cites="rumelhart1986learning">(<a href="#ref-rumelhart1986learning" role="doc-biblioref">Rumelhart et al. 1986</a>)</span>是一次理论突破<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>，并提供了训练多层网络的系统方法。该算法的计算需求远远超过当时可用的硬件能力。即使是训练较小的网络也可能需要数周，使实验和实际应用都充满挑战。算法需求与硬件能力之间的这种不匹配，导致了神经网络兴趣减弱的一段时期。</p>
+<div id="fig-trends" class="quarto-float quarto-figure quarto-figure-center" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/png/trends_65d82031.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure 8: 计算增长：计算能力的指数级增长——最初在 1952 年至 2010 年间以 1.4× 的速度增长，随后在 2012 年至 2022 年间加速到每 3.4 个月翻一番——使深度学习模型能够扩展。结合 2015 年后大规模模型 10 个月翻一番的周期，这一趋势直接缓解了训练复杂神经网络的历史瓶颈，并推动了该领域近期的进展。来源：[@epochai2023trends]."><img src="images/png/trends_65d82031.png" class="img-fluid" data-fig-pos="htb" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8: <strong>计算增长</strong>：计算能力的指数级增长——最初在 1952 年至 2010 年间以 1.4× 的速度增长，随后在 2012 年至 2022 年间加速到每 3.4 个月翻一番——使深度学习模型能够扩展。结合 2015 年后大规模模型 10 个月翻一番的周期，这一趋势直接缓解了训练复杂神经网络的历史瓶颈，并推动了该领域近期的进展。来源：<span class="citation" data-cites="epochai2023trends">(<a href="#ref-epochai2023trends" role="doc-biblioref">Sardanelli et al. 2023</a>)</span>.
+</figcaption>
+</figure>
+</div>
+<p>虽然我们在前面章节中已经建立了深度学习的技术基础，但“深度学习”这一术语是在 2010 年代才广泛流行起来的，这与计算能力和数据可获取性的显著进步相吻合。该领域呈指数级增长，如@fig-trends所示。图表揭示了两个显著趋势：以每秒浮点运算次数（FLOPS）衡量的计算能力，最初在 1952 年至 2010 年间遵循<span class="math inline">\(1.4\times\)</span>的改进模式，随后在 2012 年至 2022 年间加速到每 3.4 个月翻一番。更引人注目的是 2015 年至 2022 年间大规模模型的出现（图中未明确显示或不易看出），其扩展速度比总体趋势快 2 到 3 个数量级，遵循激进的 10 个月翻一番周期。</p>
+<p>这种演化趋势由三个维度的并行进展所推动：数据可得性、算法创新和计算基础设施。这三个因素相互强化，形成了一个良性循环，至今仍在推动该领域的发展。正如@fig-virtuous-cycle所示，更强大的计算基础设施使处理更大数据集成为可能。更大的数据集推动了算法创新。更好的算法又要求更复杂的计算系统。</p>
+<div id="fig-virtuous-cycle" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-virtuous-cycle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb4"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\resizebox</span>{.7<span class="fu">\textwidth</span>}{!}{<span class="co">%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[font=<span class="fu">\small\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{<span class="co">%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>Line/.style={line width=1.0pt,black!50,text=black},</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  Box/.style={inner xsep=2pt,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    node distance=1.2,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    draw=GreenLine, line width=0.75pt,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    fill=GreenL,text width=25mm,align=flush center,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    minimum width=25mm, minimum height=10mm</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box](B1){Data<span class="fu">\\</span> Availability};</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,right=of B1,fill=BlueL,draw=BlueLine](B2){Algorithmic Innovations};</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box, right=of B2,fill=RedL,draw=RedLine](B3){Computing Infrastructure};</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](B1)--(B2);</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](B2)--(B3);</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](B3)--++(270:1)-|(B1);</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="fu">\scoped</span>[on background layer]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[draw=BackLine,inner xsep=9mm,inner ysep=8mm,yshift=0.5mm,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            fill=BackColor! 70,fit=(B1)(B3),line width=0.75pt](BB){};</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[below=3pt of  BB.north east,anchor=north east]{Key Breakthroughs};</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-virtuous-cycle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9
+</figcaption>
+</figure>
+</div>
+<p>数据革命改变了神经网络的可能性。互联网和数字设备的兴起带来了前所未有的训练数据获取能力。图像共享平台提供了数百万张带标签的图像。数字文本集合使大规模语言处理成为可能。传感器网络和 IoT 设备持续生成来自现实世界的数据流。这种充足的数据为神经网络有效学习复杂模式提供了原始材料。</p>
+<p>算法创新使这些数据得以有效利用。用于初始化网络和控制学习率的新方法使训练更加稳定。防止过拟合<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> 的技术使模型能够更好地泛化到新数据。研究人员发现，神经网络性能会随着模型规模、计算量和数据量而可预测地扩展，从而催生了越来越雄心勃勃的架构。</p>
+<p>计算基础设施不断演进，以满足这些日益增长的需求。在硬件方面，图形处理器（GPU）提供了高效神经网络计算所需的并行处理能力。像 TPU 这样的专用 AI 加速器<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a><span class="citation" data-cites="jouppi2017datacenter">(<a href="#ref-jouppi2017datacenter" role="doc-biblioref">Jouppi et al. 2017</a>)</span>进一步提升了性能。高带宽内存系统和高速互连解决了数据移动挑战。同样重要的还有软件进步——使构建和训练网络更容易的框架和库<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a>、支持大规模训练的分布式计算系统，以及用于优化模型部署的工具。</p>
+<p>数据可得性、算法创新和计算基础设施的融合，为现代深度学习奠定了基础。构建有效的 ML 系统需要理解驱动基础设施需求的计算操作。简单的数学运算一旦扩展到数百万参数和数十亿训练样本，就会产生塑造了这一演化历程的巨大计算需求。</p>
+<div id="quiz-question-sec-dl-primer-biology-silicon-0482" class="callout callout-quiz-question">
+<details class="callout-quiz-question fbx-default closebutton"><summary><strong>Self-Check: Question 1.3</strong></summary><div>
+<ol type="1">
+<li><p>Which component of a biological neuron corresponds to the ‘weights’ in an artificial neuron?</p>
+<ol type="a">
+<li>Dendrites</li>
+<li>Axon</li>
+<li>Soma</li>
+<li>Synapses</li>
+</ol></li>
+<li><p>Explain how the principle of parallel processing in biological systems influences the design of artificial neural networks.</p></li>
+<li><p>What is a key system requirement driven by the need for high-bandwidth memory access in artificial neural networks?</p>
+<ol type="a">
+<li>Fast nonlinear operation units</li>
+<li>Large-scale memory systems</li>
+<li>Specialized parallel processors</li>
+<li>Gradient computation hardware</li>
+</ol></li>
+<li><p>The human brain’s energy efficiency, operating on approximately 20 watts, highlights the need for more efficient hardware architectures in artificial systems. This efficiency gap is a driving force behind research into _______.</p></li>
+<li><p>In a production system, what trade-offs might you consider when choosing between a biologically inspired neural network design and a more abstract computational model?</p></li>
+</ol>
+<p><a href="#quiz-answer-sec-dl-primer-biology-silicon-0482" class="question-label">See Answers →</a></p>
+</div></details>
+</div>
+</section>
+</section>
+<section id="sec-dl-primer-neural-network-fundamentals-68cd" class="level2">
+<h2>神经网络基础</h2>
+<p>在我们追溯了神经网络从生物启发、历史里程碑到现代系统的演进之后，接下来将重点从“深度学习为何成功”转向“神经网络究竟如何计算”。本节将构建机器学习系统工程所必需的数学与架构基础。</p>
+<p>我们采用自底向上的方法，从简单到复杂逐步构建：执行加权求和的单个神经元 → 组织并行计算的层 → 将原始输入转换为预测结果的完整网络。每个概念都会同时引入数学原理及其系统层面的含义。阅读时请注意，看似简单的每一步操作——这里的点积、那里的激活函数——如何不断累积成我们前面讨论过的计算需求：数百万个参数需要数 GB 内存，数十亿次运算需要专用硬件，海量数据集则要求分布式训练。</p>
+<p>建立在这些基础之上的神经网络架构最新进展以及新兴范式，将在@sec-agi-systems中探讨。现在，我们先建立所有神经网络共有的基础概念，从简单分类器一直到大语言模型。</p>
+<section id="sec-dl-primer-network-architecture-fundamentals-e6a7" class="level3">
+<h3>网络架构基础</h3>
+<p>神经网络的架构决定了信息如何在系统中流动，从输入到输出。虽然现代网络可能极其复杂，但它们都建立在少数几个关键的组织原则之上，而这些原则会直接影响系统设计。理解这些原则对于实现神经网络以及理解为什么它们需要我们前面讨论过的计算基础设施都是必要的。</p>
+<p>为了将这些概念落到一个具体例子上，本节将始终使用手写数字识别——具体来说，是对 MNIST 数据集中的图像进行分类<span class="citation" data-cites="lecun1998gradient">(<a href="#ref-lecun1998gradient" role="doc-biblioref">Lecun et al. 1998</a>)</span>。这个看似简单的任务揭示了神经网络的所有基本原理，同时也为更复杂的应用提供了直观理解。</p>
+<div id="callout-example*-1.2" class="callout callout-example" title="运行示例：MNIST 数字识别">
+<p><details class="callout-example fbx-default closebutton" open><summary><strong>Example: </strong>运行示例：MNIST 数字识别</summary><div><strong>任务</strong>：给定一张 28×28 像素的手写数字灰度图像，将其分类为十个数字中的一个（0-9）。</p>
+<p><strong>输入表示</strong>：每张图像包含 784 个像素（28×28），取值范围从 0（白色）到 255（黑色）。我们通过除以 255 将其归一化到 [0,1] 范围内。当输入神经网络时，这 784 个值构成我们的输入向量<span class="math inline">\(\mathbf{x} \in \mathbb{R}^{784}\)</span>。</p>
+<p><strong>输出表示</strong>：网络产生 10 个值，每个对应一个可能的数字。这些值表示网络对输入图像包含各个数字的置信度。置信度最高的数字就是预测结果。</p>
+<p><strong>为什么选择这个例子</strong>：MNIST 足够小，能够被完全理解（784 个输入，一个简单网络大约 10 万个参数），同时又足够大，具有现实意义。这个任务很直观——每个人都知道“识别手写的 7”是什么意思——因此它非常适合用于学习可扩展到更大问题的神经网络原理。</p>
+<p><strong>网络架构预览</strong>：一个典型的 MNIST 分类器可能使用：784 个输入神经元（每个像素一个）→ 128 个隐藏神经元 → 64 个隐藏神经元 → 10 个输出神经元（每个数字类别一个）。随着我们展开这些概念的讲解，我们将引用这一特定架构。</p>
+</div></details>
+</div>
+<p>推动实际系统设计的是，每一种架构选择——从神经元如何连接到各层如何组织——都会产生特定的计算模式，这些模式必须高效映射到硬件上。神经网络架构与计算需求之间的这种映射，对于构建可扩展的机器学习系统至关重要。</p>
+<section id="sec-dl-primer-nonlinear-activation-functions-868a" class="level4">
+<h4>非线性激活函数</h4>
+<p>所有神经网络架构的核心都是一个基本构件：人工神经元或感知机，它实现了前面建立的生物到人工的转换原则。从系统角度看，理解感知机的数学运算至关重要，因为这些简单运算在网络中被复制数百万次时，就会形成我们前面讨论过的计算瓶颈。</p>
+<p>考虑我们的 MNIST 数字识别任务。28×28 图像中的每个像素都成为网络的一个输入。第一隐藏层中的单个神经元可能学习检测某种特定模式——比如数字“1”或“7”中出现的竖直边缘。这个神经元必须以某种方式将全部 784 个像素值组合成一个单一输出，用于指示其模式是否存在。</p>
+<p>感知机通过加权求和来完成这一点。它接收多个输入<span class="math inline">\(x_1, x_2, ..., x_n\)</span>（在我们的例子中是<span class="math inline">\(n=784\)</span>个像素值），每个输入都表示被分析对象的一个特征。对于数字识别来说，这些特征就是原始像素强度；而对于其他任务，它们可能是用于预测房价的房屋属性，或用于预测歌曲热度的歌曲属性。</p>
+<p>这个乘法过程揭示了看似简单的操作背后所隐藏的计算复杂性。从计算角度看，每个输入都需要存储在内存中，并在处理过程中被读取。当这类操作扩展到深层网络中的数百万个神经元时，这些内存访问模式就会成为主要性能瓶颈。这也是为什么我们前面讨论的内存层次结构和带宽因素对神经网络性能如此关键。</p>
+<p>理解了这个加权求和过程后，感知机可以被配置用于回归或分类任务。对于回归，使用实际数值输出<span class="math inline">\(\hat{y}\)</span>。对于分类，输出取决于<span class="math inline">\(\hat{y}\)</span>是否跨过某个阈值。如果<span class="math inline">\(\hat{y}\)</span>超过该阈值，感知机可能输出一个类别（例如“是”）；如果没有超过，则输出另一个类别（例如“否”）。</p>
+<div id="fig-perceptron" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-perceptron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb5"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\scalebox</span>{0.85}{<span class="co">%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{<span class="co">%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  Line/.style={line width=1.0pt,black!50,text=black},</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  Box/.style={inner xsep=3pt,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    node distance=0.2,circle,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    draw=GreenLine, line width=0.75pt,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    fill=GreenL,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    align=flush center,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    minimum width=8mm,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box](B1){<span class="ss">$w_{1j}$</span>};</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,below=of B1](B2){<span class="ss">$w_{2j}$</span>};</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,below=of B2](B3){<span class="ss">$w_{3j}$</span>};</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,node distance=1.0,below=of B3](B4){<span class="ss">$w_{ij}$</span>};</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[rotate=90,font=<span class="fu">\tiny</span>]at(<span class="ss">$(B3)!0.5!(B4)$</span>){<span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span>};</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in{1,...,3}{</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,latex-](B<span class="fu">\x</span>)--++(180:2)node[left](X<span class="fu">\x</span>){<span class="ss">$x_</span><span class="sc">\x</span><span class="ss">$</span>};</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[above=0.1 of B1,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>](WE){Weights};</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">\path</span>[](WE)-|coordinate(IN)(X1);</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>]at(IN){Inputs};</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,latex-](B4)--++(180:2)node[left](X4){<span class="ss">$x_i$</span>};</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[rotate=90,font=<span class="fu">\tiny</span>]at(<span class="ss">$(X3)!0.5!(X4)$</span>){<span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span>};</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,minimum width=12mm,right=2of <span class="ss">$(B1)!0.5!(B4)$</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            fill=RedL,draw=RedLine](B5){<span class="ss">$</span><span class="sc">\sum</span><span class="ss">$</span>};</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in{1,...,4}{</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](B<span class="fu">\x</span>)--(B5);</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">%</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[Box,node distance=1.3,rectangle, right=of B5,fill=BlueL,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            draw=BlueLine, minimum width=11mm, minimum height=11mm,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>            font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\huge</span>](SI){<span class="ss">$</span><span class="sc">\sigma</span><span class="ss">$</span>};</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](B5)--node[above]{<span class="ss">$z$</span>}(SI);</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,latex-,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>](B5)--</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>           node[right]{<span class="ss">$b$</span>}++(270:1.75)node[below,]{Bias};</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line,-latex](SI)--++(0:1.75)node[right](OU){<span class="ss">$</span><span class="sc">\hat</span><span class="ss">{y}$</span>};</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[above=0.4 of OU,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>]{Output};</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[below=0.3 of SI,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>,align=center]{Activation<span class="fu">\\</span> function};</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-perceptron-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 10: <strong>加权输入求和</strong>：感知机对多个输入（表示特征值）进行加权求和，并将结果传递给激活函数以产生输出。每个输入<span class="math inline">\(x_i\)</span>在聚合之前都会乘以相应的权重<span class="math inline">\(w_{ij}\)</span>，这为从数据中学习复杂模式奠定了基础。
+</figcaption>
+</figure>
+</div>
+<p>通过可视化这些数学概念，<strong>?@fig-perceptron展示了感知机的核心构件</strong>，而感知机又是更复杂神经网络的基础。超越单个单元时，多层感知机协同工作，每一层的输出都作为下一层的输入。这种分层组织形成了能够应对越来越复杂任务的深度学习模型，从图像识别到自然语言处理皆是如此。</p>
+<p>进一步分解其计算机制，每个输入<span class="math inline">\(x_i\)</span>都有一个对应的权重<span class="math inline">\(w_{ij}\)</span>，感知机只需将每个输入乘以其匹配的权重。中间输出<span class="math inline">\(z\)</span>被计算为输入的加权和：<span class="math display">\[
+z = \sum (x_i \cdot w_{ij})
+\]</span>这个数学表达式表面上的简单性掩盖了其计算复杂性。当规模扩大到数百万个神经元和数十亿个参数时，这些内存访问模式会成为神经网络计算中的主导性能瓶颈。</p>
+<p>为了增强模型的灵活性，在这个中间计算中加入一个偏置项<span class="math inline">\(b\)</span>，使模型能够通过上移或下移线性输出函数来更好地拟合数据。因此，感知机包含偏置项时计算得到的中间线性组合为：<span class="math display">\[
+z = \sum (x_i \cdot w_{ij}) + b
+\]</span>这个数学形式直接驱动了我们前面讨论过的硬件需求。求和需要累加器单元，乘法需要高吞吐量算术单元，而内存访问则要求高带宽内存系统。理解数学运算与硬件需求之间的联系，对于设计高效的机器学习系统至关重要。</p>
+<p>除了线性变换之外，激活函数还是关键的非线性变换，它通过将线性加权和转换为非线性输出，使神经网络能够学习复杂模式。如果没有激活函数，多层线性网络会退化为单一线性变换，严重限制网络的表达能力。<strong>?@fig-activation-functions展示了四种最常用的激活函数及其典型形状</strong>。</p>
+<div id="fig-activation-functions" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-activation-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb6"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[line join=round,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}<span class="fu">\small</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\pgfplotsset</span>{</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    compat=1.15,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    MyStyle/.style={</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        title style={yshift=-1mm},</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        legend style={at={(0.17,0.88)}, anchor=south},</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        legend cell align={left},</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        axis x line=bottom,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        axis y line*=left,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        axis line style={thick},</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        width=10cm,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        height=7cm,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        grid = major,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        major grid style={dashed},</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        xlabel = {},</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        tick style = {line width=1.0pt},</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        tick align = inside,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        tick label style={/pgf/number format/assume math mode=true},</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        ticklabel style={font=<span class="fu">\footnotesize\usefont</span>{T1}{phv}{m}{n},</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>},</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>   yticklabel style={</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  font=<span class="fu">\footnotesize\usefont</span>{T1}{phv}{m}{n},</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  /pgf/number format/fixed,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  /pgf/number format/fixed zerofill,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  /pgf/number format/precision=2</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>},</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=GR1,shift={(<span class="ss">$(0,0)+(0,0)$</span>)}]</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">axis</span>}[</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        title = {Sigmoid Activation Function},</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        MyStyle,</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        ymin=-0.05, ymax=1.05,</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        xmin=-10.5,xmax=10.75,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        xtick={-10.0,-7.5,-5,0,-2.5,0.0,2.5,5.0,7.5,10.0},]</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\addplot</span>[</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>            blue!70!black,line width=2pt,</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>            domain = -10:10,</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>            samples = 100</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            {1/(1+exp(-x))};</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            <span class="fu">\addlegendentry</span>{Sigmoid}</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">axis</span>}</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a> <span class="co">%</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=GR2,shift={(<span class="ss">$(0,0)+(10,0)$</span>)}]</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">axis</span>}[</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        title = {Tanh Activation Function},</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        MyStyle,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        ymin=-1.1, ymax=1.1,</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        xmin=-10.5,xmax=10.75,</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        xtick={-10.0,-7.5,-5,0,-2.5,0.0,2.5,5.0,7.5,10.0},</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        ytick={-1.00,-0.75,-0.5,-0.25,0.0,0.25,0.50,0.75,1.00},</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\addplot</span>[</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>            OrangeLine,line width=2pt,</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>            domain = -10:10,</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>            samples = 100</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>           {tanh(x)};</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>           <span class="fu">\addlegendentry</span>{Tanh}</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">axis</span>}</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a> <span class="co">%</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=GR3,shift={(<span class="ss">$(0,0)+(0,-7)$</span>)}]</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">axis</span>}[</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>        title = {ReLU Activation Function},</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>        MyStyle,</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>        ymin=-0.5, ymax=10.5,</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>        xmin=-10.5,xmax=10.75,</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>        xtick={-10.0,-7.5,-5,0,-2.5,0.0,2.5,5.0,7.5,10.0},</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>        ytick={0,2,4,6,8,10},</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\addplot</span>[</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>            red,line width=2pt,</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>            domain = -10:10,</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>            samples = 100</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>          {max(0, x)};</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>          <span class="fu">\addlegendentry</span>{ReLU}</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">axis</span>}</span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>     <span class="co">%</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=GR4,shift={(<span class="ss">$(0,0)+(10,-7)$</span>)}]</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">axis</span>}[</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>        title = {Softmax Activation Function},</span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>        MyStyle,</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>        ymin=-0.002, ymax=0.042,</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>        xmin=-10.5,xmax=10.75,</span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>        xtick={-10.0,-7.5,-5,0,-2.5,0.0,2.5,5.0,7.5,10.0},</span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>        ytick={0.000,0.005,0.010,0.015,0.020,0.025,0.030,0.035,0.040},</span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>        scaled y ticks = false,</span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>   yticklabel style={/pgf/number format/precision=3},</span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\addplot</span>[</span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>            green!70!black,line width=2pt,</span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a>            domain = -10:10,</span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>            samples = 100</span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>           {exp(x)/(exp(13)+exp(0)+exp(x))};</span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>           <span class="fu">\addlegendentry</span>{Softmax}</span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">axis</span>}</span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>    <span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-activation-functions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 11: <strong>常见激活函数</strong>：神经网络依赖非线性激活函数来逼近复杂关系。每种函数都具有不同特性：sigmoid 将输入映射到<span class="math inline">\((0,1)\)</span>，且梯度平滑；tanh 在<span class="math inline">\((-1,1)\)</span>范围内提供以零为中心的输出；ReLU 通过对负输入输出零引入稀疏性；softmax 则将 logits 转换为概率分布。这些不同的行为使网络能够学习不同类型的模式和关系。
+</figcaption>
+</figure>
+</div>
+<p>激活函数的选择会深刻影响学习效果和计算效率。理解每种函数的数学性质对于设计有效的神经网络至关重要。最常用的激活函数包括：</p>
+<section id="sec-dl-primer-sigmoid-07c0" class="level5">
+<h5>Sigmoid</h5>
+<p>Sigmoid 函数将任意输入值映射到 0 到 1 之间的有界范围：<span class="math display">\[
+\sigma(x) = \frac{1}{1 + e^{-x}}
+\]</span>这个 S 形曲线（见@fig-activation-functions左上角）产生的输出可以被解释为概率，因此 sigmoid 对二分类任务特别有用。对于非常大的正输入，函数趋近于 1；对于非常大的负输入，函数趋近于 0。Sigmoid 平滑且连续，因此在任何地方都可微，这对于基于梯度的学习是必要的。</p>
+<p>然而，sigmoid 有一个显著局限：当输入的绝对值较大（远离零）时，梯度会变得极小——这就是所谓的<strong>梯度消失问题</strong><a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a>。在反向传播过程中，这些微小梯度会在各层之间连乘，导致早期层的梯度指数级变小。这实际上会阻止深层网络学习，因为权重更新变得微不足道。</p>
+<p>Sigmoid 输出不是以零为中心的（所有输出都是正的）。这种不对称性会导致优化过程中权重更新效率低下，因为与 sigmoid 单元相连的权重梯度会具有相同的符号。</p>
+</section>
+<section id="sec-dl-primer-tanh-1dfb" class="level5">
+<h5>Tanh</h5>
+<p>双曲正切函数通过将输入映射到<span class="math inline">\((-1, 1)\)</span>范围，解决了 sigmoid 零中心化的局限：<span class="math display">\[
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+\]</span>如@fig-activation-functions（右上角）所示，tanh 产生的 S 形曲线与 sigmoid 类似，但以零为中心。负输入映射为负输出，正输入映射为正输出。这种对称性有助于在训练过程中平衡梯度流，通常比 sigmoid 收敛更快。</p>
+<p>与 sigmoid 一样，tanh 也平滑且处处可微。它仍然会在输入绝对值很大时遭遇梯度消失问题。当函数饱和（趋近于 -1 或 1）时，梯度会变得很小。尽管存在这一局限，tanh 的零中心输出使其在许多架构的隐藏层中比 sigmoid 更受青睐，尤其是在循环神经网络中，因为在时间步之间保持平衡的激活值尤为重要。</p>
+</section>
+<section id="sec-dl-primer-relu-d351" class="level5">
+<h5>ReLU</h5>
+<p>修正线性单元（ReLU）通过为梯度消失问题提供一个简单解决方案而革新了深度学习<span class="citation" data-cites="nair2010rectified">(<a href="#ref-nair2010rectified" role="doc-biblioref">Nair and Hinton 2010</a>)</span><a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a>：<span class="math display">\[
+\text{ReLU}(x) = \max(0, x) = \begin{cases}
+x &amp; \text{if } x &gt; 0 \\
+0 &amp; \text{if } x \leq 0
+\end{cases}
+\]</span></p>
+<p><strong>梯度流动</strong>：对于正输入，ReLU 的梯度恰好为 1，使梯度能够不变地在网络中传递。这避免了在深层架构中困扰 sigmoid 和 tanh 的梯度消失问题。</p>
+<p><strong>稀疏性</strong>：通过将所有负激活置零，ReLU 在网络中引入了自然稀疏性。通常，ReLU 网络中大约 50% 的神经元对任意给定输入都会输出零。这种稀疏性有助于减少过拟合，并使网络更具可解释性。</p>
+<p><strong>计算效率</strong>：与需要昂贵指数运算的 sigmoid 和 tanh 不同，ReLU 只需一个简单的比较和条件操作即可计算：<code>output = (input &gt; 0) ? input : 0</code>。这种简单性带来了更快的计算速度和更低的能耗，这对资源受限设备上的部署尤为重要。</p>
+<p>ReLU 并非没有缺点。<strong>死亡 ReLU 问题</strong>发生在神经元“卡住”并始终输出零时。如果某个神经元的权重被更新到使其加权输入持续为负，那么该神经元输出零，并在反向传播中贡献零梯度。这个神经元实际上变得失效，且无法恢复。谨慎的初始化和学习率选择有助于缓解这一问题。</p>
+</section>
+<section id="sec-dl-primer-softmax-ad79" class="level5">
+<h5>Softmax</h5>
+<p>不同于前述在每个值上独立作用的激活函数，softmax 同时考虑所有值，以生成一个概率分布：<span class="math display">\[
+\text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}
+\]</span>对于一个包含<span class="math inline">\(K\)</span>个值的向量（通常称为 logits），softmax 将它们转换为总和为 1 的<span class="math inline">\(K\)</span>个概率。<a href="#fig-activation-functions" class="quarto-xref">Figure 11</a>（右下角）展示了 softmax 输出的一个分量；在实践中，softmax 处理的是整个向量，其中每个元素的输出都依赖于所有输入值。</p>
+<p>Softmax 几乎只用于多分类问题的输出层。通过将任意实值 logits 转换为概率，softmax 使网络能够表达对多个类别的置信度。概率最高的类别就是预测类别。指数函数确保更大的 logits 获得不成比例地更高的概率，从而在网络置信度较高时形成清晰的类别区分。</p>
+<p>输入 logits 与输出概率之间的数学关系是可微的，因此在训练过程中梯度可以通过 softmax 反向传播。当它与交叉熵损失结合使用时（见@sec-ai-training），softmax 会产生特别简洁的梯度表达式，从而有效引导学习。</p>
+<div class="callout callout-style-default callout-note callout-titled" title="系统视角：激活函数与硬件">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class='callout-icon'></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>系统视角：激活函数与硬件
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>为什么 ReLU 在实践中占主导地位</strong>：除了避免梯度消失等数学优势之外，ReLU 的硬件高效性也解释了它的广泛采用。计算<span class="math inline">\(\max(0,x)\)</span>只需要一次比较操作，而 sigmoid 和 tanh 则需要计算指数函数——这些操作在时间和能耗上都要昂贵得多。这样的计算简单性意味着 ReLU 可以在任何处理器上更快执行，并显著降低功耗，这对电池供电设备来说是关键考量。激活函数的计算和硬件影响，包括性能基准和现代加速器的实现策略，将在@sec-ai-training中探讨。</p>
+</div>
+</div>
+<div id="fig-nonlinear" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-nonlinear-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb7"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\scalebox</span>{0.75}{<span class="co">%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[line join=round,font=<span class="fu">\small\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Cerulean}{RGB}{0,173,231}</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{LimeGreen}{RGB}{136,201,70}</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcounter</span>{point}</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  circ/.pic={</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\pgfkeys</span>{/circ/.cd, #1}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">%red</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span>/<span class="fu">\y</span> in{0.4/0.77,0.39/1.46,0.39/2.02,0.37/2.52,0.37/2.95,0.47/3.35,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>0.84/0.42,0.68/1.09,0.7/1.72,0.74/2.36,0.77/2.78,0.85/3.18,1.16/3.44,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>1.37/0.36,1.14/0.82,1.08/1.47,1.02/1.97,1.45/2.10,1.16/2.39,1.26/2.9,1.56/3.3,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>1.89/2.37,1.64/2.7,2.09/2.96,2.00/3.37,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>2.57/2.33,3.08/2.2,3.42/2.42,3.25/3.06,2.96/2.75,2.48/2.73,2.71/3.13,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>2.44/3.44,3.07/3.48</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>}{</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a> <span class="fu">\stepcounter</span>{point} <span class="co">% We increment the counter for each iteration</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="fu">\fill</span>[draw=none,fill=<span class="fu">\bballcolor</span>](<span class="fu">\x</span>,<span class="fu">\y</span>)circle[radius=5.5pt];</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">%\node[font=\tiny,blue] at (\x,\y) {C\arabic{point}}; % We add a label for each point</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">\coordinate</span>(C<span class="fu">\arabic</span>{point})at(<span class="fu">\x</span>,<span class="fu">\y</span>);</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">%blue</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span>/<span class="fu">\y</span> in {1.83/0.36,2.29/0.35,2.71/0.35,3.38/0.35,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>3.4/0.8,3.39/1.35,3.41/1.90,3.07/1.62,2.59/1.82,2.19/1.98,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>1.79/1.67,1.52/1.25,1.66/0.80,2.13/0.72,2.63/0.74,3.04/0.59,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>3.02/0.99,2.72/1.28,2.29/1.48,1.95/1.15,2.36/1.07}</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\stepcounter</span>{point} <span class="co">%We increment the counter for each iteration</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="fu">\fill</span>[draw=none,fill=<span class="fu">\bballcolorr</span>](<span class="fu">\x</span>,<span class="fu">\y</span>)circle[radius=5.5pt];</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">%\node[font=\tiny,red] at (\x,\y) {P\arabic{point}}; % We add a label for each point</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="fu">\coordinate</span>(P<span class="fu">\arabic</span>{point})at(<span class="fu">\x</span>,<span class="fu">\y</span>);</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}  } }</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="fu">\pgfkeys</span>{</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  /circ/.cd,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  bballcolor/.store in=<span class="fu">\bballcolor</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  bballcolorr/.store in=<span class="fu">\bballcolorr</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  bballcolor=red,      <span class="co">% default ball1 color</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  bballcolorr=blue,      <span class="co">% default ball2 color</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co">%LEFT</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=CIRC1,shift={(0,0)}]</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (0,0) {circ={bballcolor=Cerulean,bballcolorr=LimeGreen}};</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co">%fitting</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[draw=black,inner xsep=4mm,inner ysep=3mm,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>fill=none,fit=(C6)(P38)(C34),line width=1.75pt](BB1){};</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[red,line width=2pt](<span class="ss">$(BB1.south west)!0.18!(BB1.south east)$</span>)--</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>             (<span class="ss">$(BB1.north east)!0.12!(BB1.south east)$</span>);</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[align=center,below=0.1 of BB1]{Neural Network without<span class="fu">\\</span> an Activation Function};</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co">%RIGHT</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">scope</span>}[local bounding box=CIRC2,shift={(6,0)}]</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (0,0) {circ={bballcolor=Cerulean,bballcolorr=LimeGreen}};</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">%fitting</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[draw=black,inner xsep=4mm,inner ysep=3mm,</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>yshift=0mm,fill=none,fit=(C61)(P93)(C89),line width=1.75pt](BB2){};</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[red,line width=2pt](<span class="ss">$(BB2.south west)!0.4!(BB2.south east)$</span>)</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>to[out=90,in=270](<span class="ss">$(C69)!0.5!(P90)$</span>)</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>to[out=90,in=280](<span class="ss">$(C70)!0.5!(P102)$</span>)</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>to[out=110,in=240](<span class="ss">$(C71)!0.5!(P101)$</span>)</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>to[out=70,in=220](<span class="ss">$(C73)!0.5!(P100)$</span>)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>to[out=30,in=200](<span class="ss">$(C77)!0.5!(P99)$</span>)</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>to[out=30,in=160](<span class="ss">$(C81)!0.5!(P98)$</span>)</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>to[out=340,in=220](<span class="ss">$(C82)!0.5!(P96)$</span>)</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>to[out=60,in=210](<span class="ss">$(C83)!0.5!(P96)$</span>)</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>to(<span class="ss">$(BB2.north east)!0.4!(BB2.south east)$</span>);</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[align=center,below=0.1 of BB2]{Neural Network with<span class="fu">\\</span> an Activation Function};</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">scope</span>}</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nonlinear-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 12: <strong>非线性激活</strong>：神经网络通过对输入加权和应用非线性激活函数来建模复杂关系，从而能够表示非线性决策边界。这些函数通过点的排列来转换输入值，赋予模型学习超越线性组合的复杂模式的能力。来源：Medium，sachin kaushik。
+</figcaption>
+</figure>
+</div>
+<p>如上文激活函数部分所述，这些非线性变换将线性输入和转换为非线性输出：<span class="math display">\[
+\hat{y} = \sigma(z)
+\]</span>因此，包含激活函数在内的感知机最终输出可以表示为：<strong>?@fig-nonlinear展示了一个数据呈现非线性模式的示例</strong>，这种模式无法用线性方法充分建模，说明了前面讨论的非线性激活函数为何对复杂模式识别至关重要。</p>
+<p>通用逼近定理<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a>表明，带有激活函数的神经网络可以逼近任意函数。这一理论基础，再结合上面讨论的 ReLU 和 sigmoid 等特定激活函数的计算和优化特性，解释了神经网络在复杂任务中的实际有效性。</p>
+<p>将线性组合与激活函数结合起来，完整的感知机计算为：<span class="math display">\[
+\hat{y} = \sigma\left(\sum (x_i \cdot w_{ij}) + b\right)
+\]</span>#### 层与连接 {#sec-dl-primer-layers-connections-8eb7}</p>
+<p>虽然单个感知机可以建模简单决策，但神经网络的力量来自将多个神经元组合成层。层是一个并行处理信息的神经元集合。层中的每个神经元都在相同输入上独立工作，但拥有各自的权重和偏置，因此该层能够从相同输入数据中学习不同的特征或模式。</p>
+<p>在典型神经网络中，我们将这些层按层次结构组织：</p>
+<ol type="1">
+<li><strong>输入层</strong>：接收原始数据特征</li>
+<li><strong>隐藏层</strong>：通过多个阶段处理并转换数据</li>
+<li><strong>输出层</strong>：产生最终预测或决策@fig-layers展示了这种分层架构。当数据流经这些层时，每一层都会转换数据表示，逐步构建出更复杂、更抽象的特征。这种分层处理正是深度神经网络能够学习复杂模式的惊人能力所在。</li>
+</ol>
+<div id="fig-layers" class="quarto-float quarto-figure quarto-figure-center" data-fig-env="figure" data-fig-pos="htb">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-layers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb8"><pre class="sourceCode tikz"><code class="sourceCode latex"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a> <span class="kw">\begin</span>{<span class="ex">tikzpicture</span>}[line join=round,font=<span class="fu">\usefont</span>{T1}{phv}{m}{n}]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Cerulean}{RGB}{0,173,231}</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Thistle}{RGB}{222,132,191}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">\definecolor</span>{Dandelion}{RGB}{255,185,76}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{<span class="co">%</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>Line/.style={line width=0.35pt,black!60,-latex}</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\tikzset</span>{</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  box/.pic={</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\pgfkeys</span>{/box/.cd, #1}</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,<span class="fu">\columns</span>}{</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,<span class="fu">\rows</span>}{</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">%</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">\node</span>[draw=black, fill=<span class="fu">\ffill</span>, minimum width=<span class="fu">\cellsize</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                    minimum height=<span class="fu">\cellheight</span>, line width=<span class="fu">\linewidth</span>] (cell-<span class="fu">\x</span>-<span class="fu">\y\br</span>) at (<span class="fu">\x*\cellsize</span>,-<span class="fu">\y*\cellheight</span>) {};</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a> } }</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">\pgfkeys</span>{</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  /box/.cd,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  cellsize/.store in=<span class="fu">\cellsize</span>,</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  linewidth/.store in=<span class="fu">\linewidth</span>,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  cellheight/.store in=<span class="fu">\cellheight</span>,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  columns/.store in=<span class="fu">\columns</span>,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  br/.store in=<span class="fu">\br</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  ffill/.store in=<span class="fu">\ffill</span>,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  rows/.store in=<span class="fu">\rows</span>,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  columns=1,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  rows=3,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  br=A,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  ffill=red,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  cellsize=8mm,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  cellheight=8mm,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  linewidth=0.75pt</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (0,0) {box={columns=1,rows=4,br=A,ffill=Thistle!30,linewidth=2.0pt}};</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (3,24mm) {box={columns=1,rows=10,br=B,ffill=Dandelion!40}};</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (6,16mm) {box={columns=1,rows=8,br=C,ffill=red!20}};</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (9,32mm) {box={columns=1,rows=12,br=D,ffill=Cerulean!40}};</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (13,16mm) {box={columns=1,rows=8,br=E,ffill=green!30}};</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="fu">\pic</span> at (16,-8mm) {box={columns=1,rows=2,br=F,ffill=Thistle!30,linewidth=2.0pt}};</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,4}{</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,10}{</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line](cell-1-<span class="fu">\x</span> A.east)--(cell-1-<span class="fu">\y</span> B.west);</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,10}{</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,8}{</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line](cell-1-<span class="fu">\x</span> B.east)--(cell-1-<span class="fu">\y</span> C.west);</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,8}{</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,12}{</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line](cell-1-<span class="fu">\x</span> C.east)--(cell-1-<span class="fu">\y</span> D.west);</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="fu">\foreach</span> <span class="fu">\x</span> in {1,...,8}{</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\foreach</span> <span class="fu">\y</span> in {1,...,2}{</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[Line](cell-1-<span class="fu">\x</span> E.east)--(cell-1-<span class="fu">\y</span> F.west);</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>}}</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="fu">\node</span>[font=<span class="fu">\huge</span>]at(<span class="ss">$(cell-1-6D.south east)!0.5!(cell-1-4E.south west)$</span>){<span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span> <span class="ss">$</span><span class="sc">\bullet</span><span class="ss">$</span>};</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="fu">\path</span>[](cell-1-1B.north west)--++(90:1)coordinate(L)-|coordinate(D)(cell-1-1E.north east);</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="fu">\draw</span>[thick,decoration={brace,amplitude=11pt},decorate](L)--node[above=9pt](HL){Hidden layers}(D);</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="fu">\path</span>(HL)-|node[]{Input layer}(cell-1-1A);</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="fu">\path</span>(HL)-|node[]{Output layer}(cell-1-1F);</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a><span class="co">%\fill[red](cell-1-1B)circle(2pt);</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">tikzpicture</span>}</span></code></pre></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-layers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 13: <strong>分层网络架构</strong>：深度神经网络通过连续层对数据进行转换，使得越来越复杂的特征和模式得以提取。每一层都对前一层的输出应用非线性变换，最终将原始输入映射到期望输出。来源：brunellon。
+</figcaption>
+</figure>
+</div>
+<div id="quiz-question-sec-dl-primer-neural-network-fundamentals-68cd" class="callout callout-quiz-question">
+<details class="callout-quiz-question fbx-default closebutton"><summary><strong>Self-Check: Question 1.4</strong></summary><div>
+<ol type="1">
+<li><p>Which of the following best describes the role of the activation function in a neural network?</p>
+<ol type="a">
+<li>To linearly combine the inputs</li>
+<li>To store the weights of the network</li>
+<li>To introduce non-linearity into the model</li>
+<li>To initialize the biases</li>
+</ol></li>
+<li><p>Explain why ReLU is favored over sigmoid activation functions in deep neural networks.</p></li>
+<li><p>In a neural network designed for MNIST digit recognition, what is the primary function of the hidden layers?</p>
+<ol type="a">
+<li>To store the input data</li>
+<li>To extract and transform features from the input data</li>
+<li>To perform the final classification</li>
+<li>To normalize the input data</li>
+</ol></li>
+<li><p>Deep neural networks can suffer from training difficulties where information flow becomes less effective in earlier layers, commonly called the ____ problem.</p></li>
+<li><p>In a production system, how might you decide between using a fully-connected layer and a sparse connectivity pattern?</p></li>
+</ol>
+<p><a href="#quiz-answer-sec-dl-primer-neural-network-fundamentals-68cd" class="question-label">See Answers →</a></p>
+</div></details>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="self-check-answers" class="level2">
+<h2>Self-Check Answers</h2>
+<div id="quiz-answer-sec-dl-primer-deep-learning-systems-engineering-foundation-822c" class="callout callout-quiz-answer">
+<details class="callout-quiz-answer fbx-answer closebutton"><summary><strong>Self-Check: Answer 1.1</strong></summary><div>
+<ol type="1">
+<li><p><strong>What is a primary limitation of rule-based programming that machine learning addresses?</strong></p>
+<ol type="a">
+<li>The need for explicit feature engineering.</li>
+<li>The inability to handle unexpected variations in data.</li>
+<li>The requirement for large datasets.</li>
+<li>The complexity of mathematical operations.</li>
+</ol>
+<p><em>Answer</em>: The correct answer is B. The inability to handle unexpected variations in data. Rule-based systems require explicit rules for every possible scenario, which becomes impractical with complex data variations.</p>
+<p><em>Learning Objective</em>: Understand the limitations of rule-based programming and how machine learning addresses them.</p></li>
+<li><p><strong>Explain why deep learning systems require a different engineering approach compared to traditional software systems.</strong></p>
+<p><em>Answer</em>: Deep learning systems operate through learned representations and mathematical processes rather than deterministic algorithms. This requires understanding mathematical operations for effective design, implementation, and maintenance. For example, debugging performance issues involves addressing gradient instabilities and memory access patterns, not just code logic. This is important because it impacts resource allocation and system optimization.</p>
+<p><em>Learning Objective</em>: Articulate the engineering differences between traditional software and deep learning systems.</p></li>
+<li><p><strong>Which of the following best describes the role of tensor operations in deep learning?</strong></p>
+<ol type="a">
+<li>They simplify the implementation of rule-based systems.</li>
+<li>They eliminate the need for numerical precision.</li>
+<li>They are used exclusively during the training phase.</li>
+<li>They form the computational backbone of neural networks.</li>
+</ol>
+<p><em>Answer</em>: The correct answer is D. They form the computational backbone of neural networks. Tensor operations are essential for handling multi-dimensional data and are optimized for parallel hardware.</p>
+<p><em>Learning Objective</em>: Understand the significance of tensor operations in neural network computations.</p></li>
+</ol>
+<p><a href="#quiz-question-sec-dl-primer-deep-learning-systems-engineering-foundation-822c" class="answer-label">← Back to Questions</a></p>
+</div></details>
+</div>
+<div id="quiz-answer-sec-dl-primer-evolution-ml-paradigms-e0a4" class="callout callout-quiz-answer">
+<details class="callout-quiz-answer fbx-answer closebutton"><summary><strong>Self-Check: Answer 1.2</strong></summary><div>
+<ol type="1">
+<li><p><strong>Which of the following best describes a limitation of rule-based systems that led to the development of machine learning?</strong></p>
+<ol type="a">
+<li>Rule-based systems are too complex to implement.</li>
+<li>Rule-based systems require too much computational power.</li>
+<li>Rule-based systems cannot adapt to new data without manual updates.</li>
+<li>Rule-based systems are not interpretable.</li>
+</ol>
+<p><em>Answer</em>: The correct answer is C. Rule-based systems cannot adapt to new data without manual updates. This limitation prompted the development of machine learning, which learns patterns from data.</p>
+<p><em>Learning Objective</em>: Understand the limitations of rule-based systems that machine learning addresses.</p></li>
+<li><p><strong>Explain how deep learning differs from classical machine learning in terms of feature extraction.</strong></p>
+<p><em>Answer</em>: Deep learning automates feature extraction by learning directly from raw data, whereas classical machine learning relies on manually engineered features. This automation allows deep learning models to discover complex patterns without human intervention, improving scalability and adaptability.</p>
+<p><em>Learning Objective</em>: Differentiate between feature extraction in classical machine learning and deep learning.</p></li>
+<li><p><strong>What is a key system-level implication of adopting deep learning over traditional programming?</strong></p>
+<ol type="a">
+<li>Deep learning requires less data movement across memory hierarchies.</li>
+<li>Deep learning models have fixed resource requirements.</li>
+<li>Deep learning simplifies the deployment of ML systems.</li>
+<li>Deep learning necessitates specialized hardware for efficient computation.</li>
+</ol>
+<p><em>Answer</em>: The correct answer is D. Deep learning necessitates specialized hardware for efficient computation. This is due to its massive parallel operations and complex memory requirements.</p>
+<p><em>Learning Objective</em>: Recognize the system-level implications of deep learning adoption.</p></li>
+<li><p><strong>In a production system, what trade-offs might you consider when choosing between classical machine learning and deep learning?</strong></p>
+<p><em>Answer</em>: Consider trade-offs such as computational resources, scalability, and ease of feature engineering. Classical ML may be suitable for smaller datasets and simpler tasks, while deep learning offers superior performance on complex tasks but requires more computational power and data.</p>
+<p><em>Learning Objective</em>: Evaluate trade-offs between classical ML and deep learning in system design.</p></li>
+</ol>
+<p><a href="#quiz-question-sec-dl-primer-evolution-ml-paradigms-e0a4" class="answer-label">← Back to Questions</a></p>
+</div></details>
+</div>
+<div id="quiz-answer-sec-dl-primer-biology-silicon-0482" class="callout callout-quiz-answer">
+<details class="callout-quiz-answer fbx-answer closebutton"><summary><strong>Self-Check: Answer 1.3</strong></summary><div>
+<ol type="1">
+<li><p><strong>Which component of a biological neuron corresponds to the ‘weights’ in an artificial neuron?</strong></p>
+<ol type="a">
+<li>Dendrites</li>
+<li>Axon</li>
+<li>Soma</li>
+<li>Synapses</li>
+</ol>
+<p><em>Answer</em>: The correct answer is D. Synapses. This is correct because synapses modulate the strength of connections between neurons, analogous to how weights determine the influence of inputs in artificial neurons. Dendrites, soma, and axon correspond to inputs, net input, and output, respectively.</p>
+<p><em>Learning Objective</em>: Understand the mapping between biological and artificial neuron components.</p></li>
+<li><p><strong>Explain how the principle of parallel processing in biological systems influences the design of artificial neural networks.</strong></p>
+<p><em>Answer</em>: Biological systems process information in parallel, with different brain regions handling specific tasks simultaneously. This inspires artificial neural networks to use parallel processing architectures, such as GPUs, to handle large-scale computations efficiently. For example, GPUs enable concurrent computation of matrix operations, crucial for training deep networks. This is important because it allows artificial systems to scale and process data efficiently, mirroring the brain’s capabilities.</p>
+<p><em>Learning Objective</em>: Analyze how biological principles inform the design of computational systems.</p></li>
+<li><p><strong>What is a key system requirement driven by the need for high-bandwidth memory access in artificial neural networks?</strong></p>
+<ol type="a">
+<li>Fast nonlinear operation units</li>
+<li>Large-scale memory systems</li>
+<li>Specialized parallel processors</li>
+<li>Gradient computation hardware</li>
+</ol>
+<p><em>Answer</em>: The correct answer is B. Large-scale memory systems. This is correct because high-bandwidth memory access is necessary to handle the large volumes of data and weights in neural networks efficiently. Fast nonlinear operation units, specialized parallel processors, and gradient computation hardware address different aspects of system requirements.</p>
+<p><em>Learning Objective</em>: Understand the system requirements driven by computational elements in neural networks.</p></li>
+<li><p><strong>The human brain’s energy efficiency, operating on approximately 20 watts, highlights the need for more efficient hardware architectures in artificial systems. This efficiency gap is a driving force behind research into _______.</strong></p>
+<p><em>Answer</em>: neuromorphic computing. Neuromorphic computing is an emerging research area that aims to mimic the brain’s energy efficiency and processing capabilities in artificial systems. This field is explored in advanced courses and research settings.</p>
+<p><em>Learning Objective</em>: Recall the motivation for developing energy-efficient computing architectures.</p></li>
+<li><p><strong>In a production system, what trade-offs might you consider when choosing between a biologically inspired neural network design and a more abstract computational model?</strong></p>
+<p><em>Answer</em>: Choosing a biologically inspired design may offer insights into efficient processing and learning mechanisms, but it may also require complex hardware and higher energy consumption. An abstract model might simplify implementation and reduce costs, but could lack the efficiency and adaptability seen in biological systems. For example, neuromorphic chips can offer efficiency but are costly to develop. This is important because balancing these trade-offs affects system performance and feasibility.</p>
+<p><em>Learning Objective</em>: Evaluate trade-offs in neural network design choices for practical applications.</p></li>
+</ol>
+<p><a href="#quiz-question-sec-dl-primer-biology-silicon-0482" class="answer-label">← Back to Questions</a></p>
+</div></details>
+</div>
+<div id="quiz-answer-sec-dl-primer-neural-network-fundamentals-68cd" class="callout callout-quiz-answer">
+<details class="callout-quiz-answer fbx-answer closebutton"><summary><strong>Self-Check: Answer 1.4</strong></summary><div>
+<ol type="1">
+<li><p><strong>Which of the following best describes the role of the activation function in a neural network?</strong></p>
+<ol type="a">
+<li>To linearly combine the inputs</li>
+<li>To store the weights of the network</li>
+<li>To introduce non-linearity into the model</li>
+<li>To initialize the biases</li>
+</ol>
+<p><em>Answer</em>: The correct answer is C. To introduce non-linearity into the model. Activation functions enable neural networks to learn complex patterns by transforming linear combinations of inputs into non-linear outputs, which is crucial for modeling non-linear decision boundaries.</p>
+<p><em>Learning Objective</em>: Understand the purpose and importance of activation functions in neural networks.</p></li>
+<li><p><strong>Explain why ReLU is favored over sigmoid activation functions in deep neural networks.</strong></p>
+<p><em>Answer</em>: ReLU is favored because it is computationally simpler, requiring only a comparison operation (max(0,x)), which reduces computation time and energy consumption. Additionally, ReLU avoids the saturation problems that can slow learning in deep networks, maintaining more efficient information flow. This efficiency is crucial for deep networks where computational resources and training speed are major concerns.</p>
+<p><em>Learning Objective</em>: Analyze the advantages of using ReLU over sigmoid in terms of computational efficiency and training effectiveness.</p></li>
+<li><p><strong>In a neural network designed for MNIST digit recognition, what is the primary function of the hidden layers?</strong></p>
+<ol type="a">
+<li>To store the input data</li>
+<li>To extract and transform features from the input data</li>
+<li>To perform the final classification</li>
+<li>To normalize the input data</li>
+</ol>
+<p><em>Answer</em>: The correct answer is B. To extract and transform features from the input data. Hidden layers process the input data through successive transformations, allowing the network to learn and represent complex features necessary for accurate classification.</p>
+<p><em>Learning Objective</em>: Understand the role of hidden layers in feature extraction and transformation within neural networks.</p></li>
+<li><p><strong>Deep neural networks can suffer from training difficulties where information flow becomes less effective in earlier layers, commonly called the ____ problem.</strong></p>
+<p><em>Answer</em>: vanishing gradient. This problem occurs when learning signals become weaker as they propagate through many layers, making it difficult to train the entire network effectively.</p>
+<p><em>Learning Objective</em>: Recall common training challenges in deep neural networks.</p></li>
+<li><p><strong>In a production system, how might you decide between using a fully-connected layer and a sparse connectivity pattern?</strong></p>
+<p><em>Answer</em>: The decision depends on the problem structure and computational resources. Fully-connected layers offer flexibility but are computationally expensive. Sparse connectivity can reduce parameters and computation by exploiting problem-specific patterns, such as spatial locality in images, leading to more efficient models. This is important for deploying models on resource-constrained devices.</p>
+<p><em>Learning Objective</em>: Evaluate the trade-offs between different connectivity patterns in neural network design for efficient deployment.</p></li>
+</ol>
+<p><a href="#quiz-question-sec-dl-primer-neural-network-fundamentals-68cd" class="answer-label">← Back to Questions</a></p>
+</div></details>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-abadi2016tensorflow" class="csl-entry" role="listitem">
+Abadi, Martín, Ashish Agarwal, Paul Barham, et al. 2016. <span>“TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems.”</span> <em>arXiv Preprint arXiv:1603.04467</em>, March. <a href="http://arxiv.org/abs/1603.04467v2">http://arxiv.org/abs/1603.04467v2</a>.
+</div>
+<div id="ref-brown2020language" class="csl-entry" role="listitem">
+<span class="nocase">Brown, Tom, Benjamin Mann, Nick Ryder, et al.</span> 2020. <span>“Language Models Are Few-Shot Learners.”</span> <em>Advances in Neural Information Processing Systems</em> 33: 1877–901.
+</div>
+<div id="ref-dalal2005histograms" class="csl-entry" role="listitem">
+Dalal, N., and B. Triggs. n.d. <span>“Histograms of Oriented Gradients for Human Detection.”</span> <em>2005 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR’05)</em> 1: 886–93. <a href="https://doi.org/10.1109/cvpr.2005.177">https://doi.org/10.1109/cvpr.2005.177</a>.
+</div>
+<div id="ref-he2016deep" class="csl-entry" role="listitem">
+He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep Residual Learning for Image Recognition.”</span> <em>2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>, June, 770–78. <a href="https://doi.org/10.1109/cvpr.2016.90">https://doi.org/10.1109/cvpr.2016.90</a>.
+</div>
+<div id="ref-jouppi2017datacenter" class="csl-entry" role="listitem">
+Jouppi, Norman P., Cliff Young, Nishant Patil, et al. 2017. <span>“In-Datacenter Performance Analysis of a Tensor Processing Unit.”</span> <em>Proceedings of the 44th Annual International Symposium on Computer Architecture</em> (New York, NY, USA), ISCA ’17, June, 1–12. <a href="https://doi.org/10.1145/3079856.3080246">https://doi.org/10.1145/3079856.3080246</a>.
+</div>
+<div id="ref-krizhevsky2012imagenet" class="csl-entry" role="listitem">
+Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E. Hinton. 2017. <span>“ImageNet Classification with Deep Convolutional Neural Networks.”</span> <em>Communications of the ACM</em> 60 (6): 84–90. <a href="https://doi.org/10.1145/3065386">https://doi.org/10.1145/3065386</a>.
+</div>
+<div id="ref-lecun1998gradient" class="csl-entry" role="listitem">
+Lecun, Y., L. Bottou, Y. Bengio, and P. Haffner. 1998. <span>“Gradient-Based Learning Applied to Document Recognition.”</span> <em>Proceedings of the IEEE</em> 86 (11): 2278–324. <a href="https://doi.org/10.1109/5.726791">https://doi.org/10.1109/5.726791</a>.
+</div>
+<div id="ref-lowe1999object" class="csl-entry" role="listitem">
+Lowe, D. G. 1999. <span>“Object Recognition from Local Scale-Invariant Features.”</span> <em>Proceedings of the Seventh IEEE International Conference on Computer Vision</em> 2: 1150–57. <a href="https://doi.org/10.1109/iccv.1999.790410">https://doi.org/10.1109/iccv.1999.790410</a>.
+</div>
+<div id="ref-nair2010rectified" class="csl-entry" role="listitem">
+Nair, Vinod, and Geoffrey E. Hinton. 2010. <span>“Rectified Linear Units Improve Restricted Boltzmann Machines.”</span> <em>Proceedings of the 27th International Conference on Machine Learning (ICML-10)</em>, 807–14. <a href="https://icml.cc/Conferences/2010/papers/432.pdf">https://icml.cc/Conferences/2010/papers/432.pdf</a>.
+</div>
+<div id="ref-paszke2019pytorch" class="csl-entry" role="listitem">
+<span class="nocase">Paszke, Adam, Sam Gross, Francisco Massa, et al.</span> 2019. <span>“PyTorch: An Imperative Style, High-Performance Deep Learning Library.”</span> <em>Advances in Neural Information Processing Systems</em> 32: 8024–35.
+</div>
+<div id="ref-rosenblatt1958perceptron" class="csl-entry" role="listitem">
+Rosenblatt, F. 1958. <span>“The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.”</span> <em>Psychological Review</em> 65 (6): 386–408. <a href="https://doi.org/10.1037/h0042519">https://doi.org/10.1037/h0042519</a>.
+</div>
+<div id="ref-rumelhart1986learning" class="csl-entry" role="listitem">
+Rumelhart, David E., Geoffrey E. Hinton, and Ronald J. Williams. 1986. <span>“Learning Representations by Back-Propagating Errors.”</span> <em>Nature</em> 323 (6088): 533–36. <a href="https://doi.org/10.1038/323533a0">https://doi.org/10.1038/323533a0</a>.
+</div>
+<div id="ref-epochai2023trends" class="csl-entry" role="listitem">
+Sardanelli, Francesco, Isabella Castiglioni, Anna Colarieti, Simone Schiaffino, and Giovanni Di Leo. 2023. <span>“Artificial Intelligence (AI) in Biomedical Research: Discussion on Authors’ Declaration of AI in Their Articles Title.”</span> <em>European Radiology Experimental</em> 7 (1): 2. <a href="https://doi.org/10.1186/s41747-022-00316-7">https://doi.org/10.1186/s41747-022-00316-7</a>.
+</div>
+<div id="ref-strubell2019energy" class="csl-entry" role="listitem">
+Strubell, Emma, Ananya Ganesh, and Andrew McCallum. 2019. <span>“Energy and Policy Considerations for Deep Learning in NLP.”</span> <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>, 3645–50. <a href="https://doi.org/10.18653/v1/p19-1355">https://doi.org/10.18653/v1/p19-1355</a>.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><strong>梯度不稳定</strong>：在深层网络中，梯度在跨层传播时可能会爆炸（变得指数级大）或消失（变得指数级小）。梯度爆炸会导致训练不稳定，损失值剧烈波动；梯度消失则会阻碍前层有效学习。这些问题会表现为系统层面的故障——例如训练看起来“卡住了”，或者尽管计算资源充足，模型似乎学习得很慢。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><strong>张量操作</strong>：构成神经网络计算骨干的多维数组操作。张量是向量（1 维）和矩阵（2 维）的 n 维推广——例如，彩色图像就是一个 3 维张量（高度 × 宽度 × 颜色通道）。现代神经网络处理表示多通道数据批次的 4 维及以上张量，需要针对 GPU 和 TPU 等并行硬件进行优化的专门内存布局和算术运算。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><strong>Breakout</strong>：Atari 于 1976 年推出的经典街机游戏，在人工智能史上具有重要意义，因为 DeepMind 的 DQN（Deep Q-Network）于 2013 年仅凭像素输入就学会了玩这款游戏，在没有任何预设游戏规则的情况下达到了超人类水平。这一突破证明了神经网络能够仅从原始感知输入和奖励信号中学习复杂策略，标志着深度强化学习中的一个关键里程碑，并影响了现代人工智能游戏系统。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><strong>专家系统</strong>：一种基于规则的人工智能程序，将人类领域专家知识编码其中，在 1970—1990 年间十分突出。著名例子包括 MYCIN（斯坦福，1976），用于医疗诊断，在某些抗生素选择任务中优于人类医生；以及 XCON（DEC，1980），用于计算机配置，每年为公司节省 4000 万美元。尽管早期取得成功，专家系统仍需要大量人工知识工程——即从人类专家那里提取并编码规则——并且在处理不确定性和人类自然处理的常识推理时表现不佳。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p><strong>方向梯度直方图（Histogram of Oriented Gradients, HOG）</strong>：由 Navneet Dalal 和 Bill Triggs 于 2005 年提出，HOG 在深度学习出现之前曾是目标检测的黄金标准。它在行人检测上达到了接近完美的准确率——这一突破推动了实用计算机视觉应用的发展。HOG 的工作方式是：在 8×8 像素单元中计算梯度（边缘方向），然后创建 9 个方向分箱的直方图。这个巧妙的抽象捕捉了物体形状，同时忽略纹理细节，使其对光照变化具有鲁棒性，但也需要专家知识来设计。<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><strong>尺度不变特征变换（Scale-Invariant Feature Transform, SIFT）</strong>：由不列颠哥伦比亚大学的 David Lowe 于 1999 年发明，SIFT 通过检测在不同视角、尺度和光照条件下仍保持稳定的“关键点”，彻底改变了计算机视觉。一张典型图像会产生 1000–2000 个 SIFT 关键点，每个关键点由一个 128 维向量描述。在深度学习出现之前，SIFT 是 Google 街景图像匹配和早期智能手机增强现实等应用的支柱。该算法的四步流程（尺度空间极值检测、关键点定位、方向分配和描述符生成）需要深厚的专业知识才能有效实现。<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p><strong>Gabor 滤波器</strong>：以 Dennis Gabor 命名（因全息摄影获得 1971 年诺贝尔物理学奖），这些数学滤波器通过同时分析频率和方向来检测边缘和纹理。在 1980—2010 年间被广泛用于计算机视觉，Gabor 滤波器模仿了人类视觉皮层处理图像的方式——不同神经元对特定方向和空间频率作出响应。一个典型的 Gabor 滤波器组包含 40 多个滤波器（8 个方向 × 5 个频率）来捕捉纹理模式，这使它们非常适合指纹识别和织物质量检测等应用，直到深度学习使手工滤波器设计过时。<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p><strong>ImageNet 竞赛进展</strong>：ImageNet 大规模视觉识别挑战赛（ILSVRC）跟踪了 2010—2017 年的计算机视觉进展。错误率大幅下降：传统方法在 2010 年的错误率约为 28%，AlexNet<span class="citation" data-cites="krizhevsky2012imagenet">(<a href="#ref-krizhevsky2012imagenet" role="doc-biblioref">Krizhevsky et al. 2017</a>)</span>（首个深度学习获胜者）在 2012 年达到 15.3%，而 ResNet<span class="citation" data-cites="he2016deep">(<a href="#ref-he2016deep" role="doc-biblioref">He et al. 2016</a>)</span>在 2015 年达到 3.6%——超过了估计的人类 5.1% 性能。这一快速改进展示了深度学习相对于手工特征的优越性，并引发了现代人工智能革命。该竞赛于 2017 年结束，因为后续改进已变得渐进式。<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p><strong>内存层次结构性能</strong>：现代处理器采用多个内存层级，其访问速度差异巨大。L1 缓存（最快、最靠近处理器）可在 1–2 个处理器时钟周期内提供数据，L2 缓存需要 10–20 个周期，而主存则需要 100 多个周期——造成 50–100 倍的速度差异。吞吐量差异同样巨大：L1 最高可达约 1000 GB/s（每秒千兆字节），L2 最高约 500 GB/s，而主存仅在 CPU 上提供约 100 GB/s（在采用专用高带宽内存的 GPU 上约 1 TB/s）。神经网络加速器之所以成功，是因为它们将频繁访问的权重保存在快速缓存中，并在多次计算中重复使用，通常通过精心调度实现 80% 以上的缓存命中率。<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p><strong>受内存带宽限制的操作</strong>：以一个典型的矩阵乘法为例：一个每秒可执行十亿次浮点运算的处理器，需要以 250–500 GB/s（每秒千兆字节）的速度加载数据，才能让计算单元充分利用。然而，典型 CPU 的内存带宽只有 50–100 GB/s，即便高端 GPU 也仅提供 1–2 TB/s（每秒太字节）。这一差距意味着 CPU 在神经网络操作上的峰值计算效率只有 5–15%，而 GPU 通过更高带宽和更好的数据复用策略可达到 40–60%。<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p><strong>大脑能效</strong>：人类大脑大约包含 860 亿到 1000 亿个神经元，仅用 20 瓦就能完成估计每秒 10^13 到 10^16 次运算——相当于驱动一盏 LED 灯泡。相比之下，训练 GPT-3<span class="citation" data-cites="brown2020language">(<a href="#ref-brown2020language" role="doc-biblioref"><span class="nocase">Brown et al.</span> 2020</a>)</span>约消耗了 1,287 兆瓦时的电力<span class="citation" data-cites="strubell2019energy">(<a href="#ref-strubell2019energy" role="doc-biblioref">Strubell et al. 2019</a>)</span>。这种鲜明的效率差距推动了对神经形态计算的研究，并启发了专用 AI 芯片的发展，这些芯片旨在模拟类脑处理。<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p><strong>突触</strong>：源自希腊语“synaptein”，意为“紧扣在一起”，突触是神经元之间传递化学或电信号的连接点。典型神经元有 1,000-10,000 个突触连接，人类大脑约有 100 万亿个突触。突触连接的强度可通过经验改变，构成学习和记忆的生物基础——这一原理被人工神经网络中的可调权重直接模仿。<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p><strong>感知机</strong>：由 Frank Rosenblatt 于 1957 年在康奈尔大学发明，感知机是第一种能够学习的人工神经网络。纽约时报曾著名地报道它将成为“电子计算机的胚胎，这台计算机[海军]预计能够行走、说话、看见、写作、自我复制并意识到自己的存在”。虽然这种说法过于乐观，但这一突破为所有现代神经网络奠定了基础。<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p><strong>反向传播</strong>：由 Rumelhart、Hinton 和 Williams 于 1986 年发表，反向传播解决了“信用分配问题”（如何确定多层网络中哪些权重导致了错误）。这一基于数学链式法则的算法，使深度网络的训练成为可能，并直接引发了现代 AI 革命。Paul Werbos 于 1974 年也曾发现类似算法，但当时几乎未受到关注。<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p><strong>过拟合</strong>：当模型记住训练样本而不是学习可泛化的模式时——就像一个只会背答案而不理解概念的学生。模型在训练数据上表现完美，但在新样本上失败。常见迹象包括训练准确率持续提高，而验证准确率停滞或下降。可以把它想象成：一个“熟练掌握”模拟考试的人，一到真正考试中略有不同的问题就会慌张。<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p><strong>张量处理单元（TPU）</strong>：谷歌专门为张量运算设计的定制硅芯片，张量运算是神经网络的数学构件。TPU 于 2015 年首次在内部部署，与 2015 年的 GPU 相比，其矩阵乘法速度最高可快 30 倍，同时功耗更低。其名称反映了它对张量运算的优化——张量是表示通过神经网络流动数据的多维数组。谷歌后来通过云服务提供 TPU，普及了对这种专用 AI 硬件的访问。<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p><strong>深度学习框架</strong>：TensorFlow<span class="citation" data-cites="abadi2016tensorflow">(<a href="#ref-abadi2016tensorflow" role="doc-biblioref">Abadi et al. 2016</a>)</span>（谷歌于 2015 年发布）和 PyTorch<span class="citation" data-cites="paszke2019pytorch">(<a href="#ref-paszke2019pytorch" role="doc-biblioref"><span class="nocase">Paszke et al.</span> 2019</a>)</span>（Facebook 于 2016 年发布）通过自动处理复杂数学，普及了深度学习。在这些框架出现之前，实现反向传播需要编写数百行容易出错的微积分代码。如今，完整的神经网络只需 10-20 行即可定义。TensorFlow 强调生产部署，下载量已超过 1.8 亿次，而 PyTorch 则凭借动态计算图主导研究领域。这些框架能够自动计算梯度、优化 GPU 内存使用，并将训练分布到多台机器上。<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p><strong>梯度消失</strong>：当梯度在经过多层向后传播时指数级变小时，早期层的学习实际上就停止了。这是因为梯度通过链式法则计算，每一层的导数都会相乘。如果这些导数持续小于 1（如饱和的 sigmoid 输出），它们的乘积会随着网络深度增加而指数级缩小。这个问题将在@sec-ai-training中详细讨论。<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p><strong>ReLU（修正线性单元）</strong>：一种分段线性激活函数，如果输入为正则直接输出输入，否则输出零。ReLU 由 Nair 和 Hinton 于 2010 年提出，它解决了梯度消失问题，并因其计算简单以及受神经元放电模式启发，成为现代深度学习中的默认激活函数。<a href="#fig-activation-functions" class="quarto-xref">Figure 11</a>（左下角）展示了 ReLU 的典型形状：对正输入是一条直线，对负输入则为零。这种简单性带来了几个优势：<a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p><strong>通用逼近定理</strong>：由 George Cybenko（1989）和 Kurt Hornik（1991）证明，该定理指出，只要一个神经网络包含一个拥有足够多神经元的隐藏层，就可以以任意精度逼近任何连续函数。不过，该定理并未说明需要多少神经元（可能是指数级数量），也没有说明如何找到正确的权重。这解释了为什么神经网络在理论上很强大，但并不保证其可实践学习性——这一关键区别推动了深度学习架构和更优训练算法的发展。<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id = "quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/skinterqwe\.github\.io\/ML-Systems-Textbook-CN\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a  href="/contents/core/ml_systems/ml_systems.html" class="pagination-link" aria-label="ML Systems">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ML Systems</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a  href="/contents/core/dnn_architectures/dnn_architectures.html" class="pagination-link" aria-label="DNN Architectures">
+        <span class="nav-page-text">DNN Architectures</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <div class='footer-contents'>ML Systems Textbook Chinese Translation
+</div>  
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+</body>
+
+</html>
