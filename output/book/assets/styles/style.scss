@@ -1720,6 +1720,22 @@ body {
   counter-reset: margin-video;
 }
 
+/* 中文内容字间距优化 */
+.content, main {
+  letter-spacing: 0.05em;
+}
+
+/* 标题不加字间距 */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6,
+main h1, main h2, main h3, main h4, main h5, main h6 {
+  letter-spacing: normal;
+}
+
+/* 代码块不加字间距 */
+pre, code, .sourceCode {
+  letter-spacing: normal;
+}
+
 .margin-video {
   counter-increment: margin-video;
 }
