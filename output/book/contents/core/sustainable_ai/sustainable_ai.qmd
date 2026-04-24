@@ -359,9 +359,11 @@ AI 工作负载是现代数据中心中计算最密集的运算之一。Meta 等
 
 [^fn-hyperscale-size]: **超大规模数据中心规模**：Meta 的普林维尔数据中心占地 250 万平方英尺（相当于 57 个足球场），容纳了超过 150,000 台服务器。微软在爱荷华州最大的 Azure 数据中心占地 700 英亩，电力容量为 300 兆瓦。谷歌在全球运营着 21 个超大规模设施，每年消耗 12.2 太瓦时的电力——比立陶宛或斯里兰卡等整个国家的用电量还要多。
 
-这种惊人的能耗反映了 AI 在各行业的快速普及。如@fig-ai-data-center-demand 所示，AI 工作负载的能源需求预计将增加数据中心的总能源消耗，特别是在 2024 年之后。尽管效率的提升抵消了不断上升的电力需求，但这些提升的速度正在放缓，从而放大了 AI 的环境影响。```{python}
+这种惊人的能耗反映了 AI 在各行业的快速普及。如@fig-ai-data-center-demand 所示，AI 工作负载的能源需求预计将增加数据中心的总能源消耗，特别是在 2024 年之后。尽管效率的提升抵消了不断上升的电力需求，但这些提升的速度正在放缓，从而放大了 AI 的环境影响。
+
+```{python}
 #| label: fig-ai-data-center-demand
-#| fig-cap: "**Projected Demand**: By 2030, AI workloads will significantly increase power demand in data centers, outpacing efficiency gains seen previously. This emphasizes the growing environmental impact of AI systems. Source: [@masanet2020energy], Cisco, IEA, Goldman Sachs Global Investment Research."
+#| fig-cap: "**预计需求**：到 2030 年，AI 工作负载将显著增加数据中心的电力需求，超过此前的效率提升。这凸显了 AI 系统日益增长的环境影响。数据来源：[@masanet2020energy]、Cisco、IEA、Goldman Sachs 全球投资研究。"
 #| fig-align: center
 #| echo: false
 #| message: false
