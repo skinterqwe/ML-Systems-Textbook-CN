@@ -15,9 +15,9 @@ project:
     navigate: false
 
 website:
-  title: "ML Systems Textbook"
+  title: "机器学习系统教科书"
   site-url: "https://skinterqwe.github.io/ML-Systems-Textbook-CN/"
-  description: "A comprehensive textbook on machine learning systems, covering hardware, software, and deployment."
+  description: "一本全面的机器学习系统教科书，涵盖硬件、软件与部署。"
 
   # High-level navigation enhancements
   page-navigation: true
@@ -35,13 +35,13 @@ website:
     pinned: true
     collapse: true
     collapse-below: "lg"
-    title: "Machine Learning Systems"
+    title: "机器学习系统"
 
   favicon: assets/images/icons/favicon.png
 
   sidebar:
     - id: main-content
-      title: "Main Content"
+      title: "主要内容"
       style: "floating"
       background: light
       collapse-level: 3
@@ -50,9 +50,9 @@ website:
       # <!-- Frontmatter -->
       # <!------------------------------------------------->
 
-      - text: "Homepage"
+      - text: "首页"
         href: index.qmd
-      - text: "Foreword"
+      - text: "前言"
         href: contents/frontmatter/foreword.qmd
       - href: contents/frontmatter/about/about.qmd
       - href: contents/frontmatter/acknowledgements/acknowledgements.qmd
@@ -62,7 +62,7 @@ website:
       # <!-- Division: Mainmatter — Part I: Systems Foundations -->
       # <!------------------------------------------------->
 
-      - section: "Systems Foundations"
+      - section: "系统基础"
         id: foundations
         contents:
           - href: contents/core/introduction/introduction.qmd
@@ -74,7 +74,7 @@ website:
       # <!-- Division: Mainmatter — Part II: Design Principles -->
       # <!------------------------------------------------->
 
-      - section: "Design Principles"
+      - section: "设计原则"
         id: design
         contents:
           - href: contents/core/workflow/workflow.qmd
@@ -86,7 +86,7 @@ website:
       # <!-- Division: Mainmatter — Part III: Performance Engineering -->
       # <!------------------------------------------------->
 
-      - section: "Performance Engineering"
+      - section: "性能工程"
         id: performance
         contents:
           - href: contents/core/efficient_ai/efficient_ai.qmd
@@ -98,7 +98,7 @@ website:
       # <!-- Division: Mainmatter — Part IV: Robust Deployment -->
       # <!------------------------------------------------->
 
-      - section: "Robust Deployment"
+      - section: "鲁棒部署"
         id: deployment
         contents:
           - href: contents/core/ops/ops.qmd
@@ -110,7 +110,7 @@ website:
       # <!-- Division: Mainmatter — Part V: Trustworthy Systems -->
       # <!------------------------------------------------->
 
-      - section: "Trustworthy Systems"
+      - section: "可信系统"
         id: trustworthy
         contents:
           - href: contents/core/responsible_ai/responsible_ai.qmd
@@ -121,7 +121,7 @@ website:
       # <!-- Division: Mainmatter — Part VI: Frontiers   -->
       # <!------------------------------------------------->
 
-      - section: "Frontiers of ML Systems"
+      - section: "机器学习系统前沿"
         id: frontiers
         contents:
           - href: contents/core/frontiers/frontiers.qmd
@@ -168,7 +168,7 @@ bibliography:
   - contents/core/conclusion/conclusion.bib
 
 crossref:
-  appendix-title: "Appendix"
+  appendix-title: "附录"
   appendix-delim: ":"
 
   custom:
@@ -363,15 +363,15 @@ format:
 
     # Custom title formatting - only show site title, not page title
     title-prefix: ""
-    pagetitle: "ML Systems Textbook"
+    pagetitle: "机器学习系统教科书"
 
     code-block-bg: true
     code-copy: true
     code-overflow: wrap
 
     language:
-      title-block-author-single: "Author, Editor & Curator"
-      title-block-published: "Last Updated"
+      title-block-author-single: "作者、编辑与策展人"
+      title-block-published: "最后更新"
 
     reference-location: margin
     citation-location: margin
@@ -389,7 +389,7 @@ format:
     toc: true
     toc-depth: 4
     toc-expand: true
-    toc-title: "On this page"
+    toc-title: "本页目录"
     number-sections: false
     number-depth: 3
     include-in-header:

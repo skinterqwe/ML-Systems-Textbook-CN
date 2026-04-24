@@ -7,7 +7,7 @@ crossrefs: frameworks_xrefs.json
 engine: jupyter
 ---
 
-# AI Frameworks {#sec-ai-frameworks}
+# AI 框架 {#sec-ai-frameworks}
 
 ::: {layout-narrow}
 
