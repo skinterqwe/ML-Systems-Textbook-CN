@@ -1,4 +1,4 @@
-# Design Principles {#sec-design-principles}
+# 设计原则 {#sec-design-principles}
 
 ::: {.content-visible when-format="html"}
 

@@ -3742,7 +3742,7 @@ yshift=-6mm,fill=cyan!10,fit=(PERSON2)(DISPLAY3),line width=0.75pt](BB2){};
 
 总之，这些实践构成了一种在 ML 系统中进行软件故障管理的完整方法。当被系统地采用时，它们可以降低系统发生故障的可能性，提高长期可维护性，并增强对模型性能和复现性的信任。
 
-## Fault Injection Tools and Frameworks {#sec-robust-ai-fault-injection-tools-frameworks-fc07}
+## 故障注入工具与框架 {#sec-robust-ai-fault-injection-tools-frameworks-fc07}
 
 鉴于开发鲁棒 AI 系统的重要性，近年来研究人员和实践者开发了各种工具和框架来评估 ML 系统的鲁棒性。这些工具支持硬件和软件故障注入、对抗攻击模拟以及分布偏移下模型行为的评估。
 

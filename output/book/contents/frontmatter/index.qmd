@@ -1,4 +1,4 @@
-# Preface {.unnumbered}
+# 前言 {.unnumbered}
 
 Welcome to Machine Learning Systems, your gateway to the fast-paced world of machine learning (ML) systems. This book is an extension of the [CS249r](https://sites.google.com/g.harvard.edu/cs249-tinyml-2023) course at Harvard University, expanding from TinyML to broader ML systems topics, taught by Prof. Vijay Janapa Reddi, and is the result of a collaborative effort involving students, professionals, and the broader community of AI practitioners.
 
@@ -17,16 +17,16 @@ This book connects foundational principles with practical workflows from a syste
 
 After reading this book, you'll be able to design ML training pipelines, optimize models for deployment, and debug production ML systems. Whether you're a computer science student learning ML systems, an engineer deploying AI in production, or a researcher building novel architectures, this community-driven resource will guide your journey.
 
-## Why We Wrote This Book {#sec-preface-wrote-book-9fb6}
+## 为什么写这本书 {#sec-preface-wrote-book-9fb6}
 
 In a world where technology is constantly evolving, open collaboration and shared knowledge are essential for innovation. Unlike traditional textbooks that become outdated quickly, this book serves as a living knowledge hub that evolves with the field, inviting contributions and fostering a global community of learners and innovators.
 
 By focusing on the principles and practices of ML systems engineering, we aim to help you build the skills needed to deploy and maintain AI solutions at scale. Together, let's explore the potential of machine learning to transform industries and improve lives.
 
-## Want to Help Out? {#sec-preface-want-help-ec2e}
+## 想帮忙？ {#sec-preface-want-help-ec2e}
 
 This is a collaborative project, and your input matters! If you'd like to contribute, check out our contribution guidelines in the repository. Feedback, corrections, and new ideas are always welcome. Simply file a GitHub [issue](https://github.com/harvard-edge/cs249r_book/issues).
 
-## What's Next? {#sec-preface-whats-next-50b4}
+## 下一步是什么？ {#sec-preface-whats-next-50b4}
 
 Ready to get started? Visit the [About the Book](../frontmatter/about/about.qmd#about-the-book-unnumbered) section to understand the book's structure, learning objectives, and how to use it effectively for your goals.
