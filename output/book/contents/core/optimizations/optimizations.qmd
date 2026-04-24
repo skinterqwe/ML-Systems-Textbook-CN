@@ -2587,7 +2587,9 @@ NAS 的应用也已超越卷积网络。NAS-BERT 探索了基于 Transformer 的
 
 通过降低数值精度，模型不仅可以更高效地执行计算，还可以减少数据移动，从而降低整体能耗。这对于硬件加速器和边缘设备尤为重要，因为在这些场景中，内存带宽和能效是关键约束。
 
-#### 性能提升 {#sec-model-optimizations-performance-gains-b199}@fig-quantization_impact 展示了量化对推理时间和模型大小的影响，采用了带双轴表示的堆叠柱状图。每个类别中左侧的柱子显示从 FP32 转向 INT8 时推理时间的改善，而右侧的柱子则描绘了相应的模型大小缩减。结果表明，量化模型可实现高达$4\times$倍更快的推理，同时将存储需求降低$4\times$倍，因此非常适合部署在资源受限的环境中。
+#### 性能提升 {#sec-model-optimizations-performance-gains-b199}
+
+@fig-quantization_impact 展示了量化对推理时间和模型大小的影响，采用了带双轴表示的堆叠柱状图。每个类别中左侧的柱子显示从 FP32 转向 INT8 时推理时间的改善，而右侧的柱子则描绘了相应的模型大小缩减。结果表明，量化模型可实现高达$4\times$倍更快的推理，同时将存储需求降低$4\times$倍，因此非常适合部署在资源受限的环境中。
 
 ::: {#fig-quantization_impact fig-env="figure" fig-pos="htb"}
 
@@ -2695,7 +2697,9 @@ NAS 的应用也已超越卷积网络。NAS-BERT 探索了基于 Transformer 的
 
 随着机器学习系统的发展，数值编码和存储策略也将持续演进，以满足大规模模型和多样化硬件环境的需求。针对 AI 工作负载而定制的精度格式的持续发展，凸显了将数值表示与底层硬件能力协同设计的重要性，这样才能确保机器学习模型在最小化计算成本的同时实现最佳性能。
 
-### 数值格式比较 {#sec-model-optimizations-numerical-format-comparison-e4ad}@tbl-numerics 比较了机器学习中常用的数值精度格式，强调了它们在存储效率、计算速度和功耗方面的权衡。FP8 和 TF32 等新兴格式也被引入，以进一步优化性能，尤其是在人工智能加速器上。
+### 数值格式比较 {#sec-model-optimizations-numerical-format-comparison-e4ad}
+
+@tbl-numerics 比较了机器学习中常用的数值精度格式，强调了它们在存储效率、计算速度和功耗方面的权衡。FP8 和 TF32 等新兴格式也被引入，以进一步优化性能，尤其是在人工智能加速器上。
 
 | **精度格式** | **位宽** | **存储减少（相对于 FP32）** | **计算速度（相对于 FP32）** | **功耗** | **使用场景** |
 |---:|---:|---:|---:|:---|:---|
@@ -5962,7 +5966,9 @@ prune.ln_structured(module, name="weight", amount=0.5, n=2, dim=0)
 
 随着模型优化的持续演进，主流框架不断维护并扩展其内置支持，进一步降低高效模型部署的门槛。这些 API 的标准化在普及模型效率技术方面发挥了重要作用，同时确保高质量实现保持一致且可靠。
 
-### 硬件特定优化库 {#sec-model-optimizations-hardwarespecific-optimization-libraries-a193}@sec-ai-frameworks 中所涵盖的现代机器学习框架里的硬件优化库，使优化后的模型能够在不同硬件平台上高效部署。这些库可直接与训练和部署流水线集成，在模型表示、数值精度和架构效率等多个维度上，为各类优化技术提供针对硬件的加速。
+### 硬件特定优化库 {#sec-model-optimizations-hardwarespecific-optimization-libraries-a193}
+
+@sec-ai-frameworks 中所涵盖的现代机器学习框架里的硬件优化库，使优化后的模型能够在不同硬件平台上高效部署。这些库可直接与训练和部署流水线集成，在模型表示、数值精度和架构效率等多个维度上，为各类优化技术提供针对硬件的加速。
 
 对于剪枝等模型表示优化，TensorRT、XLA[^fn-xla-compiler] 和 OpenVINO 等库通过优化后的 kernel 提供感知稀疏性的加速，能够高效处理稀疏计算。TensorRT 明确支持结构化稀疏模式，使采用诸如 two-out-of-four 结构化剪枝等技术训练的模型能够在 NVIDIA GPU 上高效运行。类似地，TPU 利用 XLA 的稀疏矩阵优化，而 FPGA 则可通过 Vitis AI 等框架实现定制化稀疏执行。
 

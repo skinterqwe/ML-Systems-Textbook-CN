@@ -679,7 +679,9 @@ until it’s too late to do anything about it.};
 node[below=5pt,pos=0.1]{Update from source}
 node[left=5pt,pos=0.85,black,fill=magenta!20,circle,inner sep=1pt]{2}(EKV4.north);
 \end{tikzpicture}
-```**震网病毒**：通过利用Windows和西门子软件漏洞攻击PLC，展示了供应链攻击如何使数字恶意软件造成物理基础设施损坏。现代机器学习系统通过受损的训练数据、后门依赖项和被篡改的模型权重面临类似的风险。@fig-stuxnet
+```
+
+**震网病毒**：通过利用Windows和西门子软件漏洞攻击PLC，展示了供应链攻击如何使数字恶意软件造成物理基础设施损坏。现代机器学习系统通过受损的训练数据、后门依赖项和被篡改的模型权重面临类似的风险。@fig-stuxnet
 :::
 
 ### 隔离不足：Jeep切诺基黑客事件 {#sec-security-privacy-insufficient-isolation-jeep-cherokee-hack-6a7c}
@@ -820,7 +822,9 @@ anchor=north]{Lifecycle};
   }
 }
 \end{tikzpicture}}
-```**ML 生命周期威胁**：模型窃取、数据投毒和对抗攻击针对机器学习生命周期中的不同阶段（从数据摄取到模型部署和推理），在每一步都造成独特的脆弱性。理解这些生命周期位置有助于明确攻击面，并指导开发有针对性的防御策略，以构建鲁棒的 AI 系统。
+```
+
+**ML 生命周期威胁**：模型窃取、数据投毒和对抗攻击针对机器学习生命周期中的不同阶段（从数据摄取到模型部署和推理），在每一步都造成独特的脆弱性。理解这些生命周期位置有助于明确攻击面，并指导开发有针对性的防御策略，以构建鲁棒的 AI 系统。
 
 :::
 
@@ -902,7 +906,9 @@ yshift=2.2mm,fill=green!5,fit=(RB1)(RB4),line width=0.75pt](BB2){};
 \node[below=6pt of  BB2.north,inner sep=0pt,
 anchor=north]{\textbf{Exact Model Theft}};
 \end{tikzpicture}
-```**模型窃取策略**：攻击者可以针对模型的内部参数或外部行为创建一个被窃取的副本。直接窃取会提取模型权重和架构，而近似窃取则通过查询原模型的输入输出行为来训练一个替代模型，即使无法直接访问内部组件，也可能支持进一步攻击。
+```
+
+**模型窃取策略**：攻击者可以针对模型的内部参数或外部行为创建一个被窃取的副本。直接窃取会提取模型权重和架构，而近似窃取则通过查询原模型的输入输出行为来训练一个替代模型，即使无法直接访问内部组件，也可能支持进一步攻击。
 
 :::
 
@@ -1094,7 +1100,9 @@ Box4/.style={Box,  draw=OrangeLine,fill=OrangeL!50,text width=43mm}
 \draw[Line,-latex](B0)-|(B1);
 \draw[Line,-latex](B0)-|(RB1);
 \end{tikzpicture}}
-```**威胁缓解流程**：此图将常见的机器学习威胁映射到相应的防御策略，并根据攻击向量和生命周期阶段指导选择。沿着该流程，实践者可以将威胁模型与实际缓解技术相匹配，例如安全模型访问和数据净化，从而构建更鲁棒的 AI 系统。
+```
+
+**威胁缓解流程**：此图将常见的机器学习威胁映射到相应的防御策略，并根据攻击向量和生命周期阶段指导选择。沿着该流程，实践者可以将威胁模型与实际缓解技术相匹配，例如安全模型访问和数据净化，从而构建更鲁棒的 AI 系统。
 
 :::
 
@@ -1208,7 +1216,9 @@ Box4/.style={Box,  draw=OrangeLine,fill=OrangeL!50,text width=43mm}
 
 当输入不正确的密码时，功耗分析图表会发生变化，如 @fig-encryption2 所示。在这种情况下，前三个字节（`0x61, 0x52, 0x77`）是正确的，因此功耗模式与正确密码在此点之前密切匹配。然而，当处理第四个字节（`0x42`）并发现不正确时，设备停止身份验证。这种变化反映在蓝色功耗线的突然跳跃中，表明设备已停止处理并进入错误状态。
 
-![**侧信道攻击漏洞**：功耗模式在身份验证过程中揭示加密密钥信息；一致的功耗表示正确的密码字节，而突然的变化则表示输入错误和处理停止。即使不知道密码，攻击者也可以通过分析设备在身份验证尝试期间的功耗来推断密码，通过此图。来源：Colin O'Flynn。](images/png/power_analysis_of_an_encryption_device_with_a_partially_wrong_password.png){#fig-encryption2}@fig-encryption3 显示了密码完全不正确的情况（`0x30, 0x30, 0x30, 0x30, 0x30`）。在这里，设备在第一个字节之后立即检测到不匹配并提前停止处理。这在功耗配置文件中再次可见，其中蓝色线在第一个字节之后出现急剧跳跃，反映了设备提前终止身份验证。
+![**侧信道攻击漏洞**：功耗模式在身份验证过程中揭示加密密钥信息；一致的功耗表示正确的密码字节，而突然的变化则表示输入错误和处理停止。即使不知道密码，攻击者也可以通过分析设备在身份验证尝试期间的功耗来推断密码，通过此图。来源：Colin O'Flynn。](images/png/power_analysis_of_an_encryption_device_with_a_partially_wrong_password.png){#fig-encryption2}
+
+@fig-encryption3 显示了密码完全不正确的情况（`0x30, 0x30, 0x30, 0x30, 0x30`）。在这里，设备在第一个字节之后立即检测到不匹配并提前停止处理。这在功耗配置文件中再次可见，其中蓝色线在第一个字节之后出现急剧跳跃，反映了设备提前终止身份验证。
 
 ![**功耗跳跃**：蓝色线在处理第一个字节后急剧增加，表明身份验证立即失败，突出了如何通过功耗快速检测到不正确的密码。来源：Colin O'Flynn。](images/png/power_analysis_of_an_encryption_device_with_a_wrong_password.png){#fig-encryption3}
 
@@ -1408,7 +1418,9 @@ minimum height=48mm,minimum width=67mm] (B2) at (rel axis cs:0.7,0.6) {};
 \path[name intersections={of=line1 and edgeB2left, by=I}];
 \draw[BrownLine,dashed](B1.south east)--(I);
 \end{tikzpicture}
-```**功耗轨迹**：密码学计算会在功耗上暴露出细微的、与数据相关的变化，这些变化反映了特定操作期间的内部状态。
+```
+
+**功耗轨迹**：密码学计算会在功耗上暴露出细微的、与数据相关的变化，这些变化反映了特定操作期间的内部状态。
 
 :::
 
@@ -1518,7 +1530,9 @@ anchor=north]{\textbf{Data Privacy \& Governance}};
 \draw[Line,-latex](4B1)--(5B1);
 \draw[Line,-latex](4B2)--(5B2);
 \end{tikzpicture}
-```**分层防御栈**：机器学习系统需要多层面的安全策略，从基础的硬件保护逐步延伸到以数据为中心的隐私技术，并在所有层之间建立信任。这种架构将数据、模型、运行时和基础设施层面的防护措施整合起来，以缓解威胁，并确保在生产环境中的稳健部署。:::
+```
+
+**分层防御栈**：机器学习系统需要多层面的安全策略，从基础的硬件保护逐步延伸到以数据为中心的隐私技术，并在所有层之间建立信任。这种架构将数据、模型、运行时和基础设施层面的防护措施整合起来，以缓解威胁，并确保在生产环境中的稳健部署。:::
 
 ### 隐私保护数据技术 {#sec-security-privacy-privacypreserving-data-techniques-64f8}
 
@@ -2289,7 +2303,9 @@ This framework provides starting points rather than complete solutions. Real-wor
 - 不恰当的密码学操作破坏了模型计算
 
 *诊断*：
-```python
+```
+
+python
 # 检查 DP 噪声影响
 def measure_privacy_utility_tradeoff(model, data, epsilon_values):
     results = {}
@@ -2330,7 +2346,9 @@ def measure_privacy_utility_tradeoff(model, data, epsilon_values):
 *症状*：将合法输入标记为对抗样本，导致服务中断。
 
 *调优方法*：
-```python
+```
+
+python
 # 调整检测阈值
 def calibrate_adversarial_detector(detector, clean_data, attack_data):
     # 找到在误报率与
